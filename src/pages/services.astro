@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { PRICING } from '../config/site';
 ---
 
 <BaseLayout
@@ -8,248 +7,107 @@ import { PRICING } from '../config/site';
   description="Flat-rate web design packages for small businesses in Northern Tarrant County, TX. Starter at $1,000. Premium at $2,000. No surprises."
 >
 
-  <!-- Hero -->
-  <section class="relative bg-gradient-to-br from-white via-brand-bg to-[#dce8f5] py-20 overflow-hidden">
-    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-brand-blue opacity-[0.07] blur-3xl pointer-events-none" aria-hidden="true"></div>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10">
-      <span class="badge">Simple Pricing</span>
-      <h1 class="mt-5 text-4xl md:text-5xl font-bold text-brand-navy leading-tight">
-        Everything You Need.<br />Nothing You Don't.
+  <!-- ── HERO ── -->
+  <section style="background: #0F1F3D; padding: 140px 32px 80px; text-align: center; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: relative; z-index: 1; max-width: 680px; margin: 0 auto;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Services &amp; Pricing</span>
+      <h1 style="font-size: clamp(36px, 5vw, 64px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 16px;">
+        Clean, fast websites.<br /><span class="grad-text">One-time price.</span>
       </h1>
-      <p class="mt-5 text-xl text-brand-grey max-w-2xl mx-auto leading-relaxed">
-        Two flat-rate packages for small businesses in Northern Tarrant County — for brand-new websites or for refreshing an outdated one. You'll know the price, the timeline, and exactly what you're getting before we start.
+      <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto;">
+        No subscriptions. No retainers. Pay once and own your site outright.
       </p>
     </div>
+    <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="#F4F6FB" />
+    </svg>
   </section>
 
-  <div class="py-4"><div class="section-divider"></div></div>
+  <!-- ── PRICING + FAQ ── -->
+  <section style="padding: 80px 32px 96px; background: #F4F6FB;">
+    <div style="max-width: 900px; margin: 0 auto;">
 
-  <!-- Package cards -->
-  <section class="py-16 bg-brand-bg" aria-labelledby="packages-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="packages-heading" class="sr-only">Service Packages</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-
-        <!-- Starter -->
-        <div class="bg-white rounded-2xl border border-gray-200/70 shadow-[0_4px_24px_rgba(31,56,100,0.08)] hover:shadow-[0_8px_32px_rgba(31,56,100,0.14)] transition-shadow duration-300 p-8 flex flex-col">
-          <p class="text-sm font-semibold text-brand-blue uppercase tracking-wider">{PRICING.starter.name}</p>
-          <p class="mt-2 text-4xl font-bold text-brand-navy">{PRICING.starter.price}</p>
-          <p class="mt-1 text-sm text-brand-grey">{PRICING.starter.tagline}</p>
-          <div class="my-6 h-px bg-gray-100"></div>
-          <ul class="space-y-3 flex-1">
-            {PRICING.starter.features.map(f => (
-              <li class="flex items-start gap-2 text-sm text-brand-grey">
-                <svg class="w-5 h-5 text-brand-blue shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <a href="/contact" class="mt-8 block text-center btn-secondary">Get Started</a>
-        </div>
-
-        <!-- Premium -->
-        <div class="bg-gradient-to-br from-brand-navy to-[#0F2247] rounded-2xl shadow-[0_12px_48px_rgba(31,56,100,0.4)] p-8 flex flex-col relative overflow-hidden ring-1 ring-white/10">
-          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-brand-blue opacity-[0.18] blur-2xl pointer-events-none" aria-hidden="true"></div>
-          <span class="absolute top-5 right-5 bg-brand-blue text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-sm">
-            Most Popular
-          </span>
-          <p class="text-sm font-semibold text-blue-300 uppercase tracking-wider">{PRICING.premium.name}</p>
-          <p class="mt-2 text-4xl font-bold text-white">{PRICING.premium.price}</p>
-          <p class="mt-1 text-sm text-blue-200">{PRICING.premium.tagline}</p>
-          <div class="my-6 h-px bg-blue-700"></div>
-          <ul class="space-y-3 flex-1">
-            {PRICING.premium.features.map(f => (
-              <li class="flex items-start gap-2 text-sm text-blue-100">
-                <svg class="w-5 h-5 text-brand-blue shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <a href="/contact" class="mt-8 block text-center bg-brand-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-400 transition-colors">
-            Get Started
-          </a>
-        </div>
-
-      </div>
-
-      <!-- New build or refresh note -->
-      <div class="mt-10 max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-50 to-[#dbeafe] flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-4 h-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </div>
-          <div>
-            <p class="font-semibold text-brand-navy text-sm">Starting from scratch?</p>
-            <p class="text-brand-grey text-xs mt-0.5 leading-relaxed">I'll design and build your site from the ground up — no template, no page builder.</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-50 to-[#dbeafe] flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-4 h-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </div>
-          <div>
-            <p class="font-semibold text-brand-navy text-sm">Already have a site?</p>
-            <p class="text-brand-grey text-xs mt-0.5 leading-relaxed">If it's slow, outdated, or not showing up in Google, a full rebuild fixes all of it — same price.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ongoing pricing -->
-      <div class="mt-6 max-w-3xl mx-auto p-5 rounded-xl bg-brand-bg border border-gray-100 text-center">
-        <p class="text-sm text-brand-grey">
-          <span class="font-semibold text-brand-navy">After launch:</span>
-          hosting support at <span class="font-semibold text-brand-navy">$20/month</span>,
-          and changes at <span class="font-semibold text-brand-navy">$60/hour</span> (30-minute minimum).
-          Most small edits take under an hour.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- What every site includes -->
-  <section class="py-16 bg-white" aria-labelledby="included-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12">
-        <span class="badge">Standard on Every Build</span>
-        <h2 id="included-heading" class="mt-4 text-3xl font-bold text-brand-navy">
-          What Every Site Includes
-        </h2>
-        <p class="mt-3 text-brand-grey max-w-xl mx-auto">
-          These aren't add-ons. They're built into every site, every time.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <!-- Pricing cards -->
+      <div style="display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; align-items: stretch; margin-bottom: 72px;">
         {[
-          { icon: 'M13 10V3L4 14h7v7l9-11h-7z',                                 label: 'Sub-1-second load times',        desc: 'Scores 95+ on Google PageSpeed on mobile and desktop — out of the box.' },
-          { icon: 'M12 18h.01M8 21l4-8 4 8M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z', label: 'Mobile-first design',            desc: 'Looks and works perfectly on phones, tablets, and desktops.' },
-          { icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', label: 'SSL / HTTPS',                    desc: 'Secure connection — required for Google rankings and visitor trust.' },
-          { icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',               label: 'Full SEO setup',                 desc: 'Titles, meta descriptions, headings, alt text, clean URLs, and image optimization on every page.' },
-          { icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', label: 'Schema.org structured data',    desc: 'Machine-readable markup that earns rich results in Google — star ratings, hours, phone number right in the listing.' },
-          { icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'AI discoverability (llms.txt)', desc: 'A file that tells ChatGPT, Perplexity, and other AI tools exactly who you are — so you come up when someone asks for a business like yours.' },
-          { icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', label: 'Contact form',                  desc: 'Visitors can reach you without opening their email client.' },
-          { icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', label: 'Google Analytics',               desc: 'See where your visitors come from and what they do on your site.' },
-          { icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Sitemap submitted to Google',  desc: 'Google gets notified about your site the day we launch.' },
-          { icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z', label: 'Post-launch support',           desc: 'I stay available after launch to catch anything that needs a quick fix.' },
-        ].map(({ icon, label, desc }) => (
-          <div class="flex items-start gap-3 p-5 rounded-xl bg-brand-bg border border-gray-100">
-            <div class="w-9 h-9 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center shrink-0 shadow-sm">
-              <svg class="w-5 h-5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={icon} />
-              </svg>
-            </div>
-            <div>
-              <p class="font-semibold text-brand-navy text-sm">{label}</p>
-              <p class="text-brand-grey text-xs mt-0.5 leading-relaxed">{desc}</p>
-            </div>
+          {
+            name: 'Starter', price: '$1,000', tag: 'One-time fee',
+            desc: 'Perfect for new businesses that need a professional web presence fast.',
+            features: ['Up to 5 pages', 'Mobile-responsive design', 'Contact form with email delivery', 'Google Analytics setup', 'Schema.org local business markup', '30 days post-launch support'],
+            cta: 'Get Started', featured: false,
+          },
+          {
+            name: 'Premium', price: '$2,000', tag: 'One-time fee',
+            desc: 'For businesses serious about ranking on Google and growing leads over time.',
+            features: ['Everything in Starter', 'SEO optimization & keyword research', 'Blog or news section', 'Google Business Profile setup', 'Open Graph images for social', '60 days post-launch support'],
+            cta: 'Start with Premium', featured: true,
+          },
+        ].map((plan, i) => (
+          <div
+            class={`reveal reveal-delay-${i + 1} hover-card`}
+            style={`flex: 1 1 300px; max-width: 400px; background: ${plan.featured ? '#0F1F3D' : 'white'}; border-radius: 20px; padding: 40px 36px; box-shadow: ${plan.featured ? '0 20px 56px rgba(15,31,61,0.28)' : '0 8px 32px rgba(15,31,61,0.08)'}; border: ${plan.featured ? 'none' : '1px solid #e4eaf5'}; position: relative;`}
+          >
+            {plan.featured && (
+              <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 9999px; white-space: nowrap;">Most Popular</div>
+            )}
+            <div style={`font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: ${plan.featured ? '#4B9FD4' : '#2E75B6'}; margin-bottom: 12px;`}>{plan.name}</div>
+            <div style={`font-size: 52px; font-weight: 700; color: ${plan.featured ? 'white' : '#0F1F3D'}; letter-spacing: -2px; line-height: 1;`}>{plan.price}</div>
+            <div style={`font-size: 13px; color: ${plan.featured ? 'rgba(255,255,255,0.35)' : '#999'}; margin: 4px 0 16px;`}>{plan.tag}</div>
+            <p style={`font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.55)' : '#595959'}; line-height: 1.6; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid ${plan.featured ? 'rgba(255,255,255,0.1)' : '#e4eaf5'};`}>{plan.desc}</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+              {plan.features.map(f => (
+                <li style={`display: flex; gap: 10px; font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.7)' : '#595959'}; line-height: 1.4; align-items: flex-start;`}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="8" cy="8" r="7" fill={plan.featured ? 'rgba(75,159,212,0.2)' : 'rgba(46,117,182,0.1)'} />
+                    <path d="M5 8l2 2 4-4" stroke={plan.featured ? '#4B9FD4' : '#2E75B6'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/contact"
+              style={`display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; background: ${plan.featured ? 'linear-gradient(135deg,#2E75B6,#8E44AD)' : 'transparent'}; color: ${plan.featured ? 'white' : '#1F3864'}; border: ${plan.featured ? 'none' : '2px solid #1F3864'}; box-shadow: ${plan.featured ? '0 8px 24px rgba(46,117,182,0.35)' : 'none'};`}
+            >
+              {plan.cta}
+            </a>
           </div>
         ))}
       </div>
-    </div>
-  </section>
 
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- Process -->
-  <section class="py-16 bg-gradient-to-b from-brand-bg to-white" aria-labelledby="process-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12">
-        <span class="badge">How It Works</span>
-        <h2 id="process-heading" class="mt-4 text-3xl font-bold text-brand-navy">
-          From First Call to Live Site
-        </h2>
-        <p class="mt-3 text-brand-grey max-w-xl mx-auto">
-          Typically 2–3 weeks, start to finish.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-        {[
-          { step: '1', title: 'Discovery Call',      desc: 'We spend 30 minutes talking through your business, your customers, and what you need your site to do. No jargon, no sales pitch.' },
-          { step: '2', title: 'Design & Build',      desc: 'I design and build your site, sending you check-ins along the way. You won\'t be handed a finished site and asked to approve everything at once.' },
-          { step: '3', title: 'Review & Revisions',  desc: 'You review the draft. We make changes until it looks right and says what you need it to say. Revisions are included.' },
-          { step: '4', title: 'Launch',              desc: 'We go live. I submit your sitemap to Google, monitor the first 24 hours, and stay available if anything needs a quick fix.' },
-        ].map(({ step, title, desc }) => (
-          <div class="text-center p-6 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)]">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-navy to-brand-blue text-white font-bold flex items-center justify-center mx-auto mb-4 text-sm shadow-sm">
-              {step}
+      <!-- FAQ -->
+      <div class="reveal">
+        <h2 style="font-size: 28px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 8px; text-align: center;">Common Questions</h2>
+        <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin: 0 auto 36px;"></div>
+        <div class="faq-grid">
+          {[
+            ['Do I own my website?', 'Yes — completely. When the project is done, the site and all its files are yours. No platform lock-in.'],
+            ['What about hosting?', "We recommend Netlify (free tier covers most small business sites). We'll help you get set up."],
+            ['How long does it take?', 'Starter sites typically launch in 2–3 weeks. Premium in 3–5 weeks, depending on content availability.'],
+            ['Do you do ongoing updates?', "Support windows are included (30 or 60 days). After that, we offer update packages — or teach you to make small edits yourself."],
+          ].map(([q, a]) => (
+            <div style="background: white; border-radius: 14px; padding: 22px 24px; border: 1px solid #e4eaf5;">
+              <div style="font-size: 15px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">{q}</div>
+              <div style="font-size: 14px; color: #595959; line-height: 1.6;">{a}</div>
             </div>
-            <h3 class="font-bold text-brand-navy mb-2">{title}</h3>
-            <p class="text-brand-grey text-sm leading-relaxed">{desc}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- FAQ -->
-  <section class="py-16 bg-white" aria-labelledby="faq-heading">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12">
-        <span class="badge">Common Questions</span>
-        <h2 id="faq-heading" class="mt-4 text-3xl font-bold text-brand-navy">FAQ</h2>
-      </div>
-      <div class="space-y-5">
-        {[
-          {
-            q: 'I already have a website. Can you just fix it instead of rebuilding it?',
-            a: 'Usually a full rebuild is the right call — and it\'s the same price. Patching an old site built on a slow platform is like renovating a house with a bad foundation: you spend the money but the problems keep coming back. A rebuild gives you a clean, fast site that you\'re not fighting against. That said, bring it up on our discovery call and I\'ll give you a straight answer.',
-          },
-          {
-            q: 'Do I need to write my own content?',
-            a: 'No. I can write the copy for your site based on what you tell me about your business, your customers, and what sets you apart. Just point me to anything you already have — a brochure, a Facebook page, a Google Business profile — and I\'ll take it from there.',
-          },
-          {
-            q: 'How long does it take?',
-            a: 'Typically 2–3 weeks from our first call to launch. The main variable is how quickly we can go back and forth on reviews. The faster you can give feedback, the faster we ship.',
-          },
-          {
-            q: 'What if I need changes after launch?',
-            a: 'Both packages include post-launch support (30 days for Starter, 60 days for Premium). After that, changes are billed at $60/hour with a 30-minute minimum. Most small edits — a phone number, updated hours, a new service — take less than 30 minutes.',
-          },
-          {
-            q: 'Do I need to pay for hosting?',
-            a: 'The site itself hosts free on Netlify\'s free tier. I offer an optional $20/month hosting support plan that covers monitoring, backups, and minor fixes. You\'ll also need a domain name (typically $10–$15/year) if you don\'t already have one — I\'ll walk you through buying it.',
-          },
-        ].map(({ q, a }) => (
-          <div class="border border-gray-100 rounded-xl p-6 shadow-[0_2px_12px_rgba(31,56,100,0.05)]">
-            <h3 class="font-bold text-brand-navy mb-2">{q}</h3>
-            <p class="text-brand-grey text-sm leading-relaxed">{a}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="relative bg-gradient-to-br from-brand-navy via-[#1e3d7a] to-[#0F2247] py-20 overflow-hidden" aria-labelledby="services-cta-heading">
-    <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-brand-blue opacity-[0.12] blur-3xl pointer-events-none translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
-      <h2 id="services-cta-heading" class="text-3xl md:text-4xl font-bold text-white mb-5">
-        Ready to Get Started?
-      </h2>
-      <p class="text-blue-200 text-lg mb-10 max-w-xl mx-auto">
-        Get a free website audit — I'll take a look at what you have now (or what your competitors have) and tell you exactly what a new site would improve.
-      </p>
-      <a
-        href="/contact"
-        class="bg-brand-blue text-white px-10 py-4 rounded-lg text-lg font-semibold
-               shadow-lg hover:bg-blue-400 hover:shadow-xl transition-all duration-200 inline-block"
-      >
-        Get a Free Audit
-      </a>
     </div>
   </section>
 
 </BaseLayout>
+
+<style>
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 640px) {
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

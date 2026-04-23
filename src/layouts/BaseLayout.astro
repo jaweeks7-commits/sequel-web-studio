@@ -11,14 +11,13 @@ interface Props {
 
 const {
   title,
-  description = 'Sequel Web Studio builds clean, fast websites for small businesses in Northern Tarrant County, TX — starting at $1,000.',
+  description = 'Sequel Web Studio builds hand-crafted websites for small businesses in Northern Tarrant County, TX — starting at $1,000.',
 } = Astro.props;
 
-const pageTitle   = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
+const pageTitle    = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
 const canonicalUrl = `${SITE_URL}${Astro.url.pathname}`;
-const schema      = JSON.stringify(LOCAL_BUSINESS_SCHEMA);
+const schema       = JSON.stringify(LOCAL_BUSINESS_SCHEMA);
 
-// These loaders are env-var-gated; they no-op when the vars are not yet set
 const ga4Id       = import.meta.env.PUBLIC_GA4_ID;
 const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
 ---
@@ -32,7 +31,12 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
     <link rel="canonical" href={canonicalUrl} />
     <title>{pageTitle}</title>
 
-    <!-- Favicon: "S" mark in brand navy (same as Coming Soon page) -->
+    <!-- Google Fonts: Space Grotesk + Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Favicon: "S" mark in brand navy -->
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231F3864'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E"
@@ -41,7 +45,6 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
     <!-- Schema.org LocalBusiness JSON-LD (D8) -->
     <script type="application/ld+json" set:html={schema} />
 
-    <!-- CookieYes: only loads when account is provisioned -->
     {cookieYesId && (
       <script
         id="cookieyes"
@@ -50,8 +53,6 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
       />
     )}
 
-    <!-- GA4 with consent mode v2 — analytics_storage defaults to denied
-         until user opts in via CookieYes. Loads only when GA4 ID is set. -->
     {ga4Id && (
       <>
         <script define:vars={{ ga4Id }}>
@@ -75,5 +76,14 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
       <slot />
     </main>
     <Footer />
+
+    <!-- Scroll reveal observer — wires up all .reveal elements -->
+    <script>
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); }),
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    </script>
   </body>
 </html>

@@ -76,6 +76,8 @@ Replaces the Coming Soon page. All static, no backend yet.
 
 **Phase 1 ships when**: site replaces Coming Soon at sequelwebstudio.com, Lighthouse scores ≥95 across the board, contact form delivers a test submission.
 
+**Homepage copy is approved and locked.** It lives in `Sequel Web Studio - Homepage Copy.md` at the project root. Use it verbatim — eight sections, in order, with the audit URL field in both Section 4 and Section 8 wired to the same backend endpoint (a single reusable component). Do not rewrite or summarize the copy without Joe's approval.
+
 ### Phase 2 — Audit tool
 - Public audit page where a visitor submits their URL
 - Netlify Function calls Google PageSpeed Insights API + scrapes basic on-page SEO signals

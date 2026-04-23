@@ -1,285 +1,301 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PreviewCard from '../components/PreviewCard.astro';
-import { PRICING } from '../config/site';
 ---
 
 <BaseLayout
   title="Sequel Web Studio"
-  description="Sequel Web Studio builds clean, fast websites for small businesses in Northern Tarrant County, TX — starting at $1,000."
+  description="Sequel Web Studio builds hand-crafted websites for small businesses in Northern Tarrant County, TX. Starting at $1,000."
 >
 
-  <!-- ═══════════════════════════════════ HERO ═══════════════════════════════════ -->
-  <section class="relative bg-gradient-to-br from-white via-brand-bg to-[#dce8f5] py-20 md:py-28 overflow-hidden">
-    <!-- Decorative background blobs for depth -->
-    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-blue opacity-[0.08] blur-3xl pointer-events-none" aria-hidden="true"></div>
-    <div class="absolute bottom-0 -left-12 w-64 h-64 rounded-full bg-brand-purple opacity-[0.05] blur-3xl pointer-events-none" aria-hidden="true"></div>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10">
-      <span class="badge">Serving Northern Tarrant County, TX</span>
-      <h1 class="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold text-brand-navy leading-tight max-w-3xl mx-auto">
-        Clean, Fast Websites for Small Businesses
-      </h1>
-      <p class="mt-6 text-xl text-brand-grey max-w-2xl mx-auto leading-relaxed">
-        I build new websites and refresh outdated ones — clean, fast, and built to show up wherever your customers are searching: Google, ChatGPT, and voice. Starting at $1,000.
-      </p>
-      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/contact" class="btn-primary text-center text-base">Get a Free Website Audit</a>
-        <a href="/services" class="btn-secondary text-center text-base">See What's Included</a>
+  <!-- ── HERO ── -->
+  <section style="position: relative; background: #0F1F3D; min-height: 100vh; display: flex; align-items: center; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: absolute; top: 10%; left: -10%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(46,117,182,0.25) 0%, transparent 70%); pointer-events: none;"></div>
+    <div style="position: absolute; bottom: 5%; right: -5%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(142,68,173,0.2) 0%, transparent 70%); pointer-events: none;"></div>
+
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 120px 32px 80px; width: 100%;">
+      <div style="display: flex; align-items: center; gap: 64px; flex-wrap: wrap;">
+
+        <!-- Left: copy -->
+        <div style="flex: 1 1 480px; min-width: 0;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 9999px; padding: 6px 14px; margin-bottom: 32px;">
+            <div style="width: 7px; height: 7px; border-radius: 50%; background: #4B9FD4; flex-shrink: 0;"></div>
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.7);">Web Design · Northern Tarrant County, TX</span>
+          </div>
+
+          <h1 style="font-size: clamp(44px, 6vw, 80px); font-weight: 700; color: white; line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px;">
+            Your next website<br />
+            should make people<br />
+            <span class="grad-text">stop scrolling.</span>
+          </h1>
+
+          <p style="font-size: 18px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 480px; margin-bottom: 40px;">
+            Sequel Web Studio builds hand-crafted websites for small businesses in the DFW area. Clean code, fast loads, and a design that turns visitors into customers.
+          </p>
+
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+            <a href="/contact" style="background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 24px rgba(46,117,182,0.4); letter-spacing: -0.2px; display: inline-block;">
+              Start Your Project →
+            </a>
+            <a href="/services" style="background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 14px 24px; border-radius: 10px; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block;">
+              See Pricing
+            </a>
+          </div>
+
+          <div style="margin-top: 48px; display: flex; gap: 32px; flex-wrap: wrap;">
+            {[['95+','Lighthouse score'],['< 1s','Load time'],['100%','Hand-built code']].map(([val, label]) => (
+              <div>
+                <div style="font-size: 28px; font-weight: 700; color: white; letter-spacing: -1px; line-height: 1;">{val}</div>
+                <div style="font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 4px;">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Right: decorative audit card (hidden on small screens) -->
+        <div class="audit-card-col">
+          <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 28px; backdrop-filter: blur(12px);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <span style="font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Site Audit Report</span>
+              <span style="font-size: 11px; font-weight: 600; color: #4B9FD4; background: rgba(75,159,212,0.15); padding: 3px 10px; border-radius: 9999px;">Live</span>
+            </div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 16px; font-family: 'Space Mono', monospace;">mysmallbusiness.com</div>
+            {[['Performance', 94, '#16A34A'], ['SEO Score', 87, '#2E75B6'], ['Accessibility', 91, '#16A34A'], ['Mobile-Ready', 78, '#D97706']].map(([label, score, color]) => (
+              <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <span style="font-size: 12px; color: rgba(255,255,255,0.6);">{label}</span>
+                  <span style={`font-size: 12px; font-weight: 700; color: ${color};`}>{score}</span>
+                </div>
+                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 9999px;">
+                  <div style={`height: 4px; width: ${score}%; background: ${color}; border-radius: 9999px;`}></div>
+                </div>
+              </div>
+            ))}
+            <a href="/contact" style="display: block; width: 100%; margin-top: 20px; padding: 11px; background: linear-gradient(to right, #1F3864, #2E75B6); color: white; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; text-decoration: none;">
+              Audit My Site for Free
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="white" />
+    </svg>
+  </section>
+
+  <!-- ── MARQUEE ── -->
+  <section style="background: white; padding: 28px 0; border-bottom: 1px solid #eaeff8; overflow: hidden;">
+    <div style="overflow: hidden;">
+      <div class="marquee-track">
+        {[...Array(2)].map(() => (
+          <div style="display: flex;">
+            {['Fast-Loading Sites','Hand-Built Code','Northern Tarrant County','No Page Builders','Honest Pricing','WCAG Accessible','SEO-Optimized','Google-Ready','Mobile-First'].map(item => (
+              <span style="display: inline-flex; align-items: center; gap: 20px; padding: 0 32px; font-size: 13px; font-weight: 600; color: #8892A0; letter-spacing: 0.5px; text-transform: uppercase;">
+                <span style="width: 5px; height: 5px; border-radius: 50%; background: #8E44AD; flex-shrink: 0;"></span>
+                {item}
+              </span>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- Thin purple accent line between sections (D14) -->
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- ══════════════════════════════ VALUE PROPS ══════════════════════════════ -->
-  <section class="py-16 bg-gradient-to-b from-brand-bg to-white" aria-labelledby="value-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="value-heading" class="text-3xl font-bold text-center text-brand-navy mb-12">
-        Why Choose Sequel Web Studio
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-        <div class="text-center p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300">
-          <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mx-auto mb-5 shadow-sm">
-            <svg class="w-7 h-7 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h3 class="font-bold text-brand-navy text-lg mb-3">Under 1-Second Load Times</h3>
-          <p class="text-brand-grey text-sm leading-relaxed">
-            Slow sites lose customers before they even see your offer. Every site I build scores 95+ on Google's speed test — out of the box, on mobile.
-          </p>
-        </div>
-
-        <div class="text-center p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300">
-          <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mx-auto mb-5 shadow-sm">
-            <svg class="w-7 h-7 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <h3 class="font-bold text-brand-navy text-lg mb-3">Found on Google, ChatGPT, and Voice</h3>
-          <p class="text-brand-grey text-sm leading-relaxed">
-            Every site includes full SEO plus the AI-era signals that get you found when someone asks ChatGPT, Google's AI Overview, or Siri for a business in your area — not just when they type in a search bar.
-          </p>
-        </div>
-
-        <div class="text-center p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300">
-          <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mx-auto mb-5 shadow-sm">
-            <svg class="w-7 h-7 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="font-bold text-brand-navy text-lg mb-3">Done-for-You, Start to Finish</h3>
-          <p class="text-brand-grey text-sm leading-relaxed">
-            No templates, no page builders, no hand-holding required from you. I handle design, build, launch, and post-launch support — you run your business.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- ══════════════════════════════ SERVICES / PRICING ══════════════════════ -->
-  <section class="py-16 bg-brand-bg" aria-labelledby="services-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12">
-        <span class="badge">Simple Pricing</span>
-        <h2 id="services-heading" class="mt-4 text-3xl font-bold text-brand-navy">
-          Two Packages. No Surprises.
+  <!-- ── VALUE PROPS ── -->
+  <section style="padding: 96px 0; background: white;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 560px; margin-bottom: 64px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">Why Sequel</span>
+        <h2 style="font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: #0F1F3D; letter-spacing: -1.5px; line-height: 1.1; margin-top: 12px;">
+          Built for results.<br />Not for awards.
         </h2>
-        <p class="mt-3 text-brand-grey max-w-xl mx-auto">
-          Works for brand-new websites and for refreshing what you already have. Flat-rate — you know the price before we start.
-        </p>
       </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px;">
+        {[
+          { num: '01', title: 'Speed by default', body: 'Every site targets 95+ on Lighthouse before launch. Fast sites rank higher and convert better.' },
+          { num: '02', title: 'Hand-crafted code', body: 'No Wix. No WordPress templates. No bloated plugins. Joe writes every line himself.' },
+          { num: '03', title: 'You own everything', body: 'One payment, full ownership. No monthly platform fees. No lock-in. Ever.' },
+          { num: '04', title: 'Local and reachable', body: 'Based in Northern Tarrant County. Call, text, or meet in person — your choice.' },
+        ].map((item, i) => (
+          <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #F4F6FB; border-radius: 16px; padding: 32px 28px; border: 1px solid #e4eaf5; box-shadow: 0 4px 16px rgba(15,31,61,0.06);">
+            <div style="font-size: 12px; font-family: 'Space Mono', monospace; color: #2E75B6; margin-bottom: 20px; letter-spacing: 1px;">{item.num}</div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 10px; letter-spacing: -0.3px;">{item.title}</h3>
+            <p style="font-size: 14px; color: #595959; line-height: 1.65;">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+  <!-- ── PROCESS ── -->
+  <section style="padding: 96px 0; background: #0F1F3D; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.5;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="text-align: center; margin-bottom: 64px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">How It Works</span>
+        <h2 style="font-size: clamp(30px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.15; margin-top: 12px;">
+          From call to launched<br /><span class="grad-text">in 3 weeks.</span>
+        </h2>
+      </div>
+      <div class="process-grid">
+        {[
+          { step: '1', title: 'Discovery call', body: 'We talk about your business, goals, and what you need. No pressure, no sales pitch.' },
+          { step: '2', title: 'Design & build', body: 'Joe designs and builds your site by hand. You see progress drafts along the way.' },
+          { step: '3', title: 'Review & refine', body: 'Two rounds of revisions. We tweak until it feels exactly right.' },
+          { step: '4', title: 'Launch', body: 'We deploy to Netlify, configure your domain, and submit to Google. Done.' },
+        ].map((item, i) => (
+          <div class={`reveal reveal-delay-${i + 1} process-item`} data-index={i}>
+            <div style="font-size: 48px; font-weight: 700; color: rgba(255,255,255,0.08); font-family: 'Space Mono', monospace; letter-spacing: -2px; line-height: 1; margin-bottom: 20px;">{item.step}</div>
+            <h3 style="font-size: 18px; font-weight: 700; color: white; margin-bottom: 10px;">{item.title}</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.65;">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 
-        <!-- Starter card -->
-        <div class="bg-white rounded-2xl border border-gray-200/70 shadow-[0_4px_24px_rgba(31,56,100,0.08)] hover:shadow-[0_8px_32px_rgba(31,56,100,0.14)] transition-shadow duration-300 p-8 flex flex-col">
-          <p class="text-sm font-semibold text-brand-blue uppercase tracking-wider">{PRICING.starter.name}</p>
-          <p class="mt-2 text-4xl font-bold text-brand-navy">{PRICING.starter.price}</p>
-          <p class="mt-1 text-sm text-brand-grey">{PRICING.starter.tagline}</p>
-          <div class="my-6 h-px bg-gray-100"></div>
-          <ul class="space-y-3 flex-1">
-            {PRICING.starter.features.map(f => (
-              <li class="flex items-start gap-2 text-sm text-brand-grey">
-                <svg class="w-5 h-5 text-brand-blue shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <a href="/contact" class="mt-8 block text-center btn-secondary">Get Started</a>
-        </div>
-
-        <!-- Premium card (highlighted) -->
-        <div class="bg-gradient-to-br from-brand-navy to-[#0F2247] rounded-2xl shadow-[0_12px_48px_rgba(31,56,100,0.4)] p-8 flex flex-col relative overflow-hidden ring-1 ring-white/10">
-          <!-- Subtle glow for premium feel -->
-          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-brand-blue opacity-[0.18] blur-2xl pointer-events-none" aria-hidden="true"></div>
-          <span class="absolute top-5 right-5 bg-brand-blue text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-sm">
-            Most Popular
-          </span>
-          <p class="text-sm font-semibold text-blue-300 uppercase tracking-wider">{PRICING.premium.name}</p>
-          <p class="mt-2 text-4xl font-bold text-white">{PRICING.premium.price}</p>
-          <p class="mt-1 text-sm text-blue-200">{PRICING.premium.tagline}</p>
-          <div class="my-6 h-px bg-blue-700"></div>
-          <ul class="space-y-3 flex-1">
-            {PRICING.premium.features.map(f => (
-              <li class="flex items-start gap-2 text-sm text-blue-100">
-                <svg class="w-5 h-5 text-brand-blue shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <a
-            href="/contact"
-            class="mt-8 block text-center bg-brand-blue text-white px-6 py-3 rounded-lg font-semibold
-                   hover:bg-blue-400 transition-colors"
+  <!-- ── PRICING ── -->
+  <section style="padding: 96px 0; background: #F4F6FB;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="text-align: center; margin-bottom: 56px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">Pricing</span>
+        <h2 style="font-size: clamp(30px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; margin-top: 12px;">Simple. Honest. One-time.</h2>
+        <p style="font-size: 16px; color: #595959; margin-top: 12px;">No monthly fees. No surprise invoices. You pay once and own your site.</p>
+      </div>
+      <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; align-items: stretch;">
+        {[
+          {
+            name: 'Starter', price: '$1,000', tag: 'One-time fee',
+            desc: 'A clean, fast, professional site to get your business online.',
+            features: ['Up to 5 pages', 'Mobile-responsive design', 'Contact form', 'Google Analytics setup', '30 days support'],
+            cta: 'Get Started', featured: false,
+          },
+          {
+            name: 'Premium', price: '$2,000', tag: 'One-time fee',
+            desc: 'For businesses serious about ranking on Google and growing leads.',
+            features: ['Everything in Starter', 'SEO optimization & keywords', 'Blog or news section', 'Google Business Profile setup', '60 days support'],
+            cta: 'Start with Premium', featured: true,
+          },
+        ].map((plan, i) => (
+          <div
+            class={`reveal reveal-delay-${i + 1} hover-card`}
+            style={`flex: 1 1 300px; max-width: 380px; background: ${plan.featured ? '#0F1F3D' : 'white'}; border-radius: 20px; box-shadow: ${plan.featured ? '0 20px 56px rgba(15,31,61,0.28)' : '0 8px 32px rgba(15,31,61,0.08)'}; border: ${plan.featured ? 'none' : '1px solid #e4eaf5'}; padding: 40px 36px; position: relative;`}
           >
-            Get Started
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- ══════════════════════════════ SOCIAL PROOF ════════════════════════════ -->
-  <section class="py-16 bg-white" aria-labelledby="testimonials-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-      <span class="badge">What Clients Say</span>
-      <h2 id="testimonials-heading" class="mt-4 text-3xl font-bold text-brand-navy mb-10">
-        Local Businesses Trust Sequel Web Studio
-      </h2>
-      <!-- Placeholder — real testimonials go here after first projects ship -->
-      <div class="max-w-2xl mx-auto bg-white rounded-2xl p-8 text-left border border-gray-100 shadow-[0_8px_32px_rgba(31,56,100,0.08)] relative overflow-hidden">
-        <div class="absolute top-2 left-5 text-8xl leading-none text-brand-navy opacity-[0.07] font-serif select-none pointer-events-none" aria-hidden="true">&ldquo;</div>
-        <p class="text-brand-grey italic leading-relaxed relative">
-          "Testimonial coming soon — first client sites launching shortly."
-        </p>
-        <div class="mt-5 flex items-center gap-3">
-          <div class="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0" aria-hidden="true"></div>
-          <div>
-            <p class="font-semibold text-brand-navy text-sm">Client name</p>
-            <p class="text-xs text-brand-grey">Business — Northern Tarrant County, TX</p>
+            {plan.featured && (
+              <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 9999px; white-space: nowrap;">Most Popular</div>
+            )}
+            <div style={`font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: ${plan.featured ? '#4B9FD4' : '#2E75B6'}; margin-bottom: 16px;`}>{plan.name}</div>
+            <div style={`font-size: 52px; font-weight: 700; color: ${plan.featured ? 'white' : '#0F1F3D'}; letter-spacing: -2px; line-height: 1;`}>{plan.price}</div>
+            <div style={`font-size: 13px; color: ${plan.featured ? 'rgba(255,255,255,0.4)' : '#999'}; margin-top: 4px; margin-bottom: 16px;`}>{plan.tag}</div>
+            <p style={`font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.6)' : '#595959'}; line-height: 1.6; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid ${plan.featured ? 'rgba(255,255,255,0.1)' : '#e4eaf5'};`}>{plan.desc}</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+              {plan.features.map(f => (
+                <li style={`display: flex; gap: 10px; font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.75)' : '#595959'}; line-height: 1.4; align-items: flex-start;`}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="8" cy="8" r="7" fill={plan.featured ? 'rgba(75,159,212,0.2)' : 'rgba(46,117,182,0.1)'} />
+                    <path d="M5 8l2 2 4-4" stroke={plan.featured ? '#4B9FD4' : '#2E75B6'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/contact"
+              style={`display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; background: ${plan.featured ? 'linear-gradient(135deg, #2E75B6, #8E44AD)' : 'transparent'}; color: ${plan.featured ? 'white' : '#1F3864'}; border: ${plan.featured ? 'none' : '2px solid #1F3864'}; box-shadow: ${plan.featured ? '0 8px 24px rgba(46,117,182,0.35)' : 'none'};`}
+            >
+              {plan.cta}
+            </a>
           </div>
-        </div>
-      </div>
-      <p class="mt-4 text-xs text-gray-400 italic">Real testimonials added after first clients launch</p>
-    </div>
-  </section>
-
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- ══════════════════════════════ PORTFOLIO TEASER ══════════════════════════ -->
-  <section class="py-16 bg-brand-bg" aria-labelledby="portfolio-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12">
-        <span class="badge">Recent Work</span>
-        <h2 id="portfolio-heading" class="mt-4 text-3xl font-bold text-brand-navy">
-          Sites Built by Sequel Web Studio
-        </h2>
-        <p class="mt-3 text-brand-grey max-w-xl mx-auto">
-          Every site is hand-coded from scratch — no templates, no page builders.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <PreviewCard
-          url="https://greekcafekeller.com"
-          name="Greek Cafe"
-          industry="Restaurant"
-          description="Fast, clean site for a local Greek café — menu, hours, and a Google Maps presence built to rank."
-        />
-        <PreviewCard
-          url="https://thestraightedgelawns.com"
-          name="Lawn Services"
-          industry="Lawn & Landscape"
-          description="Lead-focused site for a lawn care company — service areas, pricing, and a contact form that converts."
-        />
-        <PreviewCard
-          url="https://cocreator.work"
-          name="Garage Epoxy Floors"
-          industry="Home Services"
-          description="Specialty contractor site with before/after framing, service details, and a clear path to a quote."
-        />
-      </div>
-
-      <div class="mt-10 text-center">
-        <a href="/portfolio" class="btn-secondary inline-block">See All 6 Projects</a>
+        ))}
       </div>
     </div>
   </section>
 
-  <div class="py-4"><div class="section-divider"></div></div>
-
-  <!-- ══════════════════════════════ ABOUT TEASER ════════════════════════════ -->
-  <section class="py-16 bg-gradient-to-b from-white to-brand-bg" aria-labelledby="about-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="flex flex-col md:flex-row items-center gap-10">
-
-        <!-- Headshot with gradient border ring -->
-        <div class="shrink-0">
-          <div class="p-1 rounded-full bg-gradient-to-br from-brand-blue to-brand-navy shadow-[0_12px_40px_rgba(31,56,100,0.25)]">
-            <img
-              src="/images/joe-headshot.png"
-              alt="Joe Weeks, owner of Sequel Web Studio"
-              class="w-48 h-48 rounded-full object-cover border-[3px] border-white"
-              width="192"
-              height="192"
-              loading="lazy"
-            />
-          </div>
+  <!-- ── ABOUT SNIPPET ── -->
+  <section style="padding: 96px 0; background: white;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal about-grid">
+        <div style="position: relative;">
+          <div style="position: absolute; inset: -16px; background: linear-gradient(135deg, rgba(46,117,182,0.12), rgba(142,68,173,0.12)); border-radius: 28px; transform: rotate(-2deg);"></div>
+          <img
+            src="/images/joe-headshot.png"
+            alt="Joe Weeks, owner of Sequel Web Studio"
+            style="position: relative; width: 100%; border-radius: 20px; display: block; box-shadow: 0 24px 64px rgba(15,31,61,0.2);"
+            loading="lazy"
+          />
         </div>
-
-        <!-- Text -->
         <div>
-          <span class="badge">About Joe</span>
-          <h2 id="about-heading" class="mt-4 text-3xl font-bold text-brand-navy">
-            Hi, I'm Joe Weeks
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">About Joe</span>
+          <h2 style="font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.15; margin-top: 12px; margin-bottom: 8px;">
+            One developer.<br />Every project.
           </h2>
-          <p class="mt-4 text-brand-grey leading-relaxed">
-            I kept seeing the same thing happen to small businesses around here — great work, invisible online. Slow sites, bad SEO, and agencies that disappeared after the check cleared. I started Sequel Web Studio to fix that. Every site is hand-coded from scratch: no page builders, no templates, no shortcuts. Fast, clean code that ranks on Google and turns visitors into calls.
+          <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin-bottom: 24px;"></div>
+          <p style="font-size: 16px; color: #595959; line-height: 1.75; margin-bottom: 16px;">
+            When you hire Sequel Web Studio, you work directly with Joe Weeks — not an account manager, not an outsourced team. Joe writes every line of code and handles every conversation himself.
           </p>
-          <a href="/about" class="mt-5 inline-flex items-center gap-1 text-brand-blue font-semibold hover:underline">
-            Read more about me
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
+          <p style="font-size: 16px; color: #595959; line-height: 1.75; margin-bottom: 32px;">
+            He serves small business owners across the DFW area who want a professional web presence without the enterprise price tag.
+          </p>
+          <a href="/about" style="border: 2px solid #1F3864; color: #1F3864; padding: 11px 24px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block;">
+            More about Joe →
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════ FINAL CTA ═══════════════════════════════ -->
-  <section class="relative bg-gradient-to-br from-brand-navy via-[#1e3d7a] to-[#0F2247] py-20 overflow-hidden" aria-labelledby="cta-heading">
-    <!-- Decorative light elements -->
-    <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-brand-blue opacity-[0.12] blur-3xl pointer-events-none translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
-    <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-brand-purple opacity-[0.08] blur-3xl pointer-events-none -translate-x-1/2 translate-y-1/2" aria-hidden="true"></div>
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
-      <h2 id="cta-heading" class="text-3xl md:text-4xl font-bold text-white mb-5">
-        Ready to Get Your Business Online?
+  <!-- ── FINAL CTA ── -->
+  <section style="padding: 96px 32px; background: linear-gradient(135deg, #0F1F3D 0%, #1F3864 50%, #2E75B6 100%); position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.3;"></div>
+    <div class="reveal" style="position: relative; z-index: 1; max-width: 680px; margin: 0 auto; text-align: center;">
+      <h2 style="font-size: clamp(32px, 5vw, 58px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 20px;">
+        Ready to build something<br /><span class="grad-text">worth showing off?</span>
       </h2>
-      <p class="text-blue-200 text-lg mb-10 max-w-xl mx-auto">
-        Let's build something fast, clean, and built to convert. Get a free website audit — no strings attached.
+      <p style="font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 36px;">
+        Tell Joe about your business. He replies within one business day — usually sooner.
       </p>
-      <a
-        href="/contact"
-        class="bg-brand-blue text-white px-10 py-4 rounded-lg text-lg font-semibold
-               shadow-lg hover:bg-blue-400 hover:shadow-xl transition-all duration-200 inline-block"
-      >
-        Get a Free Audit
+      <a href="/contact" style="background: white; color: #1F3864; padding: 16px 36px; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 12px 32px rgba(0,0,0,0.3); letter-spacing: -0.3px;">
+        Start Your Project →
       </a>
     </div>
   </section>
 
 </BaseLayout>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .audit-card-col {
+    flex: 0 0 320px;
+    max-width: 320px;
+  }
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+  }
+  .process-item {
+    padding: 36px 28px;
+  }
+  .process-item[data-index]:not([data-index="0"]) {
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+  @media (max-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .audit-card-col {
+      display: none;
+    }
+    .process-item[data-index]:not([data-index="0"]) {
+      border-left: none;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+  }
+</style>

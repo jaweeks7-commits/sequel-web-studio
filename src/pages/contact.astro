@@ -5,168 +5,174 @@ import { CONTACT_EMAIL } from '../config/site';
 
 <BaseLayout
   title="Contact — Sequel Web Studio"
-  description="Get a free website audit from Sequel Web Studio. Serving small businesses in Northern Tarrant County, TX."
+  description="Start your web design project with Sequel Web Studio. Joe Weeks serves small businesses in Northern Tarrant County, TX."
 >
 
-  <section class="relative bg-gradient-to-br from-white via-brand-bg to-[#dce8f5] py-20 overflow-hidden">
-    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-brand-blue opacity-[0.07] blur-3xl pointer-events-none" aria-hidden="true"></div>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-      <div class="max-w-2xl mx-auto">
+  <!-- ── HERO ── -->
+  <section style="background: #0F1F3D; padding: 140px 32px 80px; text-align: center; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: relative; z-index: 1;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Get in Touch</span>
+      <h1 style="font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 16px;">
+        Let's build something <span class="grad-text">great.</span>
+      </h1>
+      <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto;">
+        Joe replies within one business day — usually sooner.
+      </p>
+    </div>
+    <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="#F4F6FB" />
+    </svg>
+  </section>
 
-        <!-- Intro -->
-        <div class="text-center mb-10">
-          <span class="badge">Let's Talk</span>
-          <h1 class="mt-5 text-4xl md:text-5xl font-bold text-brand-navy leading-tight">
-            Get a Free Website Audit
-          </h1>
-          <p class="mt-5 text-xl text-brand-grey leading-relaxed">
-            Tell me about your business. I'll take a look at your current site (or your competitors') and give you a straight read on what's working and what isn't — no strings attached.
+  <!-- ── FORM + SIDEBAR ── -->
+  <section style="padding: 72px 32px 96px; background: #F4F6FB;">
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+
+      <!-- Form card -->
+      <div class="reveal" style="flex: 1 1 480px; background: white; border-radius: 20px; border: 1px solid #e4eaf5; box-shadow: 0 8px 32px rgba(15,31,61,0.08); padding: 40px 36px;">
+
+        <!-- Success state — shown when ?success=true -->
+        <div id="success-card" class="hidden" role="alert">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(22,163,74,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </div>
+          <h2 style="font-size: 28px; font-weight: 700; color: #0F1F3D; text-align: center; margin-bottom: 8px;">Message sent!</h2>
+          <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin: 0 auto 20px;"></div>
+          <p style="font-size: 15px; color: #595959; line-height: 1.7; text-align: center;">
+            Thanks for reaching out. Joe will reply within one business day.
           </p>
         </div>
 
-        <!-- Success message — shown by JS when ?success=true is in the URL -->
-        <div id="success-message" class="hidden bg-green-50 border border-green-200 rounded-2xl p-8 text-center shadow-[0_4px_24px_rgba(31,56,100,0.06)]" role="alert">
-          <svg class="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <h2 class="text-2xl font-bold text-brand-navy mb-2">Message Sent!</h2>
-          <p class="text-brand-grey">Thanks — I'll be in touch within one business day.</p>
-        </div>
-
-        <!-- Contact form
-             Uses Netlify's built-in form handling for Phase 1 (no backend required).
-             Phase 2 will replace this with a Netlify Function + Turnstile (decision D10). -->
         <form
           id="contact-form"
           name="contact"
           method="POST"
           data-netlify="true"
-          netlify-honeypot="website-url"
+          netlify-honeypot="website-confirm"
           action="/contact?success=true"
-          class="bg-white rounded-2xl border border-gray-100 shadow-[0_8px_32px_rgba(31,56,100,0.08)] p-8 space-y-6"
+          style="display: flex; flex-direction: column; gap: 20px;"
         >
           <input type="hidden" name="form-name" value="contact" />
-          <!-- Honeypot — invisible to humans, bots fill it in -->
           <p class="hidden" aria-hidden="true">
-            <label>Leave this blank: <input name="website-url" tabindex="-1" autocomplete="off" /></label>
+            <label>Leave blank: <input name="website-confirm" tabindex="-1" autocomplete="off" /></label>
           </p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label for="name" class="block text-sm font-semibold text-brand-navy mb-1.5">
-                Your Name <span class="text-red-500" aria-label="required">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                autocomplete="name"
-                placeholder="Jane Smith"
-                class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm
-                       focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-              />
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="name" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Your Name <span style="color: #DC2626;" aria-label="required">*</span></label>
+              <input type="text" id="name" name="name" required autocomplete="name" placeholder="Jane Smith" class="form-input" />
             </div>
-            <div>
-              <label for="business" class="block text-sm font-semibold text-brand-navy mb-1.5">
-                Business Name <span class="text-red-500" aria-label="required">*</span>
-              </label>
-              <input
-                type="text"
-                id="business"
-                name="business"
-                required
-                autocomplete="organization"
-                placeholder="Smith Plumbing Co."
-                class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm
-                       focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-              />
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="email" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Email Address <span style="color: #DC2626;" aria-label="required">*</span></label>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="jane@myshop.com" class="form-input" />
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label for="email" class="block text-sm font-semibold text-brand-navy mb-1.5">
-                Email Address <span class="text-red-500" aria-label="required">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                autocomplete="email"
-                placeholder="jane@smithplumbing.com"
-                class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm
-                       focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-              />
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="business" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Business Name</label>
+              <input type="text" id="business" name="business" autocomplete="organization" placeholder="Jane's Flower Shop" class="form-input" />
             </div>
-            <div>
-              <label for="phone" class="block text-sm font-semibold text-brand-navy mb-1.5">
-                Phone <span class="text-brand-grey font-normal text-xs">(optional)</span>
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                autocomplete="tel"
-                placeholder="(817) 555-0123"
-                class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm
-                       focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-              />
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="site-url" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Current Website <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <input type="url" id="site-url" name="current-website" placeholder="https://mysite.com" class="form-input" />
             </div>
           </div>
 
-          <div>
-            <label for="package" class="block text-sm font-semibold text-brand-navy mb-1.5">
-              Which package are you considering?
-            </label>
-            <select
-              id="package"
-              name="package"
-              class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm bg-white
-                     focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-            >
-              <option value="">Not sure yet</option>
-              <option value="starter">Starter — $1,000</option>
-              <option value="premium">Premium — $2,000</option>
-            </select>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label for="message" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">What do you need? <span style="color: #DC2626;" aria-label="required">*</span></label>
+            <textarea id="message" name="message" required rows="5" placeholder="Tell us about your business, what you're looking for, and any questions you have…" class="form-input" style="resize: vertical;"></textarea>
           </div>
 
-          <div>
-            <label for="message" class="block text-sm font-semibold text-brand-navy mb-1.5">
-              Tell me about your business <span class="text-red-500" aria-label="required">*</span>
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              required
-              rows="4"
-              placeholder="What do you do, who are your customers, and what do you want your website to accomplish?"
-              class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-brand-navy text-sm resize-none
-                     focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
-            ></textarea>
-          </div>
-
-          <button type="submit" class="w-full btn-primary text-center text-base py-3.5">
-            Send Message
+          <button type="submit" style="background: linear-gradient(135deg, #1F3864, #2E75B6); color: white; border: none; cursor: pointer; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; box-shadow: 0 8px 24px rgba(46,117,182,0.3);">
+            Send Message →
           </button>
-
-          <p class="text-xs text-center text-brand-grey">
-            I typically respond within one business day. Or email me directly at
-            <a href={`mailto:${CONTACT_EMAIL}`} class="text-brand-blue hover:underline">{CONTACT_EMAIL}</a>.
+          <p style="font-size: 12px; color: #999; text-align: center; margin-top: -8px;">
+            No spam. Joe will reply by email within one business day.
           </p>
         </form>
+      </div>
 
+      <!-- Sidebar -->
+      <div class="reveal reveal-delay-2 contact-sidebar">
+        <div class="info-card">
+          <div class="info-card-label">Direct contact</div>
+          <a href={`mailto:${CONTACT_EMAIL}`} style="font-size: 15px; font-weight: 600; color: #2E75B6; text-decoration: none;">{CONTACT_EMAIL}</a>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Service area</div>
+          <span style="font-size: 14px; color: #595959; line-height: 1.6;">Keller · Southlake · Colleyville · Westlake · Trophy Club and surrounding communities.</span>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Response time</div>
+          <span style="font-size: 14px; color: #595959;">Within one business day, usually faster.</span>
+        </div>
+        <div style="background: #0F1F3D; border-radius: 14px; padding: 20px;">
+          <div class="info-card-label" style="color: rgba(255,255,255,0.4);">Not ready yet?</div>
+          <div style="font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 14px;">Start with a free audit of your current site and see exactly what needs fixing.</div>
+          <a href="/contact" style="display: inline-block; background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;">
+            Tell Joe about your site
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
 </BaseLayout>
 
+<style>
+  .form-input {
+    padding: 11px 14px;
+    border-radius: 9px;
+    border: 1.5px solid #d0d9e8;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    color: #595959;
+    background: #FAFBFE;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-input:focus {
+    border-color: #2E75B6;
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.12);
+  }
+  .info-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e4eaf5;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .info-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+  }
+  .contact-sidebar {
+    flex: 0 1 260px;
+    display: flex;
+    flex-direction: column;
+  }
+  .hidden {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .contact-sidebar {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
 <script>
-  // Show success message and hide the form when redirected back with ?success=true
   if (new URLSearchParams(window.location.search).get('success') === 'true') {
-    document.getElementById('success-message')?.classList.remove('hidden');
+    document.getElementById('success-card')?.classList.remove('hidden');
     document.getElementById('contact-form')?.classList.add('hidden');
   }
 </script>

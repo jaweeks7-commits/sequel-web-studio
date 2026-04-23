@@ -1,0 +1,141 @@
+---
+// Reusable audit URL form — appears in Section 4 and Section 8 of the homepage.
+// Posts to /api/audit (routed to netlify/functions/audit.ts).
+// Phase 2 will replace the stub with the real PageSpeed + SEO engine.
+---
+
+<div data-audit-form>
+  <form
+    class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
+    novalidate
+    data-audit-form-el
+  >
+    <input
+      type="text"
+      name="url"
+      placeholder="yoursite.com"
+      aria-label="Your website URL"
+      autocomplete="url"
+      data-audit-input
+      class="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-brand-navy text-sm placeholder-gray-400
+             focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition"
+    />
+    <button
+      type="submit"
+      data-audit-btn
+      class="bg-brand-blue text-white px-6 py-3 rounded-lg font-semibold text-sm
+             hover:bg-blue-400 transition-colors whitespace-nowrap shrink-0
+             disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      Run Free Audit
+    </button>
+  </form>
+
+  <p class="mt-3 text-xs text-center text-blue-200 opacity-80">
+    No email required to see your score. No credit card. No sales call unless you ask for one.
+  </p>
+
+  <!-- Success state — revealed after a successful submission -->
+  <div
+    class="hidden mt-4 rounded-xl border border-green-200 bg-green-50 px-6 py-4 text-center max-w-lg mx-auto"
+    role="alert"
+    aria-live="polite"
+    data-audit-success
+  >
+    <svg class="w-8 h-8 text-green-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <p class="font-semibold text-green-700 text-sm">Audit submitted!</p>
+    <p class="text-brand-grey text-sm mt-1">
+      We'll have your report ready for
+      <span class="font-mono text-brand-navy break-all" data-audit-url-echo></span> shortly.
+    </p>
+  </div>
+
+  <!-- Inline error -->
+  <p
+    class="hidden mt-3 text-sm text-center text-red-600"
+    role="alert"
+    aria-live="polite"
+    data-audit-error
+  ></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-audit-form]').forEach(wrapper => {
+    const form    = wrapper.querySelector<HTMLFormElement>('[data-audit-form-el]')!;
+    const input   = wrapper.querySelector<HTMLInputElement>('[data-audit-input]')!;
+    const btn     = wrapper.querySelector<HTMLButtonElement>('[data-audit-btn]')!;
+    const success = wrapper.querySelector<HTMLElement>('[data-audit-success]')!;
+    const errEl   = wrapper.querySelector<HTMLElement>('[data-audit-error]')!;
+    const urlEcho = wrapper.querySelector<HTMLElement>('[data-audit-url-echo]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.classList.add('hidden');
+
+      let url = input.value.trim();
+      if (!url) {
+        showError('Please enter your website URL.');
+        input.focus();
+        return;
+      }
+
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+      try { new URL(url); } catch {
+        showError('That doesn\'t look like a valid URL — try something like "yoursite.com".');
+        input.focus();
+        return;
+      }
+
+      const originalLabel = btn.textContent!;
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+
+      try {
+        const res = await fetch('/api/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+
+        let data: { status?: string; message?: string; error?: string } = {};
+        try { data = await res.json(); } catch { /* non-JSON body (e.g. local 404) */ }
+
+        if (res.ok) {
+          form.classList.add('hidden');
+          errEl.classList.add('hidden');
+          urlEcho.textContent = url;
+          success.classList.remove('hidden');
+        } else {
+          showError(data.error ?? 'Something went wrong. Please try again.');
+        }
+      } catch {
+        showError('Unable to connect. Please try again in a moment.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    });
+
+    function showError(msg: string) {
+      errEl.textContent = msg;
+      errEl.classList.remove('hidden');
+    }
+  });
+
+  // Focus the Section 4 audit input when arriving via an #audit hash link
+  function maybeFocusAuditInput() {
+    if (window.location.hash === '#audit') {
+      document.querySelector<HTMLInputElement>('#audit [data-audit-input]')?.focus();
+    }
+  }
+
+  window.addEventListener('hashchange', maybeFocusAuditInput);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeFocusAuditInput);
+  } else {
+    maybeFocusAuditInput();
+  }
+</script>

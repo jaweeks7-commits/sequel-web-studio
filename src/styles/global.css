@@ -3,20 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-brand-bg text-brand-grey font-sans;
+    @apply bg-white text-brand-grey font-sans;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-brand-navy;
+    @apply text-brand-navy-dark;
   }
 
-  /* Default link color; overridden inline where needed */
   a {
     @apply text-brand-blue;
   }
 
-  /* Visible focus ring for keyboard nav (WCAG 2.1 AA) */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-brand-blue;
   }
@@ -35,7 +39,6 @@
            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
   }
 
-  /* Purple accent divider — per D14 palette (small touches only) */
   .section-divider {
     @apply h-1 w-12 bg-brand-purple rounded-full mx-auto my-2;
   }
@@ -45,4 +48,54 @@
            text-brand-blue bg-blue-50 px-4 py-1.5 rounded-full
            border border-blue-100 shadow-sm;
   }
+}
+
+/* ── Dot grid — dark sections ── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ── Gradient text ── */
+.grad-text {
+  background: linear-gradient(135deg, #4B9FD4 0%, #8E44AD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Marquee ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  animation: marquee 18s linear infinite;
+  white-space: nowrap;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── Card hover lift ── */
+.hover-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 56px rgba(15,31,61,0.18) !important;
 }
