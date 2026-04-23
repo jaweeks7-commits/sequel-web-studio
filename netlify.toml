@@ -5,6 +5,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NPM_FLAGS    = "--legacy-peer-deps"
 
 # Route /api/* calls to Netlify Functions (used for contact form, audit tool in Phase 2)
 [[redirects]]
