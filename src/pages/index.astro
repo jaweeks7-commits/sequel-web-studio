@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PreviewCard from '../components/PreviewCard.astro';
 import { PRICING } from '../config/site';
 ---
 
@@ -192,46 +193,24 @@ import { PRICING } from '../config/site';
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <a href="https://greekcafekeller.com" target="_blank" rel="noopener noreferrer"
-           class="group bg-white rounded-2xl border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col">
-          <span class="text-xs font-semibold text-brand-blue uppercase tracking-wider">Restaurant</span>
-          <h3 class="mt-2 text-lg font-bold text-brand-navy group-hover:text-brand-blue transition-colors">Greek Cafe</h3>
-          <p class="mt-2 text-sm text-brand-grey leading-relaxed flex-1">Fast, clean site for a local Greek café — menu, hours, and a Google Maps presence built to rank.</p>
-          <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue">
-            View Site
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </span>
-        </a>
-
-        <a href="https://thestraightedgelawns.com" target="_blank" rel="noopener noreferrer"
-           class="group bg-white rounded-2xl border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col">
-          <span class="text-xs font-semibold text-brand-blue uppercase tracking-wider">Lawn &amp; Landscape</span>
-          <h3 class="mt-2 text-lg font-bold text-brand-navy group-hover:text-brand-blue transition-colors">Lawn Services</h3>
-          <p class="mt-2 text-sm text-brand-grey leading-relaxed flex-1">Lead-focused site for a lawn care company — service areas, pricing, and a contact form that converts.</p>
-          <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue">
-            View Site
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </span>
-        </a>
-
-        <a href="https://cocreator.work" target="_blank" rel="noopener noreferrer"
-           class="group bg-white rounded-2xl border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col">
-          <span class="text-xs font-semibold text-brand-blue uppercase tracking-wider">Home Services</span>
-          <h3 class="mt-2 text-lg font-bold text-brand-navy group-hover:text-brand-blue transition-colors">Garage Epoxy Floors</h3>
-          <p class="mt-2 text-sm text-brand-grey leading-relaxed flex-1">Specialty contractor site with before/after framing, service details, and a clear path to a quote.</p>
-          <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue">
-            View Site
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </span>
-        </a>
-
+        <PreviewCard
+          url="https://greekcafekeller.com"
+          name="Greek Cafe"
+          industry="Restaurant"
+          description="Fast, clean site for a local Greek café — menu, hours, and a Google Maps presence built to rank."
+        />
+        <PreviewCard
+          url="https://thestraightedgelawns.com"
+          name="Lawn Services"
+          industry="Lawn & Landscape"
+          description="Lead-focused site for a lawn care company — service areas, pricing, and a contact form that converts."
+        />
+        <PreviewCard
+          url="https://cocreator.work"
+          name="Garage Epoxy Floors"
+          industry="Home Services"
+          description="Specialty contractor site with before/after framing, service details, and a clear path to a quote."
+        />
       </div>
 
       <div class="mt-10 text-center">

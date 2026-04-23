@@ -1,0 +1,102 @@
+---
+interface Props {
+  url:         string;
+  name:        string;
+  industry:    string;
+  description: string;
+  large?:      boolean; // portfolio page uses taller cards
+}
+
+const { url, name, industry, description, large = false } = Astro.props;
+---
+
+<div
+  class="group rounded-2xl border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] transition-shadow duration-300 overflow-hidden flex flex-col bg-white"
+  data-preview-card
+>
+  <!-- Live preview window — clipped, no overlay -->
+  <div
+    class:list={["preview-clip relative overflow-hidden bg-[#f0f4f8] shrink-0", large ? "h-72" : "h-52"]}
+    aria-hidden="true"
+  >
+    <div class="preview-scaler" style="transform-origin:top left; will-change:transform;">
+      <iframe
+        src={url}
+        width="1440"
+        height="3600"
+        loading="lazy"
+        scrolling="no"
+        tabindex="-1"
+        title={`Live preview of ${name}`}
+        style="display:block; border:none; pointer-events:none; user-select:none;"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- Text -->
+  <div class="p-6 flex flex-col flex-1">
+    <span class="text-xs font-semibold text-brand-blue uppercase tracking-wider">{industry}</span>
+    <h3 class="mt-2 text-lg font-bold text-brand-navy">{name}</h3>
+    <p class="mt-2 text-sm text-brand-grey leading-relaxed flex-1">{description}</p>
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue hover:underline"
+    >
+      View Site
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</div>
+
+<script>
+  // Runs once, wires up all [data-preview-card] elements on the page
+  const IFRAME_W   = 1440;
+  const SCROLL_AMT = 2400;
+  const FWD_DUR    = 9000;
+  const REV_DUR    = 1000;
+
+  document.querySelectorAll<HTMLElement>('[data-preview-card]').forEach(card => {
+    const clip   = card.querySelector<HTMLElement>('.preview-clip')!;
+    const scaler = card.querySelector<HTMLElement>('.preview-scaler')!;
+
+    let raf: number | null = null;
+    let currentY  = 0;
+    let animFrom  = 0, animTo = 0, animDur = 0, animStart = 0;
+
+    const getScale = () => clip.offsetWidth / IFRAME_W;
+
+    function paint() {
+      scaler.style.transform = `scale(${getScale()}) translateY(${-currentY}px)`;
+    }
+
+    function easeInOut(t: number) {
+      return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+    }
+    function easeOut(t: number) {
+      return 1 - Math.pow(1-t, 3);
+    }
+
+    function startAnim(from: number, to: number, dur: number, ease: (t: number) => number) {
+      if (raf) cancelAnimationFrame(raf);
+      animFrom = from; animTo = to; animDur = dur; animStart = 0;
+      const tick = (ts: number) => {
+        if (!animStart) animStart = ts;
+        const t  = Math.min((ts - animStart) / animDur, 1);
+        currentY = animFrom + (animTo - animFrom) * ease(t);
+        paint();
+        if (t < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }
+
+    paint();
+
+    card.addEventListener('mouseenter', () => startAnim(currentY, SCROLL_AMT, FWD_DUR, easeInOut));
+    card.addEventListener('mouseleave', () => startAnim(currentY, 0, REV_DUR, easeOut));
+    window.addEventListener('resize', paint, { passive: true });
+  });
+</script>

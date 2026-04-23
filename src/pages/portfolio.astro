@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-// Design width the iframes are sized for — matches typical desktop viewport
-const IFRAME_WIDTH = 1440;
+import PreviewCard from '../components/PreviewCard.astro';
 
 const projects = [
   {
@@ -70,53 +68,15 @@ const projects = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map(project => (
-          <div
-            class="group rounded-2xl border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)] hover:shadow-[0_12px_36px_rgba(31,56,100,0.12)] transition-shadow duration-300 overflow-hidden flex flex-col bg-white"
-            data-card
-          >
-            <!-- Live preview window -->
-            <div
-              class="preview-container relative overflow-hidden bg-brand-bg shrink-0"
-              data-preview-container
-              aria-hidden="true"
-            >
-              <div class="preview-scaler" data-scaler style="transform-origin: top left; will-change: transform;">
-                <iframe
-                  src={project.url}
-                  width={IFRAME_WIDTH}
-                  height="3600"
-                  loading="lazy"
-                  scrolling="no"
-                  tabindex="-1"
-                  title={`Live preview of ${project.name}`}
-                  style="display:block; border:none; pointer-events:none; user-select:none;"
-                ></iframe>
-              </div>
-              <!-- Subtle gradient fade at the bottom of the preview -->
-              <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/60 to-transparent pointer-events-none"></div>
-            </div>
-
-            <!-- Card content -->
-            <div class="p-6 flex flex-col flex-1">
-              <span class="text-xs font-semibold text-brand-blue uppercase tracking-wider">{project.industry}</span>
-              <h3 class="mt-2 text-lg font-bold text-brand-navy">{project.name}</h3>
-              <p class="mt-2 text-sm text-brand-grey leading-relaxed flex-1">{project.description}</p>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue hover:underline"
-              >
-                View Site
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
-          </div>
+          <PreviewCard
+            url={project.url}
+            name={project.name}
+            industry={project.industry}
+            description={project.description}
+            large={true}
+          />
         ))}
       </div>
-
     </div>
   </section>
 
@@ -142,75 +102,3 @@ const projects = [
   </section>
 
 </BaseLayout>
-
-<style>
-  .preview-container {
-    height: 260px;
-  }
-</style>
-
-<script>
-  const IFRAME_WIDTH  = 1440;  // must match the width attribute on the iframes
-  const SCROLL_AMOUNT = 2400;  // original-px to scroll through on hover
-  const FWD_DURATION  = 9000;  // ms to reach bottom
-  const REV_DURATION  = 1000;  // ms to snap back on leave
-
-  document.querySelectorAll<HTMLElement>('[data-card]').forEach(card => {
-    const container = card.querySelector<HTMLElement>('[data-preview-container]')!;
-    const scaler    = card.querySelector<HTMLElement>('[data-scaler]')!;
-
-    let raf: number | null = null;
-    let currentY  = 0;   // current scroll offset in original px
-    let animFrom  = 0;
-    let animTo    = 0;
-    let animDur   = 0;
-    let animStart = 0;
-
-    function scale() {
-      return container.offsetWidth / IFRAME_WIDTH;
-    }
-
-    function paint() {
-      scaler.style.transform = `scale(${scale()}) translateY(${-currentY}px)`;
-    }
-
-    function easeInOut(t: number) {
-      return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    }
-
-    function easeOut(t: number) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-
-    function startAnim(from: number, to: number, dur: number, easeFn: (t: number) => number) {
-      if (raf) cancelAnimationFrame(raf);
-      animFrom  = from;
-      animTo    = to;
-      animDur   = dur;
-      animStart = 0;
-
-      function tick(ts: number) {
-        if (!animStart) animStart = ts;
-        const t     = Math.min((ts - animStart) / animDur, 1);
-        currentY    = animFrom + (animTo - animFrom) * easeFn(t);
-        paint();
-        if (t < 1) raf = requestAnimationFrame(tick);
-      }
-      raf = requestAnimationFrame(tick);
-    }
-
-    // Set initial scale without animation
-    paint();
-
-    card.addEventListener('mouseenter', () => {
-      startAnim(currentY, SCROLL_AMOUNT, FWD_DURATION, easeInOut);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      startAnim(currentY, 0, REV_DURATION, easeOut);
-    });
-
-    // Keep scale correct after resize
-    window.addEventListener('resize', paint, { passive: true });
-  });
-</script>
