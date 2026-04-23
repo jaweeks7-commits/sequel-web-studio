@@ -1,0 +1,53 @@
+---
+import { SITE_NAME, NAV_LINKS, CONTACT_EMAIL, SERVICE_AREA } from '../config/site';
+---
+
+<footer class="bg-brand-navy text-blue-100">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <!-- Brand -->
+      <div>
+        <p class="text-white font-bold text-lg mb-2">{SITE_NAME}</p>
+        <p class="text-sm text-blue-200 leading-relaxed">
+          Clean, fast websites for small businesses in {SERVICE_AREA}.
+        </p>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <p class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Navigation</p>
+        <ul class="space-y-2">
+          {NAV_LINKS.map(({ label, href }) => (
+            <li>
+              <a href={href} class="text-blue-200 hover:text-white text-sm transition-colors no-underline">
+                {label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="/privacy" class="text-blue-200 hover:text-white text-sm transition-colors no-underline">
+              Privacy Policy
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Contact</p>
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          class="text-brand-blue hover:text-blue-300 text-sm transition-colors no-underline"
+        >
+          {CONTACT_EMAIL}
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-blue-800 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-blue-300">
+      <p>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
+      <p>Serving {SERVICE_AREA}</p>
+    </div>
+  </div>
+</footer>

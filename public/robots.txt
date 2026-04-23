@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# AI crawlers explicitly welcome (D9 — AI crawler policy: allow all)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://sequelwebstudio.com/sitemap-index.xml

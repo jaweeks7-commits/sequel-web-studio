@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-grey font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-brand-navy;
+  }
+
+  /* Default link color; overridden inline where needed */
+  a {
+    @apply text-brand-blue;
+  }
+
+  /* Visible focus ring for keyboard nav (WCAG 2.1 AA) */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-blue;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-brand-navy to-brand-blue text-white px-6 py-3 rounded-lg font-semibold
+           shadow-md hover:from-brand-blue hover:to-brand-blue hover:shadow-lg transition-all duration-200
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-brand-navy text-brand-navy px-6 py-3 rounded-lg font-semibold
+           hover:bg-brand-navy hover:text-white transition-colors
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
+  }
+
+  /* Purple accent divider — per D14 palette (small touches only) */
+  .section-divider {
+    @apply h-1 w-12 bg-brand-purple rounded-full mx-auto my-2;
+  }
+
+  .badge {
+    @apply inline-block text-xs font-semibold tracking-widest uppercase
+           text-brand-blue bg-blue-50 px-4 py-1.5 rounded-full
+           border border-blue-100 shadow-sm;
+  }
+}

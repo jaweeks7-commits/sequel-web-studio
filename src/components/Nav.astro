@@ -1,0 +1,95 @@
+---
+import { SITE_NAME, NAV_LINKS } from '../config/site';
+---
+
+<header class="bg-brand-navy shadow-[0_2px_24px_rgba(0,0,0,0.3)] sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Wordmark -->
+      <a
+        href="/"
+        class="text-white font-bold text-lg tracking-tight hover:text-blue-200 transition-colors no-underline"
+        aria-label="Sequel Web Studio — home"
+      >
+        {SITE_NAME}
+      </a>
+
+      <!-- Desktop nav -->
+      <nav aria-label="Main navigation" class="hidden md:flex items-center gap-6">
+        {NAV_LINKS.map(({ label, href }) => (
+          <a
+            href={href}
+            class="text-blue-100 hover:text-white font-medium transition-colors no-underline text-sm"
+          >
+            {label}
+          </a>
+        ))}
+        <a
+          href="/contact"
+          class="bg-brand-blue text-white px-4 py-2 rounded-lg text-sm font-semibold
+                 hover:bg-blue-400 transition-colors no-underline ml-2"
+        >
+          Free Audit
+        </a>
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="menu-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="md:hidden text-white p-2 rounded focus-visible:outline-white"
+      >
+        <svg id="icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="icon-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <nav
+    id="mobile-menu"
+    class="hidden md:hidden bg-brand-navy border-t border-blue-800"
+    aria-label="Mobile navigation"
+  >
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+      {NAV_LINKS.map(({ label, href }) => (
+        <a
+          href={href}
+          class="text-blue-100 hover:text-white py-2 font-medium transition-colors no-underline"
+        >
+          {label}
+        </a>
+      ))}
+      <a
+        href="/contact"
+        class="mt-2 bg-brand-blue text-white text-center px-4 py-2 rounded-lg font-semibold
+               hover:bg-blue-400 transition-colors no-underline"
+      >
+        Free Audit
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle   = document.getElementById('menu-toggle')!;
+  const menu     = document.getElementById('mobile-menu')!;
+  const iconOpen  = document.getElementById('icon-open')!;
+  const iconClose = document.getElementById('icon-close')!;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = !menu.classList.contains('hidden');
+    menu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
+  });
+</script>

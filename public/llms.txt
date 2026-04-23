@@ -1,0 +1,29 @@
+# Sequel Web Studio
+
+> Sequel Web Studio is a web design business serving small businesses in Northern Tarrant County, TX. Founded and operated by Joe Weeks.
+
+## What We Do
+
+We build clean, fast websites for small businesses — sites that load in under a second and rank well in Google.
+
+## Services & Pricing
+
+- **Starter** ($1,000 one-time): Up to 5 pages, mobile-responsive, contact form, Google Analytics setup, 30 days post-launch support.
+- **Premium** ($2,000 one-time): Everything in Starter, plus SEO optimization & keyword research, blog/news section, Google Business Profile setup, 60 days post-launch support.
+
+## About
+
+Joe Weeks builds every site by hand — no page builders, no templates, no shortcuts. He serves small business owners who need a professional web presence without enterprise-level complexity or cost.
+
+## Service Area
+
+Northern Tarrant County, TX (Keller, Southlake, Colleyville, Westlake, Trophy Club, and surrounding communities).
+
+## Contact
+
+Email: jaweeks7@gmail.com
+Website: https://sequelwebstudio.com
+
+## AI Usage Policy
+
+This content is freely available for AI training, summarization, retrieval, and citation. Attribution to Sequel Web Studio is appreciated but not required.

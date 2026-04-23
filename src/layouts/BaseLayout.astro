@@ -1,0 +1,79 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { SITE_NAME, SITE_URL, LOCAL_BUSINESS_SCHEMA } from '../config/site';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Sequel Web Studio builds clean, fast websites for small businesses in Northern Tarrant County, TX — starting at $1,000.',
+} = Astro.props;
+
+const pageTitle   = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
+const canonicalUrl = `${SITE_URL}${Astro.url.pathname}`;
+const schema      = JSON.stringify(LOCAL_BUSINESS_SCHEMA);
+
+// These loaders are env-var-gated; they no-op when the vars are not yet set
+const ga4Id       = import.meta.env.PUBLIC_GA4_ID;
+const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{pageTitle}</title>
+
+    <!-- Favicon: "S" mark in brand navy (same as Coming Soon page) -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231F3864'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E"
+    />
+
+    <!-- Schema.org LocalBusiness JSON-LD (D8) -->
+    <script type="application/ld+json" set:html={schema} />
+
+    <!-- CookieYes: only loads when account is provisioned -->
+    {cookieYesId && (
+      <script
+        id="cookieyes"
+        type="text/javascript"
+        src={`https://cdn-cookieyes.com/client_data/${cookieYesId}/script.js`}
+      />
+    )}
+
+    <!-- GA4 with consent mode v2 — analytics_storage defaults to denied
+         until user opts in via CookieYes. Loads only when GA4 ID is set. -->
+    {ga4Id && (
+      <>
+        <script define:vars={{ ga4Id }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            wait_for_update: 500,
+          });
+          gtag('js', new Date());
+          gtag('config', ga4Id);
+        </script>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />
+      </>
+    )}
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT_EMAIL } from '../config/site';
+---
+
+<BaseLayout
+  title="About Joe Weeks — Sequel Web Studio"
+  description="Joe Weeks builds clean, fast websites for small businesses in Northern Tarrant County, TX. Learn about Sequel Web Studio."
+>
+
+  <!-- Hero -->
+  <section class="relative bg-gradient-to-br from-white via-brand-bg to-[#dce8f5] py-20 overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-brand-blue opacity-[0.07] blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10">
+      <span class="badge">About Joe</span>
+      <h1 class="mt-5 text-4xl md:text-5xl font-bold text-brand-navy leading-tight">
+        Hi, I'm Joe Weeks
+      </h1>
+      <p class="mt-5 text-xl text-brand-grey max-w-2xl mx-auto leading-relaxed">
+        Web developer. Northern Tarrant County local. I build fast, hand-crafted websites for small businesses that want to compete online without the big-agency price tag.
+      </p>
+    </div>
+  </section>
+
+  <div class="py-4"><div class="section-divider"></div></div>
+
+  <!-- Story -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-start gap-12">
+
+        <!-- Headshot -->
+        <div class="shrink-0 mx-auto md:mx-0">
+          <div class="p-1 rounded-full bg-gradient-to-br from-brand-blue to-brand-navy shadow-[0_12px_40px_rgba(31,56,100,0.25)]">
+            <img
+              src="/images/joe-headshot.png"
+              alt="Joe Weeks, owner of Sequel Web Studio"
+              class="w-48 h-48 rounded-full object-cover border-[3px] border-white"
+              width="192"
+              height="192"
+              loading="eager"
+            />
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="space-y-5 text-brand-grey leading-relaxed">
+          <h2 class="text-2xl font-bold text-brand-navy">Why I Started Sequel Web Studio</h2>
+          <p>
+            I kept seeing the same story play out for small businesses in Northern Tarrant County — a plumber, a salon, a landscaping crew — all doing great work but nearly invisible online. Their websites loaded slowly, didn't rank on Google, and looked like they were built a decade ago. Meanwhile, bigger competitors with bigger marketing budgets were scooping up every new customer.
+          </p>
+          <p>
+            I started Sequel Web Studio to close that gap. You shouldn't need a $10,000 agency retainer to have a website that actually works. Every site I build is hand-coded from scratch — no page builders, no drag-and-drop templates, no shortcuts that add bloat and slow things down. Just clean, fast code built to rank on Google and turn visitors into calls.
+          </p>
+          <p>
+            I keep my client list intentionally small. That means you work directly with me — not an account manager relaying messages to a developer you'll never meet. When you have a question, I pick up the phone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="py-4"><div class="section-divider"></div></div>
+
+  <!-- How I work -->
+  <section class="py-16 bg-gradient-to-b from-brand-bg to-white" aria-labelledby="approach-heading">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 id="approach-heading" class="text-3xl font-bold text-center text-brand-navy mb-12">How I Work</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)]">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mb-5 shadow-sm">
+            <svg class="w-6 h-6 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-brand-navy text-lg mb-2">Hand-coded, every time</h3>
+          <p class="text-brand-grey text-sm leading-relaxed">
+            No Wix, no WordPress, no page builders. Every site is written in clean code that's fast by default — not fast after you spend money on optimization plugins.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)]">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mb-5 shadow-sm">
+            <svg class="w-6 h-6 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-brand-navy text-lg mb-2">Direct communication</h3>
+          <p class="text-brand-grey text-sm leading-relaxed">
+            You'll have my phone number and email. No support tickets, no waiting for someone to relay your question to the actual developer. We talk, and I get it done.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white border border-gray-100/60 shadow-[0_4px_24px_rgba(31,56,100,0.06)]">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-[#dbeafe] rounded-full flex items-center justify-center mb-5 shadow-sm">
+            <svg class="w-6 h-6 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-brand-navy text-lg mb-2">Flat-rate pricing</h3>
+          <p class="text-brand-grey text-sm leading-relaxed">
+            The price is on the Services page. That's the price. No hourly billing creep, no surprise invoices at the end. You know what you're paying before we start.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative bg-gradient-to-br from-brand-navy via-[#1e3d7a] to-[#0F2247] py-16 overflow-hidden" aria-labelledby="about-cta-heading">
+    <div class="absolute top-0 right-0 w-80 h-80 rounded-full bg-brand-blue opacity-[0.10] blur-3xl pointer-events-none translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
+      <h2 id="about-cta-heading" class="text-3xl font-bold text-white mb-4">Ready to Work Together?</h2>
+      <p class="text-blue-200 mb-8 max-w-lg mx-auto">
+        Let's talk about your business and what you need from a website. No pitch, no pressure — just a straight conversation.
+      </p>
+      <a
+        href="/contact"
+        class="bg-brand-blue text-white px-10 py-4 rounded-lg text-lg font-semibold
+               shadow-lg hover:bg-blue-400 hover:shadow-xl transition-all duration-200 inline-block"
+      >
+        Get in Touch
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

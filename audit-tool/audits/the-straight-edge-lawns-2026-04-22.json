@@ -1,0 +1,138 @@
+{
+  "url": "https://thestraightedgelawns.com",
+  "businessName": "The Straight Edge Lawns",
+  "date": "2026-04-22",
+  "counts": {
+    "pass": 10,
+    "fail": 3,
+    "info": 5
+  },
+  "checks": [
+    {
+      "code": "A1",
+      "label": "Mobile viewport meta tag",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "Present: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+    },
+    {
+      "code": "A10",
+      "label": "Google Business Profile / Maps link",
+      "section": "Visible Opportunities",
+      "finding": "info",
+      "note": "No Google Maps or Business Profile link detected on the home page."
+    },
+    {
+      "code": "A11",
+      "label": "Analytics / tracking installed",
+      "section": "Visible Opportunities",
+      "finding": "fail",
+      "note": "No analytics tags detected — owner has no visibility into who visits."
+    },
+    {
+      "code": "A12",
+      "label": "Social media links",
+      "section": "Visible Opportunities",
+      "finding": "info",
+      "note": "No social media links detected on the home page."
+    },
+    {
+      "code": "A3",
+      "label": "Footer copyright year",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "Footer copyright current (2026)."
+    },
+    {
+      "code": "A4",
+      "label": "Images — alt text coverage",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "2 images, 100% have alt text."
+    },
+    {
+      "code": "A5",
+      "label": "Contact method on home page",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "Detected: form, mailto: link, tel: link."
+    },
+    {
+      "code": "A6",
+      "label": "HTTPS",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "Site serves over HTTPS."
+    },
+    {
+      "code": "A7",
+      "label": "Favicon",
+      "section": "Visible Opportunities",
+      "finding": "pass",
+      "note": "Favicon link tag present."
+    },
+    {
+      "code": "A8",
+      "label": "Page title & meta description",
+      "section": "Visible Opportunities",
+      "finding": "fail",
+      "note": "Issues: description length 182 (ideal 50-170). Title: \"The Straight Edge Lawns | Lawn Mowing in North Fort Worth, TX\"."
+    },
+    {
+      "code": "B1",
+      "label": "schema.org JSON-LD structured data",
+      "section": "AI-Era Foundation",
+      "finding": "pass",
+      "note": "Found 1 JSON-LD block(s). Types: LocalBusiness."
+    },
+    {
+      "code": "B2",
+      "label": "llms.txt (AI assistant context file)",
+      "section": "AI-Era Foundation",
+      "finding": "fail",
+      "note": "No llms.txt at /llms.txt. Business is not providing structured context to AI assistants — competitors who do will be preferred in AI answers."
+    },
+    {
+      "code": "B3",
+      "label": "robots.txt — AI crawler directives",
+      "section": "AI-Era Foundation",
+      "finding": "info",
+      "note": "robots.txt exists but does not mention any AI crawlers (GPTBot, ClaudeBot, Google-Extended, PerplexityBot). Owner has no explicit policy."
+    },
+    {
+      "code": "B4",
+      "label": "Open Graph & Twitter Card tags",
+      "section": "AI-Era Foundation",
+      "finding": "pass",
+      "note": "og: [type, url, title, description, image, locale, site_name] | twitter: [card, title, description, image]."
+    },
+    {
+      "code": "B5",
+      "label": "Core Web Vitals (mobile)",
+      "section": "AI-Era Foundation",
+      "finding": "info",
+      "note": "PageSpeed Insights fetch failed: status 429."
+    },
+    {
+      "code": "B6",
+      "label": "XML sitemap",
+      "section": "AI-Era Foundation",
+      "finding": "pass",
+      "note": "sitemap.xml found with 2 URL(s)."
+    },
+    {
+      "code": "B7",
+      "label": "Semantic HTML structure",
+      "section": "AI-Era Foundation",
+      "finding": "pass",
+      "note": "Uses: <main, <header, <footer, <nav, <article, <section."
+    },
+    {
+      "code": "B8",
+      "label": "AI assistant retrievability (summary)",
+      "section": "AI-Era Foundation",
+      "finding": "info",
+      "note": "3 of 5 AI-era signals pass (schema.org, llms.txt, robots AI directives, Open Graph, sitemap). The fewer signals, the less likely this business surfaces when customers ask an AI assistant."
+    }
+  ]
+}
