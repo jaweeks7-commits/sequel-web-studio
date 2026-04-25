@@ -1,6 +1,4 @@
-// Stub Netlify Function for the audit tool.
-// Phase 2 will replace the stub body with: Google PageSpeed Insights API call,
-// basic on-page SEO scraping, Google Sheets lead write, and a real result URL.
+import { getStore } from '@netlify/blobs';
 
 type LambdaEvent = {
   httpMethod: string;
@@ -33,7 +31,6 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     return { statusCode: 400, headers: JSON_CT, body: json({ error: 'URL is required' }) };
   }
 
-  // Normalize so new URL() can validate even if the caller omitted the protocol
   const normalized = /^https?:\/\//i.test(url) ? url : `https://${url}`;
   try {
     new URL(normalized);
@@ -41,7 +38,19 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     return { statusCode: 400, headers: JSON_CT, body: json({ error: 'Please enter a valid URL' }) };
   }
 
-  console.log(`[audit] Submission queued: ${normalized}`);
+  // Store submission in Netlify Blobs — picked up by the daily digest function
+  try {
+    const store = getStore('audit-leads');
+    await store.set(
+      `submission-${Date.now()}`,
+      JSON.stringify({ url: normalized, submittedAt: new Date().toISOString() }),
+    );
+  } catch (err) {
+    // Don't fail the visitor's request if storage is unavailable (e.g. local dev)
+    console.error('[audit] Blob storage failed:', err);
+  }
+
+  console.log(`[audit] Submission received: ${normalized}`);
 
   return {
     statusCode: 200,

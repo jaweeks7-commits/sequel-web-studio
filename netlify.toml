@@ -16,6 +16,10 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     X-XSS-Protection = "1; mode=block"
 
+# Run daily digest at 8 AM Central Time (14:00 UTC covers CST; shifts to 9 AM in CDT)
+[functions."daily-digest"]
+  schedule = "0 14 * * *"
+
 # Route /api/* calls to Netlify Functions (used for contact form, audit tool in Phase 2)
 [[redirects]]
   from   = "/api/*"
