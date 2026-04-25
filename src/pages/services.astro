@@ -1,22 +1,93 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_NAME, SITE_URL } from '../config/site';
+
+const offerSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type':    'ProfessionalService',
+  name:       SITE_NAME,
+  url:        SITE_URL,
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name:    'Web Design Services',
+    itemListElement: [
+      {
+        '@type':       'Offer',
+        name:          'Create New Site',
+        description:   'Complete website built from scratch — design, build, launch, and 30 days of post-launch support.',
+        price:         '1000',
+        priceCurrency: 'USD',
+        seller:        { '@type': 'ProfessionalService', name: SITE_NAME },
+      },
+      {
+        '@type':       'Offer',
+        name:          'Modernize Existing Site',
+        description:   'Full audit and rebuild of your existing website on a modern six-layer technical foundation.',
+        price:         '1000',
+        priceCurrency: 'USD',
+        seller:        { '@type': 'ProfessionalService', name: SITE_NAME },
+      },
+    ],
+  },
+});
+
+const faqSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: "What's included in the price?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Design, build, launch, and the full technical foundation — schema markup, sitemap, analytics setup, contact form, and 30 days of post-launch support.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What about hosting?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We handle hosting for $20/month. That covers your server, SSL certificate, and uptime monitoring — no setup required on your end.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How long does it take?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Most sites launch in 2–3 weeks, depending on how quickly content is available.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you do ongoing updates?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Future support is available at a rate of $60/hour with a half-hour minimum.',
+      },
+    },
+  ],
+});
 ---
 
 <BaseLayout
   title="Web Design Services — Sequel Web Studio"
-  description="Flat-rate web design packages for small businesses in Northern Tarrant County, TX. Starter at $1,000. Premium at $2,000. No surprises."
+  description="Two paths, one price. Sequel Web Studio builds custom websites for small businesses — new sites and modernizations starting at $1,000."
 >
+  <script type="application/ld+json" set:html={offerSchema} slot="head" />
+  <script type="application/ld+json" set:html={faqSchema} slot="head" />
 
   <!-- ── HERO ── -->
-  <section style="background: #0F1F3D; padding: 140px 32px 80px; text-align: center; position: relative; overflow: hidden;">
+  <section style="background: #0F1F3D; padding: 140px 32px 136px; text-align: center; position: relative; overflow: hidden;">
     <div class="dot-grid" style="position: absolute; inset: 0;"></div>
     <div style="position: relative; z-index: 1; max-width: 680px; margin: 0 auto;">
       <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Services &amp; Pricing</span>
       <h1 style="font-size: clamp(36px, 5vw, 64px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 16px;">
-        Clean, fast websites.<br /><span class="grad-text">One-time price.</span>
+        Beautiful, performant websites.<br /><span class="grad-text">One-time build price.</span>
       </h1>
       <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto;">
-        No subscriptions. No retainers. Pay once and own your site outright.
+        One flat fee to design, build, and launch. Then $20/month for hosting.
       </p>
     </div>
     <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
@@ -24,68 +95,178 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </svg>
   </section>
 
-  <!-- ── PRICING + FAQ ── -->
-  <section style="padding: 80px 32px 96px; background: #F4F6FB;">
-    <div style="max-width: 900px; margin: 0 auto;">
-
-      <!-- Pricing cards -->
-      <div style="display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; align-items: stretch; margin-bottom: 72px;">
-        {[
-          {
-            name: 'Starter', price: '$1,000', tag: 'One-time fee',
-            desc: 'Perfect for new businesses that need a professional web presence fast.',
-            features: ['Up to 5 pages', 'Mobile-responsive design', 'Contact form with email delivery', 'Google Analytics setup', 'Schema.org local business markup', '30 days post-launch support'],
-            cta: 'Get Started', featured: false,
-          },
-          {
-            name: 'Premium', price: '$2,000', tag: 'One-time fee',
-            desc: 'For businesses serious about ranking on Google and growing leads over time.',
-            features: ['Everything in Starter', 'SEO optimization & keyword research', 'Blog or news section', 'Google Business Profile setup', 'Open Graph images for social', '60 days post-launch support'],
-            cta: 'Start with Premium', featured: true,
-          },
-        ].map((plan, i) => (
-          <div
-            class={`reveal reveal-delay-${i + 1} hover-card`}
-            style={`flex: 1 1 300px; max-width: 400px; background: ${plan.featured ? '#0F1F3D' : 'white'}; border-radius: 20px; padding: 40px 36px; box-shadow: ${plan.featured ? '0 20px 56px rgba(15,31,61,0.28)' : '0 8px 32px rgba(15,31,61,0.08)'}; border: ${plan.featured ? 'none' : '1px solid #e4eaf5'}; position: relative;`}
-          >
-            {plan.featured && (
-              <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 9999px; white-space: nowrap;">Most Popular</div>
-            )}
-            <div style={`font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: ${plan.featured ? '#4B9FD4' : '#2E75B6'}; margin-bottom: 12px;`}>{plan.name}</div>
-            <div style={`font-size: 52px; font-weight: 700; color: ${plan.featured ? 'white' : '#0F1F3D'}; letter-spacing: -2px; line-height: 1;`}>{plan.price}</div>
-            <div style={`font-size: 13px; color: ${plan.featured ? 'rgba(255,255,255,0.35)' : '#999'}; margin: 4px 0 16px;`}>{plan.tag}</div>
-            <p style={`font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.55)' : '#595959'}; line-height: 1.6; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid ${plan.featured ? 'rgba(255,255,255,0.1)' : '#e4eaf5'};`}>{plan.desc}</p>
-            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
-              {plan.features.map(f => (
-                <li style={`display: flex; gap: 10px; font-size: 14px; color: ${plan.featured ? 'rgba(255,255,255,0.7)' : '#595959'}; line-height: 1.4; align-items: flex-start;`}>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink: 0; margin-top: 2px;">
-                    <circle cx="8" cy="8" r="7" fill={plan.featured ? 'rgba(75,159,212,0.2)' : 'rgba(46,117,182,0.1)'} />
-                    <path d="M5 8l2 2 4-4" stroke={plan.featured ? '#4B9FD4' : '#2E75B6'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <a
-              href="/contact"
-              style={`display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; background: ${plan.featured ? 'linear-gradient(135deg,#2E75B6,#8E44AD)' : 'transparent'}; color: ${plan.featured ? 'white' : '#1F3864'}; border: ${plan.featured ? 'none' : '2px solid #1F3864'}; box-shadow: ${plan.featured ? '0 8px 24px rgba(46,117,182,0.35)' : 'none'};`}
-            >
-              {plan.cta}
-            </a>
-          </div>
-        ))}
+  <!-- ── TWO PATHS ── -->
+  <section style="padding: 96px 0; background: #F4F6FB;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">How We Work</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          Two paths. Same price. A website that gets found either way.
+        </h2>
+        <p style="font-size: 16px; color: #595959; line-height: 1.7;">
+          Whether you're starting from nothing or starting from a site that's gone stale, we handle the build, the launch, and the ongoing care. You don't need to know HTML, hire a freelancer, or manage a designer. Tell us what your business does — we do the rest.
+        </p>
       </div>
 
-      <!-- FAQ -->
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: stretch;">
+
+        <!-- Card A: New Site (light) -->
+        <div class="reveal reveal-delay-1 hover-card" style="flex: 1 1 320px; max-width: 480px; background: white; border-radius: 20px; padding: 40px 36px; box-shadow: 0 8px 32px rgba(15,31,61,0.1); border: 2px solid #b8cce0;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Starting fresh</div>
+          <div style="font-size: 26px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
+          <p style="font-size: 14px; color: #595959; line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">
+            For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile — but not a real website.
+          </p>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
+            {[
+              'Homepage, services, about, contact, privacy, and 404 — designed from scratch to match your brand',
+              'Every page built on our six-layer modern foundation',
+              'Full setup: domain, hosting, SSL, email forwarding',
+              'Launch + 30 days of post-launch support',
+            ].map(f => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.45; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
+                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 20px; padding-top: 4px;">
+            Starting at $1,000
+            <span style="font-size: 13px; font-weight: 400; color: #999;"> · Hosting $20/month</span>
+          </div>
+          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: #1F3864; border: 2px solid #1F3864; background: transparent;">
+            Talk About a New Site
+          </a>
+        </div>
+
+        <!-- Card B: Modernize (dark featured) -->
+        <div class="reveal reveal-delay-2 hover-card" style="flex: 1 1 320px; max-width: 480px; background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28);">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Existing site</div>
+          <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Modernize Existing</div>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            For businesses whose current website is five-plus years old, hosted on a dated template, or invisible to AI assistants and voice search.
+          </p>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
+            {[
+              "Full audit of your current site — what's working, what's broken, what's invisible",
+              'Your content preserved and restructured so AI can actually read it',
+              'Rebuild on the same six-layer foundation as a new site',
+              'Launch on your existing domain — your URLs, your SEO, no lost traffic',
+            ].map(f => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.45; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
+                  <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <div style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 20px; padding-top: 4px;">
+            Starting at $1,000
+            <span style="font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.35);"> · Hosting $20/month</span>
+          </div>
+          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: white; background: linear-gradient(135deg, #2E75B6, #8E44AD); box-shadow: 0 8px 24px rgba(46,117,182,0.35);">
+            Start With a Free Audit
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section style="padding: 96px 0; background: white;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 980px; margin-bottom: 56px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">Pricing</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          One price to start. No surprises.
+        </h2>
+        <p style="font-size: 16px; color: #595959; line-height: 1.7;">
+          Most small-business websites start at $1,000 flat — including design, build, launch, and the full technical foundation. Hosting is $20/month. If your business needs something beyond the standard build — additional pages, a custom integration — we quote those separately, up front, in plain English.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; align-items: stretch;">
+
+        <!-- New Site card -->
+        <div class="reveal reveal-delay-1 hover-card" style="flex: 1 1 380px; max-width: 480px; background: white; border-radius: 20px; padding: 40px 36px; border: 2px solid #b8cce0; box-shadow: 0 8px 32px rgba(15,31,61,0.1);">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Create New Site</div>
+          <div style="font-size: 52px; font-weight: 700; color: #0F1F3D; letter-spacing: -2px; line-height: 1;">$1,000</div>
+          <div style="font-size: 13px; color: #999; margin-top: 4px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Starting price · one-time fee</div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+            {[
+              'Complete site built from scratch',
+              'All six technical layers included',
+              'Domain setup, SSL, launch',
+              '30 days of post-launch support',
+              '$20/month hosting after launch',
+              'Future support: $60/hr, half-hour minimum',
+            ].map(f => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.4; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
+                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: #1F3864; border: 2px solid #1F3864; background: transparent;">
+            Let's Talk About a New Site
+          </a>
+        </div>
+
+        <!-- Modernize card -->
+        <div class="reveal reveal-delay-2 hover-card" style="flex: 1 1 380px; max-width: 480px; background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.25); position: relative;">
+          <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 9999px; white-space: nowrap;">Most Popular</div>
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Modernize Existing</div>
+          <div style="font-size: 52px; font-weight: 700; color: white; letter-spacing: -2px; line-height: 1;">$1,000</div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">Starting price · one-time fee</div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+            {[
+              'Full audit of your current site',
+              'Content preserved and restructured',
+              'Rebuild on the same six-layer foundation',
+              'Launch on your existing domain — no lost SEO',
+              '30 days of post-launch support',
+              '$20/month hosting after launch',
+              'Future support: $60/hr, half-hour minimum',
+            ].map(f => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.4; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
+                  <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: white; background: linear-gradient(135deg, #2E75B6, #8E44AD); box-shadow: 0 8px 24px rgba(46,117,182,0.35);">
+            Start With a Free Audit
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section style="padding: 80px 32px 96px; background: #F4F6FB;">
+    <div style="max-width: 900px; margin: 0 auto;">
       <div class="reveal">
         <h2 style="font-size: 28px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 8px; text-align: center;">Common Questions</h2>
         <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin: 0 auto 36px;"></div>
         <div class="faq-grid">
           {[
-            ['Do I own my website?', 'Yes — completely. When the project is done, the site and all its files are yours. No platform lock-in.'],
-            ['What about hosting?', "We recommend Netlify (free tier covers most small business sites). We'll help you get set up."],
-            ['How long does it take?', 'Starter sites typically launch in 2–3 weeks. Premium in 3–5 weeks, depending on content availability.'],
-            ['Do you do ongoing updates?', "Support windows are included (30 or 60 days). After that, we offer update packages — or teach you to make small edits yourself."],
+            ["What's included in the price?", 'Design, build, launch, and the full technical foundation — schema markup, sitemap, analytics setup, contact form, and 30 days of post-launch support.'],
+            ['What about hosting?', 'We handle hosting for $20/month. That covers your server, SSL certificate, and uptime monitoring — no setup required on your end.'],
+            ['How long does it take?', 'Most sites launch in 2–3 weeks, depending on how quickly content is available.'],
+            ['Do you do ongoing updates?', 'Future support is available at a rate of $60/hour with a half-hour minimum.'],
           ].map(([q, a]) => (
             <div style="background: white; border-radius: 14px; padding: 22px 24px; border: 1px solid #e4eaf5;">
               <div style="font-size: 15px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">{q}</div>

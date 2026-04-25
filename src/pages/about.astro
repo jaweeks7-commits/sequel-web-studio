@@ -1,33 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { CONTACT_EMAIL } from '../config/site';
+import { SITE_NAME, SITE_URL, CONTACT_EMAIL } from '../config/site';
+
+const personSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type':    'Person',
+  name:       'Joe Weeks',
+  jobTitle:   'Founder',
+  url:        `${SITE_URL}/about`,
+  email:      CONTACT_EMAIL,
+  worksFor: {
+    '@type': 'ProfessionalService',
+    name:    SITE_NAME,
+    url:     SITE_URL,
+  },
+});
 ---
 
 <BaseLayout
-  title="About Joe Weeks — Sequel Web Studio"
-  description="Joe Weeks builds hand-crafted websites for small businesses in Northern Tarrant County, TX. Learn about Sequel Web Studio."
+  title="About — Sequel Web Studio"
+  description="Sequel Web Studio builds custom-coded websites for small businesses across the US. Learn about how we work."
 >
+  <script type="application/ld+json" set:html={personSchema} slot="head" />
 
   <!-- ── HERO ── -->
-  <section style="background: #0F1F3D; padding: 140px 32px 96px; position: relative; overflow: hidden;">
+  <section style="background: #0F1F3D; padding: 140px 32px 152px; position: relative; overflow: hidden;">
     <div class="dot-grid" style="position: absolute; inset: 0;"></div>
     <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto;">
       <div class="hero-grid">
         <!-- Copy -->
         <div>
-          <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">About Joe</span>
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">About Us</span>
           <h1 style="font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 20px;">
-            One developer.<br /><span class="grad-text">Every project.</span>
+            Built different.<br /><span class="grad-text">By design.</span>
           </h1>
           <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin-bottom: 24px;"></div>
           <p style="font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 14px;">
-            When you hire Sequel Web Studio, you work directly with Joe Weeks — not an account manager, not an outsourced team. Joe writes every line of code and handles every conversation himself.
+            When you hire Sequel Web Studio, you work directly with our team — not an account manager, not an outsourced developer. We handle every conversation ourselves.
           </p>
           <p style="font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 36px;">
-            He serves small business owners across the DFW area who need a real web presence — not a template from a page builder.
+            We serve small business owners across the US who need a real web presence — not a template from a page builder.
           </p>
           <a href="/contact" style="background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; padding: 13px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 8px 24px rgba(46,117,182,0.4);">
-            Work with Joe →
+            Work with us →
           </a>
         </div>
 
@@ -36,7 +51,7 @@ import { CONTACT_EMAIL } from '../config/site';
           <div style="position: absolute; inset: -20px; background: linear-gradient(135deg, rgba(46,117,182,0.15), rgba(142,68,173,0.15)); border-radius: 32px; transform: rotate(-2deg);"></div>
           <img
             src="/images/joe-headshot.png"
-            alt="Joe Weeks, owner of Sequel Web Studio"
+            alt="Joe Weeks, founder of Sequel Web Studio"
             style="position: relative; width: 100%; border-radius: 24px; display: block; box-shadow: 0 32px 80px rgba(0,0,0,0.4);"
             loading="eager"
           />
@@ -49,7 +64,7 @@ import { CONTACT_EMAIL } from '../config/site';
   </section>
 
   <!-- ── VALUES ── -->
-  <section style="padding: 80px 32px; background: white;">
+  <section style="padding: 48px 32px 80px; background: white;">
     <div style="max-width: 1000px; margin: 0 auto;">
       <div class="reveal" style="text-align: center; margin-bottom: 48px;">
         <h2 style="font-size: 32px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px;">The Sequel way.</h2>
@@ -58,9 +73,9 @@ import { CONTACT_EMAIL } from '../config/site';
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
         {[
           ['Transparency first', "You'll always know what you're getting, how much it costs, and when it'll be done."],
-          ['Fast by default', "Performance isn't an afterthought. Every site targets 95+ on Lighthouse before it ships."],
-          ['Local, not remote', "Joe is based in Northern Tarrant County. You can meet in person, call, or text — your choice."],
-          ['You own everything', "When the project ships, the code and all assets are yours. No platform lock-in, ever."],
+          ['Performance-centric', "Performance isn't an afterthought. Every site targets 95+ on Lighthouse before it ships."],
+          ['Always direct', "You work with our team directly — not an account manager, outsourced developer, or offshore firm. Call, text, or email."],
+          ['No surprises', "One flat price covers design, build, and launch. Hosting is $20/month. If anything extra is needed, we quote it up front in plain English."],
         ].map(([title, desc], i) => (
           <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #F4F6FB; border-radius: 14px; padding: 24px; border: 1px solid #e4eaf5; box-shadow: 0 4px 16px rgba(15,31,61,0.06);">
             <div style="height: 3px; width: 32px; background: #8E44AD; border-radius: 9999px; margin-bottom: 14px;"></div>
@@ -77,7 +92,7 @@ import { CONTACT_EMAIL } from '../config/site';
 <style>
   .hero-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.8fr 1fr;
     gap: 72px;
     align-items: center;
   }

@@ -1,15 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { CONTACT_EMAIL } from '../config/site';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '../config/site';
+
+const contactSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type':    'ContactPage',
+  name:       `Contact ${SITE_NAME}`,
+  description: 'Get in touch with Sequel Web Studio for custom website design for small businesses across the US.',
+  url:        `${SITE_URL}/contact`,
+  mainEntity: {
+    '@type':     'ProfessionalService',
+    name:        SITE_NAME,
+    email:       CONTACT_EMAIL,
+    url:         SITE_URL,
+  },
+});
 ---
 
 <BaseLayout
   title="Contact — Sequel Web Studio"
-  description="Start your web design project with Sequel Web Studio. Joe Weeks serves small businesses in Northern Tarrant County, TX."
+  description="Start your web design project with Sequel Web Studio. We serve small businesses across the US."
 >
+  <script type="application/ld+json" set:html={contactSchema} slot="head" />
 
   <!-- ── HERO ── -->
-  <section style="background: #0F1F3D; padding: 140px 32px 80px; text-align: center; position: relative; overflow: hidden;">
+  <section style="background: #0F1F3D; padding: 140px 32px 136px; text-align: center; position: relative; overflow: hidden;">
     <div class="dot-grid" style="position: absolute; inset: 0;"></div>
     <div style="position: relative; z-index: 1;">
       <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Get in Touch</span>
@@ -17,7 +32,7 @@ import { CONTACT_EMAIL } from '../config/site';
         Let's build something <span class="grad-text">great.</span>
       </h1>
       <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto;">
-        Joe replies within one business day — usually sooner.
+        We reply within one business day — usually sooner.
       </p>
     </div>
     <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
@@ -42,7 +57,7 @@ import { CONTACT_EMAIL } from '../config/site';
           <h2 style="font-size: 28px; font-weight: 700; color: #0F1F3D; text-align: center; margin-bottom: 8px;">Message sent!</h2>
           <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin: 0 auto 20px;"></div>
           <p style="font-size: 15px; color: #595959; line-height: 1.7; text-align: center;">
-            Thanks for reaching out. Joe will reply within one business day.
+            Thanks for reaching out. We'll reply within one business day.
           </p>
         </div>
 
@@ -82,6 +97,33 @@ import { CONTACT_EMAIL } from '../config/site';
             </div>
           </div>
 
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="platform" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">What platform is your website on? <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <select id="platform" name="platform" class="form-input">
+                <option value="" disabled selected>Select a platform…</option>
+                <option>Wix</option>
+                <option>Squarespace</option>
+                <option>WordPress</option>
+                <option>Shopify</option>
+                <option>Custom / HTML</option>
+                <option>I don't know</option>
+                <option>I don't have a website</option>
+              </select>
+            </div>
+            <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="site-age" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">How old is your website? <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <select id="site-age" name="site-age" class="form-input">
+                <option value="" disabled selected>Select an age…</option>
+                <option>Less than 1 year</option>
+                <option>1–3 years</option>
+                <option>3–5 years</option>
+                <option>5+ years</option>
+                <option>Not sure</option>
+              </select>
+            </div>
+          </div>
+
           <div style="display: flex; flex-direction: column; gap: 6px;">
             <label for="message" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">What do you need? <span style="color: #DC2626;" aria-label="required">*</span></label>
             <textarea id="message" name="message" required rows="5" placeholder="Tell us about your business, what you're looking for, and any questions you have…" class="form-input" style="resize: vertical;"></textarea>
@@ -91,7 +133,7 @@ import { CONTACT_EMAIL } from '../config/site';
             Send Message →
           </button>
           <p style="font-size: 12px; color: #999; text-align: center; margin-top: -8px;">
-            No spam. Joe will reply by email within one business day.
+            No spam. We'll reply by email within one business day.
           </p>
         </form>
       </div>
@@ -99,12 +141,8 @@ import { CONTACT_EMAIL } from '../config/site';
       <!-- Sidebar -->
       <div class="reveal reveal-delay-2 contact-sidebar">
         <div class="info-card">
-          <div class="info-card-label">Direct contact</div>
-          <a href={`mailto:${CONTACT_EMAIL}`} style="font-size: 15px; font-weight: 600; color: #2E75B6; text-decoration: none;">{CONTACT_EMAIL}</a>
-        </div>
-        <div class="info-card">
           <div class="info-card-label">Service area</div>
-          <span style="font-size: 14px; color: #595959; line-height: 1.6;">Keller · Southlake · Colleyville · Westlake · Trophy Club and surrounding communities.</span>
+          <span style="font-size: 14px; color: #595959; line-height: 1.6;">Anywhere in the US. Everything is handled remotely — no in-person meeting required.</span>
         </div>
         <div class="info-card">
           <div class="info-card-label">Response time</div>
@@ -114,7 +152,7 @@ import { CONTACT_EMAIL } from '../config/site';
           <div class="info-card-label" style="color: rgba(255,255,255,0.4);">Not ready yet?</div>
           <div style="font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 14px;">Start with a free audit of your current site and see exactly what needs fixing.</div>
           <a href="/contact" style="display: inline-block; background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;">
-            Tell Joe about your site
+            Tell us about your site
           </a>
         </div>
       </div>
@@ -140,6 +178,12 @@ import { CONTACT_EMAIL } from '../config/site';
     border-color: #2E75B6;
     box-shadow: 0 0 0 3px rgba(46,117,182,0.12);
   }
+  select.form-input {
+    cursor: pointer;
+    appearance: auto;
+    color: #595959;
+  }
+  select.form-input option[value=""] { color: #8892A0; }
   .info-card {
     background: white;
     border-radius: 14px;

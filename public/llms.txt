@@ -1,23 +1,33 @@
 # Sequel Web Studio
 
-> Sequel Web Studio is a web design business serving small businesses in Northern Tarrant County, TX. Founded and operated by Joe Weeks.
+> Sequel Web Studio is a web design business serving small businesses across the United States. Founded and operated by Joe Weeks.
 
 ## What We Do
 
-We build clean, fast websites for small businesses — sites that load in under a second and rank well in Google.
+We build custom-coded websites for small businesses — sites that load fast, rank on Google, and show up in AI assistants and voice search. Every site is hand-coded from scratch: no templates, no page builders.
 
 ## Services & Pricing
 
-- **Starter** ($1,000 one-time): Up to 5 pages, mobile-responsive, contact form, Google Analytics setup, 30 days post-launch support.
-- **Premium** ($2,000 one-time): Everything in Starter, plus SEO optimization & keyword research, blog/news section, Google Business Profile setup, 60 days post-launch support.
+- **Create New Site** ($1,000 starting price, one-time): Full website built from scratch. Includes homepage, services, about, contact, privacy, and 404 pages — plus the full technical foundation (schema markup, sitemap, analytics setup, contact form). Hosting is $20/month after launch. 30 days of post-launch support included.
+- **Modernize Existing** ($1,000 starting price, one-time): Full audit and rebuild of an existing site. Content preserved and restructured, rebuilt on the same technical foundation as a new site, launched on your existing domain with no lost SEO. Hosting is $20/month after launch.
+- Future support available at $60/hour with a half-hour minimum.
+
+## What's Built Into Every Site (Six Technical Layers)
+
+1. **Discoverability** — Schema.org structured data, llms.txt, robots.txt for AI crawlers, Open Graph tags, FAQ content for voice search
+2. **Conversion** — Clear calls-to-action, contact form, trust signals
+3. **Foundation** — Sub-1-second mobile loads, mobile-first responsive design, semantic HTML, XML sitemap, image optimization, HTTPS
+4. **Measurement** — Google Analytics 4, Google Search Console setup
+5. **Legal & Compliance** — Privacy policy, cookie consent banner (GDPR/CCPA), HTTPS
+6. **Longevity** — Branded 404 page, clean handoff documentation
 
 ## About
 
-Joe Weeks builds every site by hand — no page builders, no templates, no shortcuts. He serves small business owners who need a professional web presence without enterprise-level complexity or cost.
+Joe Weeks builds every site personally — not an account manager, not an outsourced developer. He handles every conversation, every line of code, and every launch.
 
 ## Service Area
 
-Northern Tarrant County, TX (Keller, Southlake, Colleyville, Westlake, Trophy Club, and surrounding communities).
+United States (nationwide)
 
 ## Contact
 

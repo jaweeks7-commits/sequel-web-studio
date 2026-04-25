@@ -7,6 +7,15 @@
   NODE_VERSION = "22"
   NPM_FLAGS    = "--legacy-peer-deps"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-XSS-Protection = "1; mode=block"
+
 # Route /api/* calls to Netlify Functions (used for contact form, audit tool in Phase 2)
 [[redirects]]
   from   = "/api/*"

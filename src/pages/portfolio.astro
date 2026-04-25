@@ -1,104 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PreviewCard from '../components/PreviewCard.astro';
-
-const projects = [
-  {
-    url: 'https://greekcafekeller.com',
-    name: 'Greek Cafe',
-    industry: 'Restaurant',
-    description: 'Menu, hours, and location for a local Greek café — built to rank for "Greek food near me" and show up in voice and AI searches.',
-  },
-  {
-    url: 'https://thestraightedgelawns.com',
-    name: 'Lawn Services',
-    industry: 'Lawn & Landscape',
-    description: 'Service-area-focused site for a lawn care company — clear pricing, service details, and a contact form designed to convert visitors into booked jobs.',
-  },
-  {
-    url: 'https://proposedwebsite.com',
-    name: 'Thai Restaurant',
-    industry: 'Restaurant',
-    description: 'Clean, image-forward site for a Thai restaurant — menu presentation, hours, and a Google Maps presence optimized for local search.',
-  },
-  {
-    url: 'https://cocreator.dev',
-    name: 'Donut Shop',
-    industry: 'Bakery & Café',
-    description: 'Bright, fast-loading site for a local donut shop — daily specials, hours, and a location page built to capture foot traffic from search.',
-  },
-  {
-    url: 'https://cocreator.work',
-    name: 'Garage Epoxy Floors',
-    industry: 'Home Services',
-    description: 'Specialty contractor site with before/after framing, service options, and a quote request form — built for homeowners actively comparing vendors.',
-  },
-  {
-    url: 'https://co-creating.live',
-    name: 'Sod Laying',
-    industry: 'Lawn & Landscape',
-    description: 'Lead-generation site for a sod installation service — service area, project types, and a direct path to a free estimate.',
-  },
-];
+import { PORTFOLIO } from '../data/portfolio';
 ---
 
 <BaseLayout
   title="Portfolio — Sequel Web Studio"
-  description="Hand-coded websites built by Sequel Web Studio for small businesses in Northern Tarrant County, TX. Every site is fast, clean, and built to rank."
+  description="Custom-coded websites built by Sequel Web Studio for small businesses across the US. Every site is fast, clean, and built to rank."
 >
 
-  <!-- Hero -->
-  <section class="relative bg-gradient-to-br from-white via-brand-bg to-[#dce8f5] py-20 overflow-hidden">
-    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-brand-blue opacity-[0.07] blur-3xl pointer-events-none" aria-hidden="true"></div>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10">
-      <span class="badge">Our Work</span>
-      <h1 class="mt-5 text-4xl md:text-5xl font-bold text-brand-navy leading-tight">
-        Sites Built by Sequel Web Studio
+  <!-- ── HERO ── -->
+  <section style="background: #0F1F3D; padding: 140px 32px 136px; text-align: center; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: relative; z-index: 1;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Our Work</span>
+      <h1 style="font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 16px;">
+        Sites built by <span class="grad-text">Sequel Web Studio.</span>
       </h1>
-      <p class="mt-6 text-xl text-brand-grey max-w-2xl mx-auto leading-relaxed">
-        Every site is hand-coded from scratch — no templates, no page builders. Hover any card to scroll through the full site.
+      <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto;">
+        Every site is custom-coded from scratch — no templates, no page builders.
       </p>
+    </div>
+    <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="#F4F6FB" />
+    </svg>
+  </section>
+
+  <!-- ── GRID ── -->
+  <section style="padding: 72px 32px 96px; background: #F4F6FB;">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px;">
+      {PORTFOLIO.map((site, i) => (
+        <a
+          href={site.href}
+          target={site.external ? '_blank' : undefined}
+          rel={site.external ? 'noopener noreferrer' : undefined}
+          class={`reveal reveal-delay-${(i % 3) + 1} hover-card portfolio-card`}
+          style="background: white; border-radius: 16px; border: 1px solid #e4eaf5; box-shadow: 0 4px 20px rgba(15,31,61,0.07); overflow: hidden; text-decoration: none; display: block;"
+        >
+          <div class="portfolio-screenshot">
+            <img src={site.img} alt={`${site.name} ${site.tag.toLowerCase()} website built by Sequel Web Studio`} class="portfolio-img" loading="lazy" />
+          </div>
+          <div style="padding: 18px 20px;">
+            <div style="font-size: 11px; font-weight: 600; color: #2E75B6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">{site.tag}</div>
+            <div style="font-size: 16px; font-weight: 700; color: #0F1F3D; margin-bottom: 6px;">{site.url}</div>
+            <div style="font-size: 13px; color: #595959; line-height: 1.6;">{site.description}</div>
+          </div>
+        </a>
+      ))}
     </div>
   </section>
 
-  <!-- Project grid -->
-  <section class="py-16 bg-white" aria-labelledby="projects-heading">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="projects-heading" class="sr-only">All projects</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projects.map(project => (
-          <PreviewCard
-            url={project.url}
-            name={project.name}
-            industry={project.industry}
-            description={project.description}
-            large={true}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="relative bg-gradient-to-br from-brand-navy via-[#1e3d7a] to-[#0F2247] py-20 overflow-hidden" aria-labelledby="portfolio-cta-heading">
-    <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-brand-blue opacity-[0.12] blur-3xl pointer-events-none translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
-    <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-brand-purple opacity-[0.08] blur-3xl pointer-events-none -translate-x-1/2 translate-y-1/2" aria-hidden="true"></div>
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
-      <h2 id="portfolio-cta-heading" class="text-3xl md:text-4xl font-bold text-white mb-5">
-        Want a Site Like These?
-      </h2>
-      <p class="text-blue-200 text-lg mb-10 max-w-xl mx-auto">
-        Get a free audit of your current site — or tell me about your business and I'll show you what's possible.
-      </p>
-      <a
-        href="/contact"
-        class="bg-brand-blue text-white px-10 py-4 rounded-lg text-lg font-semibold
-               shadow-lg hover:bg-blue-400 hover:shadow-xl transition-all duration-200 inline-block"
-      >
-        Get a Free Audit
-      </a>
-    </div>
+  <!-- ── CTA ── -->
+  <section style="background: linear-gradient(135deg, #1F3864 0%, #2E75B6 60%, #8E44AD 100%); padding: 80px 32px; text-align: center;">
+    <h2 style="font-size: 32px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 16px;">Want a site like these?</h2>
+    <p style="font-size: 16px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto 32px;">
+      Get a free audit of your current site — or tell us about your business and we'll show you what's possible.
+    </p>
+    <a href="/contact" style="background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 13px 32px; border-radius: 10px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 8px 24px rgba(46,117,182,0.4);">
+      Get in touch →
+    </a>
   </section>
 
 </BaseLayout>
+
+<style>
+  .portfolio-screenshot {
+    height: 220px;
+    overflow: hidden;
+    background: #0F1F3D;
+  }
+  .portfolio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .portfolio-card:hover .portfolio-img {
+    transform: scale(1.04) translateY(-2%);
+  }
+</style>

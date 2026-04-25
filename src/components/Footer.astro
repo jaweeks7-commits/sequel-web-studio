@@ -7,11 +7,20 @@ import { SITE_NAME, NAV_LINKS, CONTACT_EMAIL } from '../config/site';
 
     <!-- Brand -->
     <div>
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #1F3864, #2E75B6); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 17px; font-family: Georgia, serif; flex-shrink: 0;">S</div>
-        <span style="font-size: 15px; font-weight: 700; color: white;">{SITE_NAME}</span>
+      <div style="margin-bottom: 12px;">
+        <svg viewBox="0 0 260 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 40px; width: auto; flex-shrink: 0;" aria-hidden="true">
+          <defs>
+            <linearGradient id="gmark-foot" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1F3864" />
+              <stop offset="100%" stop-color="#2E75B6" />
+            </linearGradient>
+          </defs>
+          <polygon points="4,6 44,28 4,50" fill="url(#gmark-foot)" />
+          <text x="9" y="35" font-family="Georgia, serif" font-size="22" font-weight="700" fill="white">S</text>
+          <text x="50" y="33" font-family="'Space Grotesk', sans-serif" font-size="19" font-weight="700" fill="white" letter-spacing="-0.3">{SITE_NAME}</text>
+        </svg>
       </div>
-      <div style="font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.5px;">Northern Tarrant County, TX</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.5px;">Serving small businesses nationwide</div>
     </div>
 
     <!-- Navigation -->
@@ -28,7 +37,7 @@ import { SITE_NAME, NAV_LINKS, CONTACT_EMAIL } from '../config/site';
 
     <!-- Contact -->
     <div>
-      <a href={`mailto:${CONTACT_EMAIL}`} style="color: #2E75B6; font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px; text-decoration: none;">
+      <a href={`mailto:${CONTACT_EMAIL}`} style="color: rgba(255,255,255,0.5); font-size: 13px; text-decoration: none; display: block; margin-bottom: 8px;" class="footer-link">
         {CONTACT_EMAIL}
       </a>
       <div style="font-size: 11px; color: rgba(255,255,255,0.25);">

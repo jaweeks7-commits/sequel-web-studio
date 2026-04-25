@@ -2,16 +2,27 @@
 import { SITE_NAME, NAV_LINKS } from '../config/site';
 ---
 
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
 <header
   id="main-nav"
   style="position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 68px; transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;"
 >
   <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between;">
 
-    <!-- Logo -->
-    <a href="/" style="display: flex; align-items: center; gap: 11px; text-decoration: none;" aria-label="Sequel Web Studio — home">
-      <div style="width: 38px; height: 38px; border-radius: 9px; background: linear-gradient(135deg, #1F3864, #2E75B6); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 18px; font-family: Georgia, serif; box-shadow: 0 4px 12px rgba(31,56,100,0.3); flex-shrink: 0;">S</div>
-      <span id="nav-logo-text" style="font-size: 16px; font-weight: 700; letter-spacing: -0.3px; transition: color 0.3s; color: white;">{SITE_NAME}</span>
+    <!-- Logo — unified SVG lockup matching approved Logo 2 design -->
+    <a href="/" style="display: flex; align-items: center; text-decoration: none;" aria-label="Sequel Web Studio — home">
+      <svg viewBox="0 0 260 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 40px; width: auto; flex-shrink: 0;" aria-hidden="true">
+        <defs>
+          <linearGradient id="gmark-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1F3864" />
+            <stop offset="100%" stop-color="#2E75B6" />
+          </linearGradient>
+        </defs>
+        <polygon points="4,6 44,28 4,50" fill="url(#gmark-nav)" />
+        <text x="9" y="35" font-family="Georgia, serif" font-size="22" font-weight="700" fill="white">S</text>
+        <text id="nav-wordmark" x="50" y="33" font-family="'Space Grotesk', sans-serif" font-size="19" font-weight="700" fill="white" letter-spacing="-0.3" style="transition: fill 0.3s;">{SITE_NAME}</text>
+      </svg>
     </a>
 
     <!-- Desktop nav -->
@@ -20,16 +31,17 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
         <a
           href={href}
           class="nav-link"
-          style="padding: 6px 14px; border-radius: 6px; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 0.3s; color: rgba(255,255,255,0.8);"
+          style="padding: 6px 13px; border-radius: 6px; font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.3s; color: rgba(255,255,255,0.8);"
         >
           {label}
         </a>
       ))}
       <a
-        href="/contact"
-        style="margin-left: 10px; background: white; color: #1F3864; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgba(15,31,61,0.2); transition: all 0.2s;"
+        href="/#audit-form"
+        data-audit-cta
+        style="margin-left: 10px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgba(46,117,182,0.3); transition: opacity 0.2s; white-space: nowrap;"
       >
-        Get a Free Quote
+        Free Audit
       </a>
     </nav>
 
@@ -68,43 +80,67 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
         </a>
       ))}
       <a
-        href="/contact"
-        style="margin-top: 12px; background: linear-gradient(135deg, #1F3864, #2E75B6); color: white; text-align: center; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none;"
+        href="/#audit-form"
+        data-audit-cta
+        style="margin-top: 12px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; text-align: center; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none;"
       >
-        Get a Free Quote
+        Free Audit
       </a>
     </div>
   </nav>
 </header>
 
 <script>
-  const nav       = document.getElementById('main-nav')!;
-  const logoText  = document.getElementById('nav-logo-text')!;
-  const navLinks  = document.querySelectorAll<HTMLElement>('.nav-link');
-  const toggle    = document.getElementById('menu-toggle')!;
-  const menu      = document.getElementById('mobile-menu')!;
-  const iconOpen  = document.getElementById('icon-open')!;
-  const iconClose = document.getElementById('icon-close')!;
+  (() => {
+    const nav      = document.getElementById('main-nav');
+    const wordmark = document.getElementById('nav-wordmark');
+    const navLinks = document.querySelectorAll<HTMLElement>('.nav-link');
+    const toggle    = document.getElementById('menu-toggle');
+    const menu      = document.getElementById('mobile-menu');
+    const iconOpen  = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
 
-  function updateNav() {
-    const scrolled = window.scrollY > 40;
-    nav.style.background       = scrolled ? 'rgba(255,255,255,0.95)' : 'transparent';
-    nav.style.backdropFilter   = scrolled ? 'blur(16px)' : 'none';
-    nav.style.boxShadow        = scrolled ? '0 2px 20px rgba(15,31,61,0.08)' : 'none';
-    logoText.style.color       = scrolled ? '#0F1F3D' : 'white';
-    navLinks.forEach(l => { l.style.color = scrolled ? '#595959' : 'rgba(255,255,255,0.8)'; });
-    (toggle as HTMLButtonElement).style.color = scrolled ? '#0F1F3D' : 'white';
-  }
+    if (!nav || !wordmark || !toggle || !menu || !iconOpen || !iconClose) return;
 
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
+    function updateNav() {
+      const scrolled = window.scrollY > 40;
+      nav!.style.background       = scrolled ? 'rgba(255,255,255,0.95)' : 'transparent';
+      nav!.style.backdropFilter   = scrolled ? 'blur(16px)' : 'none';
+      nav!.style.boxShadow        = scrolled ? '0 2px 20px rgba(15,31,61,0.08)' : 'none';
+      wordmark!.style.setProperty('fill', scrolled ? '#0F1F3D' : 'white');
+      navLinks.forEach(l => { l.style.color = scrolled ? '#595959' : 'rgba(255,255,255,0.8)'; });
+      (toggle as HTMLButtonElement).style.color = scrolled ? '#0F1F3D' : 'white';
+    }
 
-  toggle.addEventListener('click', () => {
-    const isOpen = !menu.classList.contains('hidden');
-    menu.classList.toggle('hidden');
-    iconOpen.classList.toggle('hidden');
-    iconClose.classList.toggle('hidden');
-    toggle.setAttribute('aria-expanded', String(!isOpen));
-    toggle.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
-  });
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    toggle.addEventListener('click', () => {
+      const isOpen = !menu!.classList.contains('hidden');
+      menu!.classList.toggle('hidden');
+      iconOpen!.classList.toggle('hidden');
+      iconClose!.classList.toggle('hidden');
+      toggle!.setAttribute('aria-expanded', String(!isOpen));
+      toggle!.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
+    });
+
+    // Smooth-scroll to #audit-form on the homepage; navigate on other pages
+    document.querySelectorAll<HTMLAnchorElement>('[data-audit-cta]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const form = document.getElementById('audit-form');
+        if (form) {
+          e.preventDefault();
+          form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Close mobile menu if open
+          if (!menu!.classList.contains('hidden')) {
+            menu!.classList.add('hidden');
+            iconOpen!.classList.remove('hidden');
+            iconClose!.classList.add('hidden');
+            toggle!.setAttribute('aria-expanded', 'false');
+            toggle!.setAttribute('aria-label', 'Open navigation menu');
+          }
+        }
+      });
+    });
+  })();
 </script>
