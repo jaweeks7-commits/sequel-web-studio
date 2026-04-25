@@ -1,5 +1,5 @@
 ---
-import { SITE_NAME, NAV_LINKS, CONTACT_EMAIL } from '../config/site';
+import { SITE_NAME, NAV_LINKS } from '../config/site';
 ---
 
 <footer style="background: #0F1F3D; padding-top: 56px;">
@@ -37,9 +37,6 @@ import { SITE_NAME, NAV_LINKS, CONTACT_EMAIL } from '../config/site';
 
     <!-- Contact -->
     <div>
-      <a href={`mailto:${CONTACT_EMAIL}`} style="color: rgba(255,255,255,0.5); font-size: 13px; text-decoration: none; display: block; margin-bottom: 8px;" class="footer-link">
-        {CONTACT_EMAIL}
-      </a>
       <div style="font-size: 11px; color: rgba(255,255,255,0.25);">
         &copy; {new Date().getFullYear()} {SITE_NAME}. Built by hand.
       </div>
