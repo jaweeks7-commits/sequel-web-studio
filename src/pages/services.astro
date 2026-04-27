@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_NAME, SITE_URL } from '../config/site';
+import { layers } from '../data/layers';
 
 const offerSchema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -95,97 +96,15 @@ const faqSchema = JSON.stringify({
     </svg>
   </section>
 
-  <!-- ── TWO PATHS ── -->
-  <section style="padding: 96px 0; background: #F4F6FB;">
-    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
-      <div class="reveal" style="margin-bottom: 52px;">
-        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">How We Work</span>
-        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
-          Two paths. Same price. A website that gets found either way.
-        </h2>
-        <p style="font-size: 16px; color: #595959; line-height: 1.7;">
-          Whether you're starting from nothing or starting from a site that's gone stale, we handle the build, the launch, and the ongoing care. You don't need to know HTML, hire a freelancer, or manage a designer. Tell us what your business does — we do the rest.
-        </p>
-      </div>
-
-      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: stretch;">
-
-        <!-- Card A: New Site (light) -->
-        <div class="reveal reveal-delay-1 hover-card" style="flex: 1 1 320px; max-width: 480px; background: white; border-radius: 20px; padding: 40px 36px; box-shadow: 0 8px 32px rgba(15,31,61,0.1); border: 2px solid #b8cce0;">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Starting fresh</div>
-          <div style="font-size: 26px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
-          <p style="font-size: 14px; color: #595959; line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">
-            For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile — but not a real website.
-          </p>
-          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
-            {[
-              'Homepage, services, about, contact, privacy, and 404 — designed from scratch to match your brand',
-              'Every page built on our six-layer modern foundation',
-              'Full setup: domain, hosting, SSL, email forwarding',
-              'Launch + 30 days of post-launch support',
-            ].map(f => (
-              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.45; align-items: flex-start;">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
-                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
-                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 20px; padding-top: 4px;">
-            Starting at $1,000
-            <span style="font-size: 13px; font-weight: 400; color: #999;"> · Hosting $20/month</span>
-          </div>
-          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: #1F3864; border: 2px solid #1F3864; background: transparent;">
-            Talk About a New Site
-          </a>
-        </div>
-
-        <!-- Card B: Modernize (dark featured) -->
-        <div class="reveal reveal-delay-2 hover-card" style="flex: 1 1 320px; max-width: 480px; background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28);">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Existing site</div>
-          <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Modernize Existing</div>
-          <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            For businesses whose current website is five-plus years old, hosted on a dated template, or invisible to AI assistants and voice search.
-          </p>
-          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
-            {[
-              "Full audit of your current site — what's working, what's broken, what's invisible",
-              'Your content preserved and restructured so AI can actually read it',
-              'Rebuild on the same six-layer foundation as a new site',
-              'Launch on your existing domain — your URLs, your SEO, no lost traffic',
-            ].map(f => (
-              <li style="display: flex; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.45; align-items: flex-start;">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
-                  <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
-                  <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <div style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 20px; padding-top: 4px;">
-            Starting at $1,000
-            <span style="font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.35);"> · Hosting $20/month</span>
-          </div>
-          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: white; background: linear-gradient(135deg, #2E75B6, #8E44AD); box-shadow: 0 8px 24px rgba(46,117,182,0.35);">
-            Start With a Free Audit
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- ── PRICING ── -->
   <section style="padding: 96px 0; background: white;">
     <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
       <div class="reveal" style="max-width: 980px; margin-bottom: 56px;">
         <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">Pricing</span>
-        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 8px;">
           One price to start. No surprises.
         </h2>
+        <p style="font-size: 18px; font-weight: 600; color: #595959; margin-bottom: 16px;">Two paths — same starting price.</p>
         <p style="font-size: 16px; color: #595959; line-height: 1.7;">
           Most small-business websites start at $1,000 flat — including design, build, launch, and the full technical foundation. Hosting is $20/month. If your business needs something beyond the standard build — additional pages, a custom integration — we quote those separately, up front, in plain English.
         </p>
@@ -195,12 +114,16 @@ const faqSchema = JSON.stringify({
 
         <!-- New Site card -->
         <div class="reveal reveal-delay-1 hover-card" style="flex: 1 1 380px; max-width: 480px; background: white; border-radius: 20px; padding: 40px 36px; border: 2px solid #b8cce0; box-shadow: 0 8px 32px rgba(15,31,61,0.1);">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Create New Site</div>
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Starting fresh</div>
+          <div style="font-size: 26px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
+          <p style="font-size: 14px; color: #595959; line-height: 1.65; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e4eaf5;">
+            For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile — but not a real website.
+          </p>
           <div style="font-size: 52px; font-weight: 700; color: #0F1F3D; letter-spacing: -2px; line-height: 1;">$1,000</div>
           <div style="font-size: 13px; color: #999; margin-top: 4px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Starting price · one-time fee</div>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
             {[
-              'Complete site built from scratch',
+              'Complete site built from scratch — homepage, services, about, contact, privacy, 404, and more',
               'All six technical layers included',
               'Domain setup, SSL, launch',
               '30 days of post-launch support',
@@ -224,15 +147,19 @@ const faqSchema = JSON.stringify({
         <!-- Modernize card -->
         <div class="reveal reveal-delay-2 hover-card" style="flex: 1 1 380px; max-width: 480px; background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.25); position: relative;">
           <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 9999px; white-space: nowrap;">Most Popular</div>
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Modernize Existing</div>
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Existing site</div>
+          <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Modernize Existing</div>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            For businesses whose current website is five-plus years old, hosted on a dated template, or invisible to AI assistants and voice search.
+          </p>
           <div style="font-size: 52px; font-weight: 700; color: white; letter-spacing: -2px; line-height: 1;">$1,000</div>
           <div style="font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">Starting price · one-time fee</div>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
             {[
-              'Full audit of your current site',
-              'Content preserved and restructured',
+              "Full audit of your current site — what's working, what's broken, what's invisible",
+              'Your content preserved and restructured so AI can actually read it',
               'Rebuild on the same six-layer foundation',
-              'Launch on your existing domain — no lost SEO',
+              'Launch on your existing domain — your URLs, your SEO, no lost traffic',
               '30 days of post-launch support',
               '$20/month hosting after launch',
               'Future support: $60/hr, half-hour minimum',
@@ -252,6 +179,65 @@ const faqSchema = JSON.stringify({
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- ── TECHNICAL FOUNDATION ── -->
+  <section style="padding: 96px 0; background: #0F1F3D; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">The Technical Foundation</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          Most designers stop at the pretty. We don't.
+        </h2>
+        <p style="font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.72;">
+          Every Sequel Web Studio site — whether new or modernized — is built across eight technical categories. This is what separates a site that looks good from a site that actually gets found, converts visitors into customers, and keeps working five years from now. We build for conversion and longevity from day one — not as an afterthought.
+        </p>
+      </div>
+
+      <!-- Accordion -->
+      <div class="layers-dark reveal accordion" data-accordion>
+        {layers.map((layer, i) => (
+          <div class="acc-item" data-acc-item>
+            <button class="acc-header" data-acc-btn type="button" aria-expanded="false" aria-controls={`svc-acc-body-${i}`}>
+              <span class="acc-num">{layer.num}</span>
+              <span class="acc-meta">
+                <span class="acc-title">{layer.title}</span>
+                <span class="acc-sub">{layer.sub}</span>
+              </span>
+              <span class="acc-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="acc-body" data-acc-body id={`svc-acc-body-${i}`}>
+              <ul class="acc-list">
+                {layer.items.map(item => (
+                  <li class="acc-list-item">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                      <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
+                      <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Callout bar -->
+      <div class="reveal" style="margin-top: 28px; background: rgba(255,255,255,0.06); border-radius: 14px; border: 2px solid rgba(255,255,255,0.12); padding: 24px 28px; display: flex; align-items: center; gap: 16px;">
+        <div style="width: 3px; height: 48px; background: #8E44AD; border-radius: 9999px; flex-shrink: 0;"></div>
+        <p style="font-size: 16px; font-weight: 500; color: white; line-height: 1.55; margin: 0;">
+          When a graphic designer builds you a website, you get the first layer. When we build you a website, you get all eight.
+        </p>
+      </div>
+
     </div>
   </section>
 
@@ -280,6 +266,8 @@ const faqSchema = JSON.stringify({
 
 </BaseLayout>
 
+<script>import '../scripts/accordion';</script>
+
 <style>
   .faq-grid {
     display: grid;
@@ -291,4 +279,14 @@ const faqSchema = JSON.stringify({
       grid-template-columns: 1fr;
     }
   }
+
+  /* Dark-background accordion overrides for the Technical Foundation section */
+  :global(.layers-dark .acc-item) {
+    background: white;
+    border-color: #e4eaf5;
+  }
+  :global(.layers-dark .acc-title) { color: #0F1F3D; }
+  :global(.layers-dark .acc-sub)   { color: #8892A0; }
+  :global(.layers-dark .acc-icon)  { color: #8892A0; }
+  :global(.layers-dark .acc-list-item) { color: #595959; }
 </style>

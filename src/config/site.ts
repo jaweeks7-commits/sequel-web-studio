@@ -8,7 +8,8 @@ export const SERVICE_AREA = 'United States';
 
 export const NAV_LINKS = [
   { label: 'Home',      href: '/'          },
-  { label: 'Services',  href: '/services'  },
+  { label: 'Audit',     href: '/audit'     },
+  { label: 'Websites',  href: '/services'  },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'About',     href: '/about'     },
   { label: 'Contact',   href: '/contact'   },

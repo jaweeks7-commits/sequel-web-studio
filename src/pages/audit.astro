@@ -1,0 +1,619 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT_EMAIL } from '../config/site';
+
+const serviceSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Professional Website Audit + Fix Kit',
+  description: 'A 28-point deep technical audit of a business homepage delivered as a branded report with ready-to-use code fixes for every issue found.',
+  provider: {
+    '@type': 'LocalBusiness',
+    name: 'Sequel Web Studio',
+    url: 'https://sequelwebstudio.com',
+  },
+  offers: {
+    '@type': 'Offer',
+    price: '350',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  },
+});
+
+const auditCategories = [
+  {
+    num: '01', title: 'SEO Fundamentals', sub: 'Your business shows up in search results — correctly.',
+    items: [
+      { name: 'Your Website\'s Name in Google', desc: 'The headline that appears in Google search results. If it\'s missing or cut off mid-sentence, people scroll past you.' },
+      { name: 'Your Google Elevator Pitch', desc: 'The short paragraph under your title in Google results. A compelling one can double the number of people who click.' },
+      { name: 'Telling Google Which Version of Your Site is Official', desc: 'Without this, Google may split your ranking authority across multiple versions of the same page.' },
+      { name: 'Your "Do Not Disturb" Sign for Google', desc: 'A one-line instruction telling Google your page is open for indexing — and catching it if something accidentally changes that.' },
+      { name: 'Your Page\'s Outline — The One Google Actually Reads', desc: 'Google reads your headings to understand what your page is about. We check they\'re clear, in the right order, and actually descriptive.' },
+      { name: 'Telling Google "This Is The Real Page" (Inner Pages)', desc: 'On content-rich sites, the same content can appear at dozens of addresses. This tells Google which one is the official version.' },
+    ],
+  },
+  {
+    num: '02', title: 'Social Sharing & Open Graph', sub: 'Your brand looks professional everywhere it gets shared.',
+    items: [
+      { name: 'The Photo That Shows Up When You Share Your Link', desc: 'Without this, shares on Facebook, LinkedIn, and iMessage show a blank box. Every share so far has looked incomplete.' },
+      { name: 'The Full Story Behind Every Social Share', desc: 'Controls the title, description, and URL that appear alongside your image on every social platform.' },
+      { name: 'The Same Thing, Specifically for X (Twitter)', desc: 'X needs its own separate set of tags. Without them, shared links on X show as plain text with no image or formatting.' },
+    ],
+  },
+  {
+    num: '03', title: 'Performance & Page Speed', sub: 'Real visitors don\'t wait. And neither does Google.',
+    items: [
+      { name: 'How Fast Does Your Server Respond?', desc: 'How quickly your server wakes up when someone types your address. If this is slow, everything else is slow too.' },
+      { name: 'How Long Until Your Page is Fully Ready', desc: 'The total time a real visitor waits before they can see and use your entire page. Over 5 seconds and roughly half your visitors have already left.' },
+      { name: 'Are Your Photos Slowing You Down?', desc: 'Images are almost always the heaviest things on a webpage. We check for modern formats and smart loading behavior.' },
+      { name: 'What Is Making Your Site Wait?', desc: 'We name the specific files and external services adding the most time to your load — including ones a developer plugged in years ago that nobody watches anymore.' },
+      { name: 'Is JavaScript Holding Up Your Page?', desc: 'When a browser loads your page, certain scripts can make it stop and wait. We check whether yours are set up to load in the background instead.' },
+    ],
+  },
+  {
+    num: '04', title: 'Schema & Structured Data', sub: 'Search engines and AI assistants know exactly who you are.',
+    items: [
+      { name: 'Do You Speak Google\'s Language?', desc: 'Google\'s rich results — star ratings, FAQ answers, event dates — all require this markup. Without it, you\'re invisible to all of those enhanced result types.' },
+      { name: 'Are Your Schema Blocks Talking to Each Other?', desc: 'Having schema is good. Having it properly connected so Google builds a complete picture of your business is better.' },
+      { name: 'Rich Result Types You Are Missing Out On', desc: 'Most sites are missing several high-value schema types that unlock specific Google features, including AI Overview eligibility.' },
+    ],
+  },
+  {
+    num: '05', title: 'Analytics & Tracking Integrity', sub: 'Your data tells you the truth — not a flattering lie.',
+    items: [
+      { name: 'Is Google Analytics Actually On?', desc: 'Without GA4, there\'s no baseline. Every conversation about what\'s working is guesswork.' },
+      { name: 'Is Your Tracking Counting Everything Twice?', desc: 'A duplicate tracking pixel makes Facebook think every page visit is multiple conversions. You optimize toward fake data and wonder why ads aren\'t working.' },
+      { name: 'What Is Secretly Loading on Your Website?', desc: 'A complete inventory of every external service your site calls — including tools left behind by previous developers or agencies.' },
+    ],
+  },
+  {
+    num: '06', title: 'Security & Crawlability', sub: 'No broken doors. No accidental stop signs for Google.',
+    items: [
+      { name: 'What Are You Telling Search Engines They Can\'t Read?', desc: 'One misplaced line in this file can block Google from indexing your entire website — and it can take weeks to notice.' },
+      { name: 'Is Your Website Secure?', desc: 'The padlock icon means secure. Without it, visitors see "Not Secure" and Google ranks you lower. We confirm your site is secured all the way through.' },
+      { name: 'A Simple Security Setting Most Sites Miss', desc: 'When your site has links that open in new tabs, this setting prevents those external sites from being able to reach back into your page.' },
+      { name: 'Are You Telling AI How to Represent You?', desc: 'With this file, you tell AI systems directly: here\'s who we are, here\'s how to describe us accurately, and here\'s what not to say.' },
+    ],
+  },
+  {
+    num: '07', title: 'Accessibility', sub: 'Usable by everyone. Required by law in many jurisdictions.',
+    items: [
+      { name: 'Can Google (and Blind Users) Understand Your Images?', desc: 'Every image is invisible to Google and to blind visitors unless it has a text description. We find every image missing one and write the correct text.' },
+      { name: 'Does Your Site Know What Language It\'s Written In?', desc: 'A one-word fix that helps screen readers pronounce words correctly and helps Google serve your site to the right audience.' },
+    ],
+  },
+  {
+    num: '08', title: 'Platform & AI Discoverability', sub: 'You show up when people search on ChatGPT, Perplexity, or Siri.',
+    items: [
+      { name: 'What Website Builder Was This Site Built On?', desc: 'We identify exactly what system your site runs on so every fix in the Upgrade Kit is written for your specific platform — not generic instructions.' },
+      { name: 'Is Your Site Ready for AI-Powered Search?', desc: 'Search has changed. We check whether your site is structured so that when someone asks an AI about your topic, your content is part of the answer.' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Professional Website Audit + Fix Kit — $350"
+  description="A 28-point deep technical audit of your homepage by a real AI agent — not an automated scanner. Delivered as a branded report with ready-to-paste code for every fix. $350, within 24 hours."
+  ogImage="https://sequelwebstudio.com/images/audit-og.png"
+>
+  <!-- TODO: create /public/images/audit-og.png for social share previews -->
+  <script type="application/ld+json" set:html={serviceSchema} slot="head" />
+
+  <!-- ── SECTION 1: HERO ── -->
+  <section style="position: relative; background: #0F1F3D; min-height: 90vh; display: flex; align-items: center; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <!-- Glow blobs -->
+    <div style="position: absolute; top: 5%; left: -8%; width: 560px; height: 560px; border-radius: 50%; background: radial-gradient(circle, rgba(46,117,182,0.22) 0%, transparent 70%); pointer-events: none;"></div>
+    <div style="position: absolute; bottom: 10%; right: -4%; width: 440px; height: 440px; border-radius: 50%; background: radial-gradient(circle, rgba(142,68,173,0.18) 0%, transparent 70%); pointer-events: none;"></div>
+
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 120px 32px 80px; width: 100%;">
+      <div style="display: flex; align-items: center; gap: 64px; flex-wrap: wrap;">
+
+        <!-- Left: copy -->
+        <div style="flex: 1 1 460px; min-width: 0;">
+          <!-- Badge pill -->
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); border-radius: 9999px; padding: 6px 14px; margin-bottom: 28px;">
+            <div style="width: 7px; height: 7px; border-radius: 50%; background: #00bcd4; flex-shrink: 0;"></div>
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.65);">Paid Service · $350</span>
+          </div>
+
+          <h1 style="font-size: clamp(34px, 5vw, 62px); font-weight: 700; color: white; line-height: 1.1; letter-spacing: -2px; margin-bottom: 24px;">
+            Your website probably has problems you don't know about.<br />
+            <span class="grad-text">Here's exactly what they are — and everything needed to fix them.</span>
+          </h1>
+
+          <p style="font-size: 17px; color: rgba(255,255,255,0.62); line-height: 1.72; max-width: 560px; margin-bottom: 36px;">
+            We run a real AI agent through your homepage in a live browser session. Not an automated scan. A deep, 28-point technical audit that reads your actual code, fires your real tracking pixels, and checks how Google, ChatGPT, and voice assistants actually see your site. You get a branded report with every issue clearly explained — plus ready-to-paste code for every fix.
+          </p>
+
+          <button
+            data-order-cta
+            style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 16px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 24px rgba(46,117,182,0.4); letter-spacing: -0.2px; border: none; cursor: pointer; font-family: inherit;"
+          >
+            Order Your Audit — $350 →
+          </button>
+
+          <p style="margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.4);">
+            Delivered as a branded Word document within 24 hours. No retainer. No sales call unless you want one.
+          </p>
+        </div>
+
+        <!-- Right: document mockup card -->
+        <div class="audit-hero-card-col">
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 28px; backdrop-filter: blur(12px);">
+            <!-- Document header -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #2E75B6, #8E44AD); display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <rect x="3" y="2" width="10" height="12" rx="1.5" stroke="white" stroke-width="1.4"/>
+                  <line x1="5.5" y1="5.5" x2="10.5" y2="5.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+                  <line x1="5.5" y1="8" x2="10.5" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+                  <line x1="5.5" y1="10.5" x2="8.5" y2="10.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: white; letter-spacing: -0.2px;">Website Audit Report</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,0.4);">Sequel Web Studio · 28 checks</div>
+              </div>
+            </div>
+            <!-- Category row -->
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2E75B6; margin-bottom: 8px;">SEO Fundamentals</div>
+              <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Page title tag</span>
+                <span style="font-size: 10px; font-weight: 700; color: #DC2626; background: rgba(220,38,38,0.15); padding: 2px 8px; border-radius: 9999px;">Critical</span>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Meta description</span>
+                <span style="font-size: 10px; font-weight: 700; color: #D97706; background: rgba(217,119,6,0.15); padding: 2px 8px; border-radius: 9999px;">High Value</span>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Canonical tag</span>
+                <span style="font-size: 10px; font-weight: 700; color: #16A34A; background: rgba(22,163,74,0.15); padding: 2px 8px; border-radius: 9999px;">Pass</span>
+              </div>
+            </div>
+            <!-- Code block preview -->
+            <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 8px;">Fix · Ready to paste</div>
+              <div style="font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.55); line-height: 1.6;">
+                <span style="color: #4B9FD4;">&lt;title&gt;</span>
+                <span style="color: rgba(255,255,255,0.7);">Your Business Name</span><br/>
+                <span style="color: rgba(255,255,255,0.35);">&nbsp;&nbsp;| City, TX</span>
+                <span style="color: #4B9FD4;">&lt;/title&gt;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: STATS BAR ── -->
+  <section style="padding: 40px 0; background: #0d1929; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 32px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 24px; text-align: center;">
+      {[
+        ['28+',         'checks per audit'],
+        ['8 Categories','fully documented'],
+        ['24 Hours',    'typical delivery'],
+      ].map(([val, label]) => (
+        <div>
+          <div style="font-size: 32px; font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1;">{val}</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; letter-spacing: 0.3px;">{label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: WHAT MAKES THIS DIFFERENT ── -->
+  <section style="padding: 96px 0; background: white;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">The Difference</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          This isn't a scan. It's a diagnosis — with the prescription included.
+        </h2>
+        <p style="font-size: 16px; color: #595959; line-height: 1.72;">
+          Free audit tools read your HTML. We run your website. Those are completely different things — the same difference as reading a car's spec sheet versus putting it on a diagnostic computer. We see what your visitors actually see: JavaScript that fires, pixels that duplicate, console errors that silently break things, and tracking that counts every visit three times.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        {[
+          {
+            num: '01',
+            title: 'A Real Browser Session',
+            body: 'Free tools pull your HTML and check tags. We load your page in a real browser, execute your JavaScript, intercept your network requests, and read your browser console. We catch things that are completely invisible to any scanner — including duplicate tracking pixels, console errors, and slow-loading third-party scripts.',
+          },
+          {
+            num: '02',
+            title: 'Plain English + Code, Together',
+            body: 'Every issue in the report comes with two things: a plain-English explanation of why it matters to your business, and the exact code or content to fix it. Not a recommendation. The fix itself — ready to paste, upload, or hand to your web person.',
+          },
+          {
+            num: '03',
+            title: 'Built for Your Platform',
+            body: 'Every fix in the Upgrade Kit is written specifically for your platform. Webflow instructions look different from WordPress instructions. You get the version that matches what you\'ll actually see on your screen — not generic advice you have to translate.',
+          },
+        ].map((card, i) => (
+          <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #0F1F3D; border-radius: 18px; padding: 32px 28px; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-family: 'Space Mono', monospace; font-size: 12px; color: #2E75B6; margin-bottom: 16px;">{card.num}</div>
+            <h3 style="font-size: 20px; font-weight: 700; color: white; letter-spacing: -0.3px; margin-bottom: 12px;">{card.title}</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65;">{card.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 4: WHAT'S INCLUDED ── -->
+  <section style="padding: 96px 0; background: #F4F6FB;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 560px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">The Deliverable</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px;">
+          What you receive
+        </h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px;">
+
+        <!-- Left: The Audit Report -->
+        <div class="reveal reveal-delay-1 hover-card" style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">The Audit Report</div>
+          <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">A branded Word document covering all 28 checks across 8 categories.</div>
+          <div style="height: 1px; background: #e4eaf5; margin: 20px 0;"></div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+            {[
+              'Overall site health summary with category scores',
+              'Every finding explained in plain English',
+              'Business impact stated for each issue — not just "this is broken"',
+              'Technical explanation included for developer handoff',
+              'Priority ranking: Critical · High Value · Nice to Have',
+            ].map(item => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.5; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
+                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Right: The Upgrade Kit -->
+        <div class="reveal reveal-delay-2 hover-card" style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">The Upgrade Kit</div>
+          <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">Everything you need to actually fix what we find.</div>
+          <div style="height: 1px; background: #e4eaf5; margin: 20px 0;"></div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+            {[
+              'Ready-to-paste code for every fixable technical issue',
+              'Platform-specific installation steps (Webflow, WordPress, Squarespace, etc.)',
+              'Alt text written for every image missing it — the actual text, ready to use',
+              'Complete llms.txt file written for your business, ready to upload',
+              'Corrected robots.txt ready to paste',
+              'All Open Graph and Twitter Card meta tags pre-filled with your real data',
+              'Schema.org JSON-LD blocks for every missing type — complete and valid',
+              'A prioritized to-do checklist so you know what to do first',
+            ].map(item => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.5; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(0,188,212,0.15)" />
+                  <path d="M5 8l2 2 4-4" stroke="#00bcd4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Pull quote -->
+      <div class="reveal" style="background: #0F1F3D; border-radius: 16px; padding: 32px 36px; border-left: 4px solid #8E44AD;">
+        <p style="font-size: 17px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.65; margin: 0; font-style: italic;">
+          "We don't just find the problems. We hand you the solution. Most audits end with a list and a handshake. Ours ends with a to-do list and a file of everything you need."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 5: 28-POINT CHECKLIST ── -->
+  <section style="padding: 96px 0; background: #0F1F3D; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.4;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16A34A;">What We Check</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          Every audit covers these 28 checks — at minimum.
+        </h2>
+        <p style="font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.72;">
+          Depending on your site's platform, tracking setup, and content structure, we may identify additional findings beyond this list. You'll see everything we find.
+        </p>
+      </div>
+
+      <div class="reveal accordion" data-accordion>
+        {auditCategories.map((cat, i) => (
+          <div class="acc-item" data-acc-item>
+            <button class="acc-header" data-acc-btn type="button" aria-expanded="false" aria-controls={`audit-acc-body-${i}`}>
+              <span class="acc-num">{cat.num}</span>
+              <span class="acc-meta">
+                <span class="acc-title">{cat.title}</span>
+                <span class="acc-sub">{cat.sub}</span>
+              </span>
+              <span class="acc-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="acc-body" data-acc-body id={`audit-acc-body-${i}`}>
+              <ul class="acc-list">
+                {cat.items.map(check => (
+                  <li class="acc-list-item">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                      <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
+                      <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span><strong style="font-weight: 600; color: #0F1F3D;">{check.name}</strong> — {check.desc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 6: OBJECTION HANDLER ── -->
+  <section style="padding: 96px 0; background: white;">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 560px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">Common Questions</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px;">
+          What about free tools?
+        </h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        {[
+          {
+            num: '01',
+            title: '"Free tools do the same thing"',
+            body: 'Free tools read your HTML. We run your website. Those are completely different things — the same difference as reading a car\'s spec sheet versus putting it on a diagnostic computer. We catch duplicate pixels, console errors, and slow third-party scripts that are invisible to any scanner.',
+          },
+          {
+            num: '02',
+            title: '"I can get a Fiverr audit for $50"',
+            body: 'A $50 audit gives you a list of problems. We give you the list, the explanation of why each one matters to your business, and the ready-to-paste code to fix it. The $350 isn\'t for finding problems — it\'s for handing you the solutions.',
+          },
+          {
+            num: '03',
+            title: '"Is this worth $350?"',
+            body: 'The Facebook Pixel duplicate we found on a real client\'s site was corrupting every conversion event in their ad account. They were spending money optimizing toward fake data. That single fix was worth more than the cost of this audit. We find issues like this regularly.',
+          },
+        ].map((card, i) => (
+          <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #0F1F3D; border-radius: 18px; padding: 32px 28px; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-family: 'Space Mono', monospace; font-size: 12px; color: #2E75B6; margin-bottom: 16px;">{card.num}</div>
+            <h3 style="font-size: 18px; font-weight: 700; color: white; letter-spacing: -0.2px; margin-bottom: 12px;">{card.title}</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65;">{card.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 7: HOW IT WORKS ── -->
+  <section style="padding: 96px 0; background: #0F1F3D; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.4;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 560px; margin-bottom: 64px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16A34A;">The Process</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.12; margin-top: 12px;">
+          Simple from your end. Thorough on ours.
+        </h2>
+      </div>
+
+      <div class="audit-steps-grid">
+        {[
+          {
+            step: '01',
+            title: 'You submit your URL',
+            body: 'Fill out a short form with your homepage URL and your name. That\'s all we need to get started. No login, no access to your site, no technical setup on your end.',
+          },
+          {
+            step: '02',
+            title: 'We run the audit',
+            body: 'Our AI agent opens your page in a real browser, works through all 28 checks, reads your actual code and live data, and documents every finding. This typically takes 15–20 minutes of active analysis.',
+          },
+          {
+            step: '03',
+            title: 'We build your Upgrade Kit',
+            body: 'Every issue gets a plain-English explanation, a business impact statement, and a ready-to-use fix — code, content, or instructions tailored to your specific platform.',
+          },
+          {
+            step: '04',
+            title: 'You receive your report',
+            body: 'Within 24 hours, you receive a branded Word document with the complete audit and Upgrade Kit. Everything you need is in one file — organized, prioritized, and ready to act on.',
+          },
+        ].map((s, i) => (
+          <div class={`reveal reveal-delay-${i + 1}`} style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #2E75B6, #8E44AD); display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0;">{s.step}</div>
+            <h3 style="font-size: 18px; font-weight: 700; color: white; letter-spacing: -0.2px; line-height: 1.2;">{s.title}</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.65;">{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 8: FINAL CTA + ORDER FORM ── -->
+  <section id="order-section" style="padding: 96px 0; background: linear-gradient(135deg, #0F1F3D 0%, #1F3864 60%, #2E75B6 100%); position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.3;"></div>
+    <div style="position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 32px; text-align: center;">
+      <div class="reveal">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 16px;">Ready?</span>
+        <h2 style="font-size: clamp(28px, 4vw, 52px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;">
+          Find out exactly what your website is missing.
+        </h2>
+        <p style="font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 36px;">
+          $350. Delivered within 24 hours. No retainer. No sales call unless you want one.
+        </p>
+
+        <!-- CTA area — hidden after button click -->
+        <div id="order-cta-area">
+          <button
+            data-order-cta
+            style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 16px 36px; border-radius: 10px; font-size: 16px; font-weight: 700; box-shadow: 0 8px 24px rgba(46,117,182,0.4); border: none; cursor: pointer; font-family: inherit; letter-spacing: -0.2px;"
+          >
+            Order Your Professional Audit →
+          </button>
+          <p style="margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.4);">
+            Questions first? <a href={`mailto:${CONTACT_EMAIL}`} style="color: #4B9FD4; text-decoration: underline;">Contact us</a> and we'll answer them.
+          </p>
+        </div>
+
+        <!-- Order form — revealed on CTA click -->
+        <div id="order-form-wrapper" style="display: none; text-align: left; margin-top: 8px;">
+          <form
+            name="audit-order"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            style="display: flex; flex-direction: column; gap: 16px;"
+          >
+            <input type="hidden" name="form-name" value="audit-order" />
+            <p style="display: none;">
+              <label>Don't fill this out: <input name="bot-field" /></label>
+            </p>
+            <input
+              type="text"
+              name="name"
+              placeholder="Your name"
+              required
+              style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none;"
+            />
+            <input
+              type="text"
+              name="business"
+              placeholder="Business name"
+              required
+              style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none;"
+            />
+            <input
+              type="url"
+              name="url"
+              placeholder="yoursite.com"
+              required
+              style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none;"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email"
+              required
+              style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none;"
+            />
+            <textarea
+              name="notes"
+              placeholder="Anything specific you'd like us to focus on? (optional)"
+              rows="3"
+              style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none; resize: vertical;"
+            ></textarea>
+            <button
+              type="submit"
+              style="padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; box-shadow: 0 8px 24px rgba(46,117,182,0.4);"
+            >
+              Submit Your Audit Request →
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* Hero right column — hidden on narrow screens */
+  .audit-hero-card-col {
+    flex: 0 0 340px;
+    max-width: 340px;
+  }
+  @media (max-width: 960px) {
+    .audit-hero-card-col { display: none; }
+  }
+
+  /* Deliverable two-column — stacks on mobile */
+  @media (max-width: 768px) {
+    section [style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Process steps grid */
+  .audit-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 36px;
+  }
+  @media (max-width: 960px) {
+    .audit-steps-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .audit-steps-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Form placeholder text color */
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+</style>
+
+<script>import '../scripts/accordion';</script>
+
+<script>
+  // Reveal order form on CTA click (both hero and final CTA buttons)
+  document.querySelectorAll<HTMLElement>('[data-order-cta]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrapper  = document.getElementById('order-form-wrapper');
+      const ctaArea  = document.getElementById('order-cta-area');
+      if (wrapper && ctaArea) {
+        ctaArea.style.display = 'none';
+        wrapper.style.display = 'block';
+        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Confirmation message after form submit
+  const orderForm = document.querySelector<HTMLFormElement>('[name="audit-order"]');
+  orderForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailInput = orderForm.querySelector<HTMLInputElement>('[name="email"]');
+    const email = emailInput?.value ?? '';
+    const data = new FormData(orderForm);
+    try {
+      await fetch('/', { method: 'POST', body: data });
+    } catch {
+      // Netlify handles the POST server-side; a network error here is non-fatal
+    }
+    const wrapper = document.getElementById('order-form-wrapper');
+    if (wrapper) {
+      wrapper.innerHTML = `
+        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 16px;">✓</div>
+          <p style="font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.65; margin: 0;">
+            Got it — we'll have your audit and Upgrade Kit to you within 24 hours at <strong style="color: white;">${email}</strong>. Check your spam folder if you don't see it.
+          </p>
+        </div>`;
+    }
+  });
+</script>
