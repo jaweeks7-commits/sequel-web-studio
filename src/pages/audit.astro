@@ -5,8 +5,8 @@ import { CONTACT_EMAIL } from '../config/site';
 const serviceSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: 'Professional Website Audit + Fix Kit',
-  description: 'A 28-point deep technical audit of a business homepage delivered as a branded report with ready-to-use code fixes for every issue found.',
+  name: 'Pro Diagnosis + Upgrade Package',
+  description: 'A 28-point deep technical diagnosis of a business homepage delivered as a branded report with ready-to-use code fixes for every issue found.',
   provider: {
     '@type': 'LocalBusiness',
     name: 'Sequel Web Studio',
@@ -85,7 +85,7 @@ const auditCategories = [
   {
     num: '08', title: 'Platform & AI Discoverability', sub: 'You show up when people search on ChatGPT, Perplexity, or Siri.',
     items: [
-      { name: 'What Website Builder Was This Site Built On?', desc: 'We identify exactly what system your site runs on so every fix in the Upgrade Kit is written for your specific platform — not generic instructions.' },
+      { name: 'What Website Builder Was This Site Built On?', desc: 'We identify exactly what system your site runs on so every fix in the Upgrade Package is written for your specific platform — not generic instructions.' },
       { name: 'Is Your Site Ready for AI-Powered Search?', desc: 'Search has changed. We check whether your site is structured so that when someone asks an AI about your topic, your content is part of the answer.' },
     ],
   },
@@ -93,8 +93,8 @@ const auditCategories = [
 ---
 
 <BaseLayout
-  title="Professional Website Audit + Fix Kit — $350"
-  description="A 28-point deep technical audit of your homepage by a real AI agent — not an automated scanner. Delivered as a branded report with ready-to-paste code for every fix. $350, within 24 hours."
+  title="Pro Diagnosis + Upgrade Package — $350"
+  description="A 28-point deep technical diagnosis of your homepage by a real AI agent — not an automated scanner. Delivered as a branded report with ready-to-paste code for every fix. $350, within 24 hours."
   ogImage="https://sequelwebstudio.com/images/audit-og.png"
 >
   <!-- TODO: create /public/images/audit-og.png for social share previews -->
@@ -124,14 +124,14 @@ const auditCategories = [
           </h1>
 
           <p style="font-size: 17px; color: rgba(255,255,255,0.62); line-height: 1.72; max-width: 560px; margin-bottom: 36px;">
-            We run a real AI agent through your homepage in a live browser session. Not an automated scan. A deep, 28-point technical audit that reads your actual code, fires your real tracking pixels, and checks how Google, ChatGPT, and voice assistants actually see your site. You get a branded report with every issue clearly explained — plus ready-to-paste code for every fix.
+            We run a real AI agent through your homepage in a live browser session. Not an automated scan. A deep, 28-point technical diagnosis that reads your actual code, fires your real tracking pixels, and checks how Google, ChatGPT, and voice assistants actually see your site. You get a branded report with every issue clearly explained — plus ready-to-paste code for every fix.
           </p>
 
           <button
             data-order-cta
             style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 16px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 24px rgba(46,117,182,0.4); letter-spacing: -0.2px; border: none; cursor: pointer; font-family: inherit;"
           >
-            Order Your Audit — $350 →
+            Order Your Pro Diagnosis — $350 →
           </button>
 
           <p style="margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.4);">
@@ -194,7 +194,7 @@ const auditCategories = [
   <section style="padding: 40px 0; background: #0d1929; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
     <div style="max-width: 800px; margin: 0 auto; padding: 0 32px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 24px; text-align: center;">
       {[
-        ['28+',         'checks per audit'],
+        ['28+',         'checks per diagnosis'],
         ['8 Categories','fully documented'],
         ['24 Hours',    'typical delivery'],
       ].map(([val, label]) => (
@@ -215,7 +215,7 @@ const auditCategories = [
           This isn't a scan. It's a diagnosis — with the prescription included.
         </h2>
         <p style="font-size: 16px; color: #595959; line-height: 1.72;">
-          Free audit tools read your HTML. We run your website. Those are completely different things — the same difference as reading a car's spec sheet versus putting it on a diagnostic computer. We see what your visitors actually see: JavaScript that fires, pixels that duplicate, console errors that silently break things, and tracking that counts every visit three times.
+          The free scan you just ran reads your HTML. The Professional Audit runs your website. Those are completely different things — the same difference as reading a car's spec sheet versus putting it on a diagnostic computer. We see what your visitors actually see: JavaScript that fires, pixels that duplicate, console errors that silently break things, and tracking that counts every visit three times.
         </p>
       </div>
 
@@ -244,6 +244,89 @@ const auditCategories = [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 3.5: FREE vs. PAID COMPARISON ── -->
+  <section style="padding: 96px 0; background: linear-gradient(135deg, #0F1F3D 0%, #1F3864 60%, #2E75B6 100%); position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.4;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">The Difference in Practice</span>
+        <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
+          What the free audit shows you. And what it can't.
+        </h2>
+        <p style="font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.72;">
+          The free audit reads your code — it checks whether the right tags are there, measures your PageSpeed scores, and surfaces the quick wins. The Professional Audit runs your site in a real browser, which is the only way to see what actually happens when a visitor loads your page.
+        </p>
+      </div>
+
+      <div class="audit-compare-grid reveal">
+
+        <!-- Free Audit column -->
+        <div style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
+          <div style="font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8892A0; margin-bottom: 8px;">Free Audit</div>
+          <div style="font-size: 18px; font-weight: 700; color: #595959; margin-bottom: 6px;">Reads your code.</div>
+          <div style="font-size: 14px; color: #8892A0; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Surfaces what's visible.</div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px;">
+            {[
+              'Title tag, meta description, canonical — present or missing',
+              'PageSpeed score — and the main categories dragging it down',
+              'Social sharing tags (Open Graph, Twitter Cards) — detected or absent',
+              'Schema markup — present or not present',
+              'Google Analytics — installed or not',
+              'HTTPS — secure or not',
+              'Image alt text — present on your images',
+              'A scored report and ranked list of what to fix',
+            ].map(item => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.5; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(137,146,160,0.15)" />
+                  <path d="M5 8l2 2 4-4" stroke="#8892A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Professional Audit column -->
+        <div style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; border-top: 3px solid #0F1F3D; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
+          <div style="font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2E75B6; margin-bottom: 8px;">Pro Diagnosis + Upgrade Package</div>
+          <div style="font-size: 18px; font-weight: 700; color: #0F1F3D; margin-bottom: 6px;">Runs your site.</div>
+          <div style="font-size: 14px; color: #8892A0; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Finds what's hidden.</div>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px;">
+            {[
+              'Whether each tag is correctly formed and actually doing its job',
+              'The specific files and third-party scripts causing your slowdown — named',
+              'Whether your tracking pixels are firing once, twice, or three times',
+              'A full inventory of every external service loading on your page',
+              'Whether your schema blocks are properly connected so Google builds a complete picture',
+              'Console errors silently breaking things for real visitors',
+              'Whether your site is structured for AI Overview eligibility',
+              'All of the above, plus the Upgrade Package: platform-specific code fixes, ready to use',
+            ].map(item => (
+              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.5; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
+                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Callout bar -->
+      <div class="reveal" style="margin-top: 28px; background: rgba(255,255,255,0.08); border-radius: 14px; border: 2px solid rgba(255,255,255,0.15); padding: 24px 28px; display: flex; align-items: center; gap: 16px;">
+        <div style="width: 3px; height: 48px; background: #8E44AD; border-radius: 9999px; flex-shrink: 0;"></div>
+        <p style="font-size: 16px; font-weight: 500; color: white; line-height: 1.55; margin: 0;">
+          The Upgrade Package has no equivalent in the free scan. It's not just a report — it's every fix we find, written for your platform, ready to paste.
+        </p>
+      </div>
+
     </div>
   </section>
 
@@ -285,7 +368,7 @@ const auditCategories = [
 
         <!-- Right: The Upgrade Kit -->
         <div class="reveal reveal-delay-2 hover-card" style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
-          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">The Upgrade Kit</div>
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">The Upgrade Package</div>
           <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">Everything you need to actually fix what we find.</div>
           <div style="height: 1px; background: #e4eaf5; margin: 20px 0;"></div>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
@@ -328,7 +411,7 @@ const auditCategories = [
       <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
         <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16A34A;">What We Check</span>
         <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
-          Every audit covers these 28 checks — at minimum.
+          Every Pro Diagnosis covers these 28 checks — at minimum.
         </h2>
         <p style="font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.72;">
           Depending on your site's platform, tracking setup, and content structure, we may identify additional findings beyond this list. You'll see everything we find.
@@ -433,13 +516,13 @@ const auditCategories = [
           },
           {
             step: '03',
-            title: 'We build your Upgrade Kit',
+            title: 'We build your Upgrade Package',
             body: 'Every issue gets a plain-English explanation, a business impact statement, and a ready-to-use fix — code, content, or instructions tailored to your specific platform.',
           },
           {
             step: '04',
             title: 'You receive your report',
-            body: 'Within 24 hours, you receive a branded Word document with the complete audit and Upgrade Kit. Everything you need is in one file — organized, prioritized, and ready to act on.',
+            body: 'Within 24 hours, you receive a branded Word document with the complete diagnosis and Upgrade Package. Everything you need is in one file — organized, prioritized, and ready to act on.',
           },
         ].map((s, i) => (
           <div class={`reveal reveal-delay-${i + 1}`} style="display: flex; flex-direction: column; gap: 12px;">
@@ -471,7 +554,7 @@ const auditCategories = [
             data-order-cta
             style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 16px 36px; border-radius: 10px; font-size: 16px; font-weight: 700; box-shadow: 0 8px 24px rgba(46,117,182,0.4); border: none; cursor: pointer; font-family: inherit; letter-spacing: -0.2px;"
           >
-            Order Your Professional Audit →
+            Order Your Pro Diagnosis →
           </button>
           <p style="margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.4);">
             Questions first? <a href={`mailto:${CONTACT_EMAIL}`} style="color: #4B9FD4; text-decoration: underline;">Contact us</a> and we'll answer them.
@@ -481,13 +564,13 @@ const auditCategories = [
         <!-- Order form — revealed on CTA click -->
         <div id="order-form-wrapper" style="display: none; text-align: left; margin-top: 8px;">
           <form
-            name="audit-order"
+            name="pro-diagnosis-order"
             method="POST"
             data-netlify="true"
             netlify-honeypot="bot-field"
             style="display: flex; flex-direction: column; gap: 16px;"
           >
-            <input type="hidden" name="form-name" value="audit-order" />
+            <input type="hidden" name="form-name" value="pro-diagnosis-order" />
             <p style="display: none;">
               <label>Don't fill this out: <input name="bot-field" /></label>
             </p>
@@ -541,6 +624,17 @@ const auditCategories = [
 </BaseLayout>
 
 <style>
+  /* Free vs. paid comparison grid */
+  .audit-compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 768px) {
+    .audit-compare-grid { grid-template-columns: 1fr; }
+  }
+
   /* Hero right column — hidden on narrow screens */
   .audit-hero-card-col {
     flex: 0 0 340px;
@@ -594,7 +688,7 @@ const auditCategories = [
   });
 
   // Confirmation message after form submit
-  const orderForm = document.querySelector<HTMLFormElement>('[name="audit-order"]');
+  const orderForm = document.querySelector<HTMLFormElement>('[name="pro-diagnosis-order"]');
   orderForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const emailInput = orderForm.querySelector<HTMLInputElement>('[name="email"]');
