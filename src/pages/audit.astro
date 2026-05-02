@@ -585,7 +585,7 @@ const auditCategories = [
               style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none;"
             />
             <input
-              type="url"
+              type="text"
               name="url"
               placeholder="yoursite.com"
               required
@@ -739,7 +739,7 @@ const auditCategories = [
     const payload = {
       name:     (orderForm.querySelector<HTMLInputElement>('[name="name"]')?.value     ?? '').trim(),
       business: (orderForm.querySelector<HTMLInputElement>('[name="business"]')?.value ?? '').trim(),
-      url:      (orderForm.querySelector<HTMLInputElement>('[name="url"]')?.value       ?? '').trim(),
+      url:      (() => { let v = (orderForm.querySelector<HTMLInputElement>('[name="url"]')?.value ?? '').trim(); if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v; return v; })(),
       email:    (orderForm.querySelector<HTMLInputElement>('[name="email"]')?.value     ?? '').trim(),
       notes:    (orderForm.querySelector<HTMLTextAreaElement>('[name="notes"]')?.value  ?? '').trim(),
     };
