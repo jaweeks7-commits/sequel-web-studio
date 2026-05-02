@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Diagnosis + Remedy Package — Pre-Delivery QA Checklist</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #222;
+      background: #fff;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 3px solid #1F3864;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .header .brand {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #2E75B6;
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1F3864;
+    }
+    .header .subtitle {
+      font-size: 13px;
+      color: #595959;
+      margin-top: 4px;
+    }
+
+    /* Client block */
+    .client-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 32px;
+      background: #F7F8FA;
+      border: 1px solid #dde3ee;
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .field label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #595959;
+      margin-bottom: 4px;
+    }
+    .field .line {
+      border-bottom: 1px solid #aaa;
+      height: 24px;
+      width: 100%;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1F3864;
+      background: #e8edf5;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    /* Checklist items */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid #e4e8f0;
+    }
+    .checklist li:hover {
+      background: #fafbfd;
+    }
+    .checklist li input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #2E75B6;
+    }
+    .checklist li span {
+      flex: 1;
+    }
+    .note {
+      font-size: 11px;
+      color: #595959;
+      margin-top: 2px;
+    }
+
+    /* Sign-off */
+    .signoff {
+      border-top: 2px solid #1F3864;
+      padding-top: 20px;
+      margin-top: 32px;
+    }
+    .signoff h2 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #1F3864;
+      margin-bottom: 16px;
+    }
+    .signoff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 32px;
+    }
+    .signoff .field .sig-line {
+      border-bottom: 1px solid #aaa;
+      height: 32px;
+      width: 100%;
+    }
+    .notes-block label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #595959;
+      margin-bottom: 6px;
+      margin-top: 20px;
+    }
+    .notes-block textarea {
+      width: 100%;
+      height: 72px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    /* Footer */
+    .doc-footer {
+      margin-top: 32px;
+      padding-top: 12px;
+      border-top: 1px solid #dde3ee;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+    }
+
+    @media print {
+      body { padding: 24px; }
+      .checklist li:hover { background: none; }
+      .notes-block textarea { border: 1px solid #bbb; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brand">Sequel Web Studio · sequelwebstudio.com</div>
+    <h1>Pro Diagnosis + Remedy Package</h1>
+    <div class="subtitle">Pre-Delivery QA Checklist — complete before sending to client</div>
+  </div>
+
+  <div class="client-block">
+    <div class="field">
+      <label>Client Name</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Website URL</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Audit Date</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Platform (Squarespace / WP / etc.)</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Number of Priority / Remedy Items</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Total Checks in Report</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — Content Completeness -->
+  <div class="section">
+    <div class="section-title">1 — Content Completeness</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c1">
+        <span><label for="c1">Cover page shows correct client name, site URL, audit date, and platform</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c2">
+        <span><label for="c2">Executive Summary score grid counts match actual findings (Critical / High Value / Pass / Nice to Have)</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c3">
+        <span><label for="c3">Priority Action List contains the correct number of items, ordered Critical first then High Value</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c4">
+        <span><label for="c4">Remedy Package item count matches the Priority Action List, in the same order</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c5">
+        <span><label for="c5">Every Remedy item has: badge, item number, title, Audit Findings block, and Remedy steps</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c6">
+        <span><label for="c6">Audit Results section accounts for all checks run (standard 28 + any B-checks)</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c7">
+        <span><label for="c7">Every check included in the Remedy Package shows a "See Remedy Package — Item X" cross-reference in Audit Results</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c8">
+        <span>
+          <label for="c8">Standalone Deliverables are called out in the "What's Included" section and marked with callout boxes inline</label>
+          <div class="note">If no standalone deliverables this client, verify the What's Included section reflects that.</div>
+        </span>
+      </li>
+      <li>
+        <input type="checkbox" id="c9">
+        <span><label for="c9">Footer shows correct delivery date and "Pro Diagnosis + Remedy Package prepared by Sequel Web Studio · sequelwebstudio.com"</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECTION 2 — Formatting -->
+  <div class="section">
+    <div class="section-title">2 — Formatting</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="f1">
+        <span><label for="f1">Cover page fills page 1 — navy gradient background, white text, no content overflow</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f2">
+        <span><label for="f2">Priority Action List begins on its own page</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f3">
+        <span><label for="f3">Remedy Package section has dark navy background with white text throughout</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f4">
+        <span><label for="f4">Critical badges are red; High Value badges are amber; Pass badges are green</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f5">
+        <span><label for="f5">Code blocks are monospace and visually distinct from surrounding text</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f6">
+        <span><label for="f6">No audit check card splits awkwardly across a page break</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="f7">
+        <span><label for="f7">No remedy item splits awkwardly across a page break</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3 — Code Blocks & Standalone Deliverables -->
+  <div class="section">
+    <div class="section-title">3 — Code Blocks &amp; Standalone Deliverables</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="d1">
+        <span>
+          <label for="d1">All JSON-LD structured data is valid</label>
+          <div class="note">Test at: Google Rich Results Test (search.google.com/test/rich-results) or Schema Markup Validator (validator.schema.org)</div>
+        </span>
+      </li>
+      <li>
+        <input type="checkbox" id="d2">
+        <span><label for="d2">All code is selectable and copyable in the PDF — click into a code block and drag to select</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="d3">
+        <span><label for="d3">No raw HTML entities visible in code blocks (no <code>&amp;lt;</code> instead of <code>&lt;</code>, no <code>&amp;amp;</code> instead of <code>&amp;</code>)</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="d4">
+        <span><label for="d4">Each standalone deliverable has the teal "Standalone Deliverable" callout box above its code block</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECTION 4 — Accuracy -->
+  <div class="section">
+    <div class="section-title">4 — Accuracy</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="a1">
+        <span><label for="a1">Every finding accurately describes what was found on the client's live site as of the audit date</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="a2">
+        <span><label for="a2">All remedy steps match the client's actual platform (correct menu paths, UI labels, etc.)</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="a3">
+        <span><label for="a3">All specific values are correct: GA4 IDs, URLs, image filenames, business name spelling, phone number, address</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="a4">
+        <span><label for="a4">Client business name and site URL are spelled and formatted consistently throughout the document</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="a5">
+        <span><label for="a5">No placeholder text remaining (no "{{", no "[CLIENT]", no "TBD", no lorem ipsum)</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECTION 5 — Final File Check -->
+  <div class="section">
+    <div class="section-title">5 — Final File Check</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="p1">
+        <span>
+          <label for="p1">PDF filename follows naming convention</label>
+          <div class="note">Format: <code>[Client-Name]-Remedy-Package-[Month]-[Year].pdf</code> — e.g. BSR-Bike-Shop-Remedy-Package-April-2026.pdf</div>
+        </span>
+      </li>
+      <li>
+        <input type="checkbox" id="p2">
+        <span><label for="p2">PDF opens without errors or password prompts</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="p3">
+        <span><label for="p3">PDF file size is reasonable (typically 1–4 MB) — an unexpectedly large file may indicate embedded images at wrong resolution</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="p4">
+        <span><label for="p4">Spot-check on mobile or tablet: document is legible at default zoom</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SIGN-OFF -->
+  <div class="signoff">
+    <h2>Sign-Off</h2>
+    <div class="signoff-grid">
+      <div class="field">
+        <label>Reviewed by</label>
+        <div class="sig-line"></div>
+      </div>
+      <div class="field">
+        <label>Review date</label>
+        <div class="sig-line"></div>
+      </div>
+      <div class="field">
+        <label>Delivered to client on</label>
+        <div class="sig-line"></div>
+      </div>
+      <div class="field">
+        <label>Delivery method (email / Drive / etc.)</label>
+        <div class="sig-line"></div>
+      </div>
+    </div>
+    <div class="notes-block">
+      <label>Notes / Issues Found</label>
+      <textarea placeholder="Any issues caught, corrections made, or deviations from standard process..."></textarea>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    Pro Diagnosis + Remedy Package — Pre-Delivery QA Checklist · Sequel Web Studio · sequelwebstudio.com
+  </div>
+
+</body>
+</html>

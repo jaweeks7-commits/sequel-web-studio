@@ -212,7 +212,7 @@ const auditCategories = [
       <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
         <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">The Difference</span>
         <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
-          This isn't a scan. It's a diagnosis — with the prescription included.
+          This isn't a scan. It's a diagnosis — with the remedy included.
         </h2>
         <p style="font-size: 16px; color: #595959; line-height: 1.72;">
           The free scan you just ran reads your HTML. The Professional Audit runs your website. Those are completely different things — the same difference as reading a car's spec sheet versus putting it on a diagnostic computer. We see what your visitors actually see: JavaScript that fires, pixels that duplicate, console errors that silently break things, and tracking that counts every visit three times.
@@ -234,7 +234,7 @@ const auditCategories = [
           {
             num: '03',
             title: 'Built for Your Platform',
-            body: 'Every fix in the Upgrade Kit is written specifically for your platform. Webflow instructions look different from WordPress instructions. You get the version that matches what you\'ll actually see on your screen — not generic advice you have to translate.',
+            body: 'Every fix in the Upgrade Package is written specifically for your platform. Webflow instructions look different from WordPress instructions. You get the version that matches what you\'ll actually see on your screen — not generic advice you have to translate.',
           },
         ].map((card, i) => (
           <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #0F1F3D; border-radius: 18px; padding: 32px 28px; border: 1px solid rgba(255,255,255,0.08);">
@@ -564,14 +564,10 @@ const auditCategories = [
         <!-- Order form — revealed on CTA click -->
         <div id="order-form-wrapper" style="display: none; text-align: left; margin-top: 8px;">
           <form
-            name="pro-diagnosis-order"
-            method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
+            id="order-form"
             style="display: flex; flex-direction: column; gap: 16px;"
           >
-            <input type="hidden" name="form-name" value="pro-diagnosis-order" />
-            <p style="display: none;">
+            <p style="display: none;" aria-hidden="true">
               <label>Don't fill this out: <input name="bot-field" /></label>
             </p>
             <input
@@ -609,11 +605,13 @@ const auditCategories = [
               style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none; resize: vertical;"
             ></textarea>
             <button
+              id="order-submit-btn"
               type="submit"
               style="padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; box-shadow: 0 8px 24px rgba(46,117,182,0.4);"
             >
               Submit Your Audit Request →
             </button>
+            <p id="order-form-error" style="display: none; color: #fca5a5; font-size: 14px; text-align: center; margin: 0;"></p>
           </form>
         </div>
 
@@ -674,11 +672,48 @@ const auditCategories = [
 <script>import '../scripts/accordion';</script>
 
 <script>
-  // Reveal order form on CTA click (both hero and final CTA buttons)
+  // ── Page-load: handle Stripe redirect params ────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const orderStatus = params.get('order');
+
+  if (orderStatus === 'success' || orderStatus === 'cancelled') {
+    const ctaArea = document.getElementById('order-cta-area');
+    const wrapper = document.getElementById('order-form-wrapper');
+    const section = document.getElementById('order-section');
+    if (ctaArea) ctaArea.style.display = 'none';
+    if (wrapper) {
+      wrapper.style.display = 'block';
+      if (orderStatus === 'success') {
+        wrapper.innerHTML = `
+          <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px; text-align: center;">
+            <div style="font-size: 32px; margin-bottom: 16px;">&#10003;</div>
+            <h3 style="color: white; font-size: 20px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.3px;">Payment confirmed — you're in.</h3>
+            <p style="font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.65; margin: 0;">
+              Check your email for an order confirmation. Your Pro Diagnosis + Remedy Package will be delivered within 24 hours.
+            </p>
+          </div>`;
+      } else {
+        wrapper.innerHTML = `
+          <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px; text-align: center;">
+            <p style="font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.65; margin: 0 0 16px;">
+              No problem — your card wasn&rsquo;t charged. Ready when you are.
+            </p>
+            <button
+              onclick="document.getElementById('order-cta-area')!.style.display='block';document.getElementById('order-form-wrapper')!.style.display='none';"
+              style="padding: 12px 24px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-family: inherit; font-size: 14px;"
+            >Try again &rarr;</button>
+          </div>`;
+      }
+    }
+    if (section) setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    window.history.replaceState({}, '', '/audit');
+  }
+
+  // ── Reveal order form on CTA click ──────────────────────────────────────
   document.querySelectorAll<HTMLElement>('[data-order-cta]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const wrapper  = document.getElementById('order-form-wrapper');
-      const ctaArea  = document.getElementById('order-cta-area');
+      const wrapper = document.getElementById('order-form-wrapper');
+      const ctaArea = document.getElementById('order-cta-area');
       if (wrapper && ctaArea) {
         ctaArea.style.display = 'none';
         wrapper.style.display = 'block';
@@ -687,27 +722,43 @@ const auditCategories = [
     });
   });
 
-  // Confirmation message after form submit
-  const orderForm = document.querySelector<HTMLFormElement>('[name="pro-diagnosis-order"]');
+  // ── Form submit → Stripe Checkout ────────────────────────────────────────
+  const orderForm = document.getElementById('order-form') as HTMLFormElement | null;
   orderForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const emailInput = orderForm.querySelector<HTMLInputElement>('[name="email"]');
-    const email = emailInput?.value ?? '';
-    const data = new FormData(orderForm);
+
+    // Honeypot — bots fill hidden fields
+    const botField = orderForm.querySelector<HTMLInputElement>('[name="bot-field"]');
+    if (botField?.value) return;
+
+    const submitBtn = document.getElementById('order-submit-btn') as HTMLButtonElement | null;
+    const errorEl   = document.getElementById('order-form-error') as HTMLParagraphElement | null;
+    if (submitBtn) { submitBtn.textContent = 'Redirecting to payment…'; submitBtn.disabled = true; }
+    if (errorEl)   { errorEl.style.display = 'none'; }
+
+    const payload = {
+      name:     (orderForm.querySelector<HTMLInputElement>('[name="name"]')?.value     ?? '').trim(),
+      business: (orderForm.querySelector<HTMLInputElement>('[name="business"]')?.value ?? '').trim(),
+      url:      (orderForm.querySelector<HTMLInputElement>('[name="url"]')?.value       ?? '').trim(),
+      email:    (orderForm.querySelector<HTMLInputElement>('[name="email"]')?.value     ?? '').trim(),
+      notes:    (orderForm.querySelector<HTMLTextAreaElement>('[name="notes"]')?.value  ?? '').trim(),
+    };
+
     try {
-      await fetch('/', { method: 'POST', body: data });
+      const res  = await fetch('/.netlify/functions/create-checkout-session', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const json = await res.json() as { checkoutUrl?: string; error?: string };
+      if (json.checkoutUrl) {
+        window.location.href = json.checkoutUrl;
+      } else {
+        throw new Error(json.error ?? 'Unknown error');
+      }
     } catch {
-      // Netlify handles the POST server-side; a network error here is non-fatal
-    }
-    const wrapper = document.getElementById('order-form-wrapper');
-    if (wrapper) {
-      wrapper.innerHTML = `
-        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px; text-align: center;">
-          <div style="font-size: 32px; margin-bottom: 16px;">✓</div>
-          <p style="font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.65; margin: 0;">
-            Got it — we'll have your audit and Upgrade Kit to you within 24 hours at <strong style="color: white;">${email}</strong>. Check your spam folder if you don't see it.
-          </p>
-        </div>`;
+      if (submitBtn) { submitBtn.textContent = 'Submit Your Audit Request →'; submitBtn.disabled = false; }
+      if (errorEl)   { errorEl.textContent = 'Something went wrong — please try again or email us directly.'; errorEl.style.display = 'block'; }
     }
   });
 </script>

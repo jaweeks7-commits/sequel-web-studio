@@ -1,0 +1,346 @@
+{
+  "_instructions": "This is the JSON format Claude produces at the end of every audit session. Save as [client]-audit-data-[month]-[year].json in the project root. Then run: node scripts/fill-template.mjs [filename].json",
+
+  "client": {
+    "name": "Acme Plumbing",
+    "siteUrl": "acmeplumbing.com",
+    "siteUrlFull": "https://www.acmeplumbing.com",
+    "platform": "Squarespace",
+    "auditDate": "May 15, 2026",
+    "auditMonthYear": "May 2026"
+  },
+
+  "scores": {
+    "_note": "Count of each badge across ALL checks — standard 28 + all B-checks. Must add up to totalChecks.",
+    "critical": 4,
+    "highValue": 6,
+    "pass": 15,
+    "niceToHave": 3
+  },
+
+  "execSummary": {
+    "headline": "One strong sentence summarizing the audit — e.g. 'Acme Plumbing has strong fundamentals but several technical gaps are actively suppressing search visibility.'",
+    "body": "Two to four sentences. What was strong, what needs work, what the client will have after the remedy."
+  },
+
+  "deliverables": [
+    {
+      "_note": "One entry per standalone code block included in the report. Empty array if none.",
+      "ref": "Remedy · Item 3",
+      "desc": "LocalBusiness schema JSON-LD — ready to paste into your site's code injection field"
+    },
+    {
+      "ref": "Remedy · Item 7",
+      "desc": "llms.txt file — complete content ready to publish at /llms.txt"
+    }
+  ],
+
+  "priorityItems": [
+    {
+      "_note": "All Criticals first, then High Values. No required count — use however many the findings warrant.",
+      "badge": "critical",
+      "text": "Plain-English title of this priority item, as it will appear in the Priority Action List."
+    },
+    {
+      "badge": "critical",
+      "text": "Second priority item title."
+    },
+    {
+      "badge": "high",
+      "text": "First High Value item title."
+    }
+  ],
+
+  "remedyItems": [
+    {
+      "_note": "Must be in the same order as priorityItems. One entry per priority item.",
+      "badge": "critical",
+      "title": "Full remedy item title (can be slightly longer than the priority list entry)",
+      "findings": "One to three sentences describing exactly what was found on this client's site — specific and factual. No remedy steps here.",
+      "steps": [
+        "Step 1: Exact platform path and action, written so a non-technical person can follow it.",
+        "Step 2: Continue as needed.",
+        "Step 3: Add or remove steps — no required count."
+      ],
+      "standalone": null
+    },
+    {
+      "badge": "critical",
+      "title": "Second remedy item title",
+      "findings": "What was found for this check.",
+      "steps": [
+        "Step 1: ...",
+        "Step 2: ..."
+      ],
+      "standalone": null
+    },
+    {
+      "_note": "Example with a standalone code deliverable. Set standalone to null if not applicable.",
+      "badge": "high",
+      "title": "Add LocalBusiness Schema",
+      "findings": "No structured data was found on the homepage. Google cannot confirm your business name, address, or phone number from machine-readable markup.",
+      "steps": [
+        "Step 1: In Squarespace, go to Settings → Advanced → Code Injection.",
+        "Step 2: Paste the JSON-LD block below into the Header field.",
+        "Step 3: Click Save, then test at search.google.com/test/rich-results."
+      ],
+      "standalone": {
+        "label": "Standalone Deliverable — LocalBusiness Schema JSON-LD",
+        "code": "<span class=\"kw\">&lt;script</span> <span class=\"at\">type</span>=<span class=\"val\">\"application/ld+json\"</span><span class=\"kw\">&gt;</span>\n{\n  <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n  <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"LocalBusiness\"</span>,\n  <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Acme Plumbing\"</span>\n}\n<span class=\"kw\">&lt;/script&gt;</span>"
+      }
+    }
+  ],
+
+  "auditChecks": {
+    "_note": "All 28 standard checks required. Keys: C01_1 through C08_2. badgeClass: badge-critical | badge-high | badge-pass | badge-nice. badgeLabel: Critical | High Value | Pass | Nice to Have. remedyItem: integer (1-based) if this check is covered in Remedy Package, null otherwise.",
+
+    "C01_1": {
+      "badgeClass": "badge-critical",
+      "badgeLabel": "Critical",
+      "found": "The page title tag is missing entirely.",
+      "impact": "Google has no text to display in search results for this page. It will either show the URL or auto-generate a title, usually poorly.",
+      "technical": null,
+      "remedyItem": 1
+    },
+    "C01_2": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Meta description is present but is 210 characters — Google truncates at ~155.",
+      "impact": "The search result snippet gets cut off mid-sentence, which reduces click-through rate.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C01_3": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Canonical tag present and pointing to the correct URL.",
+      "impact": "Google knows which URL to index. No duplicate content risk.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C01_4": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Robots meta tag set to index, follow — correct.",
+      "impact": "Search engines can crawl and index this page normally.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C01_5": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Two H1 tags found on the page.",
+      "impact": "Google expects one H1 per page. Multiple H1s dilute the primary topic signal.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C01_6": {
+      "badgeClass": "badge-nice",
+      "badgeLabel": "Nice to Have",
+      "found": "Inner pages do not have canonical tags.",
+      "impact": "Low risk for a site this size, but worth adding as the site grows.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C02_1": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "OG image present at a reasonable size.",
+      "impact": "Social shares will show a proper preview image.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C02_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "og:title, og:description, og:url, og:type all present.",
+      "impact": "Social shares render correctly with correct title and description.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C02_3": {
+      "badgeClass": "badge-nice",
+      "badgeLabel": "Nice to Have",
+      "found": "Twitter card meta tags are absent.",
+      "impact": "X/Twitter will fall back to OG tags, which usually works. Not urgent.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C03_1": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "TTFB measured at 320ms via PageSpeed Insights.",
+      "impact": "Within the acceptable range. No action needed.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C03_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Total load time 2.1s on desktop, 3.4s on mobile.",
+      "impact": "Acceptable. Mobile is slightly slow but not critical.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C03_3": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Hero image is 2.4MB and served as PNG. No next-gen format in use.",
+      "impact": "This single image is adding ~1.8s to mobile load time.",
+      "technical": null,
+      "remedyItem": 2
+    },
+    "C03_4": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Only Squarespace's own scripts loading. No heavy third-party services detected.",
+      "impact": "No third-party performance drag.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C03_5": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "No render-blocking JavaScript detected.",
+      "impact": "Page renders without script delays.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C04_1": {
+      "badgeClass": "badge-critical",
+      "badgeLabel": "Critical",
+      "found": "No structured data markup of any kind found on the homepage.",
+      "impact": "Google cannot confirm your business name, address, phone number, or hours from machine-readable data. No eligibility for rich results.",
+      "technical": null,
+      "remedyItem": 3
+    },
+    "C04_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "N/A — no structured data present to evaluate connectivity.",
+      "impact": "Will be resolved when schema is added.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C04_3": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "LocalBusiness, BreadcrumbList, and FAQPage rich result types are all eligible but absent.",
+      "impact": "Missing out on enhanced search result features that competitors may already be using.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C05_1": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "GA4 property G-XXXXXXXXXX detected and firing correctly.",
+      "impact": "Analytics data is being collected. No action needed.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C05_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "GA4 tag fires once per page load.",
+      "impact": "No duplicate counting. Data is accurate.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C05_3": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "GA4, Squarespace analytics, and one font loader detected. No unexpected scripts.",
+      "impact": "Clean third-party inventory. No hidden performance or privacy exposure.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C06_1": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "robots.txt exists and allows all crawlers including GPTBot and ClaudeBot.",
+      "impact": "No accidental crawl blocks. AI search crawlers can index the site.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C06_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "HTTPS enforced. SSL certificate valid.",
+      "impact": "Secure connection. No browser warnings for visitors.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C06_3": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Three external links found without rel=\"noopener\" attribute.",
+      "impact": "Minor security exposure. Easy one-time fix.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C06_4": {
+      "badgeClass": "badge-critical",
+      "badgeLabel": "Critical",
+      "found": "No llms.txt file found at acmeplumbing.com/llms.txt.",
+      "impact": "AI assistants (ChatGPT, Perplexity, Siri) have no structured guidance on how to represent this business. They may describe it inaccurately or incompletely.",
+      "technical": null,
+      "remedyItem": 4
+    },
+    "C07_1": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "7 of 12 images on the homepage are missing alt text.",
+      "impact": "Screen readers skip these images entirely. Google cannot index their content.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C07_2": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "HTML lang attribute set to 'en'.",
+      "impact": "Screen readers and translation tools identify the language correctly.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C08_1": {
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Squarespace — Squarespace handles hosting, CDN, and most technical SEO defaults automatically. Platform-specific instructions are provided throughout the Remedy Package.",
+      "impact": "No platform-related issues detected.",
+      "technical": null,
+      "remedyItem": null
+    },
+    "C08_2": {
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "No llms.txt, no FAQ schema, no structured NAP data. AI search engines have minimal structured content to work from.",
+      "impact": "When users ask ChatGPT or Perplexity about plumbers in your area, this site is less likely to be cited accurately.",
+      "technical": null,
+      "remedyItem": null
+    }
+  },
+
+  "bChecks": [
+    {
+      "_note": "One entry per additional diagnostic found during the live session. id follows B01, B02 convention. Empty array if no B-checks.",
+      "id": "B01",
+      "name": "Mobile Viewport Meta Tag",
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Viewport meta tag present and correctly configured.",
+      "impact": "Mobile browsers render the page at the correct scale.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "id": "B02",
+      "name": "HTTP to HTTPS Redirect",
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "http://acmeplumbing.com correctly redirects to https://www.acmeplumbing.com.",
+      "impact": "No insecure entry points. Redirect chain is clean.",
+      "technical": null,
+      "remedyItem": null
+    }
+  ]
+}
