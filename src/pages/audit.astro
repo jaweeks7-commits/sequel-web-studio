@@ -756,9 +756,10 @@ const auditCategories = [
       } else {
         throw new Error(json.error ?? 'Unknown error');
       }
-    } catch {
+    } catch (err) {
       if (submitBtn) { submitBtn.textContent = 'Submit Your Audit Request →'; submitBtn.disabled = false; }
-      if (errorEl)   { errorEl.textContent = 'Something went wrong — please try again or email us directly.'; errorEl.style.display = 'block'; }
+      const msg = (err instanceof Error && err.message && err.message !== 'Unknown error') ? err.message : 'Something went wrong — please try again or email us directly.';
+      if (errorEl)   { errorEl.textContent = msg; errorEl.style.display = 'block'; }
     }
   });
 </script>
