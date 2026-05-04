@@ -29,12 +29,10 @@ function receiptHtml(params: {
   });
   return `
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:24px;">
-      <div style="background:linear-gradient(135deg,#1F3864,#2E75B6);padding:20px 24px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <span style="color:white;font-size:17px;font-weight:700;letter-spacing:-0.3px;">Sequel Web Studio</span>
-          <div style="color:rgba(255,255,255,0.55);font-size:13px;margin-top:2px;">sequelwebstudio.com</div>
-        </div>
-        <span style="background:rgba(22,163,74,0.85);color:white;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">Payment received</span>
+      <div style="background:linear-gradient(135deg,#1F3864,#2E75B6);padding:20px 24px;border-radius:10px 10px 0 0;">
+        <span style="float:right;margin-top:3px;background:rgba(22,163,74,0.85);color:white;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:9999px;display:inline-block;">Payment received</span>
+        <span style="color:white;font-size:17px;font-weight:700;letter-spacing:-0.3px;">Sequel Web Studio</span>
+        <div style="font-size:13px;margin-top:2px;"><a href="https://sequelwebstudio.com" style="color:rgba(255,255,255,0.65);text-decoration:none;">sequelwebstudio.com</a></div>
       </div>
       <div style="border:1px solid #e4eaf5;border-top:none;padding:32px;border-radius:0 0 10px 10px;background:white;">
         <h2 style="margin:0 0 6px;color:#0F1F3D;font-size:22px;font-weight:700;">Order confirmed — you're in.</h2>
