@@ -61,8 +61,9 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown Stripe error';
+    const priceIdSuffix = (process.env.STRIPE_PRICE_ID ?? '').slice(-8);
     console.error('[create-checkout-session] Stripe error:', message);
-    return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ error: `Stripe error: ${message}` }) };
+    return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ error: `Stripe error: ${message}`, debug_price_suffix: priceIdSuffix }) };
   }
 
   return {
