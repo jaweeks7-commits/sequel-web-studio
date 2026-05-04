@@ -29,9 +29,12 @@ function receiptHtml(params: {
   });
   return `
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:24px;">
-      <div style="background:linear-gradient(135deg,#1F3864,#2E75B6);padding:20px 24px;border-radius:10px 10px 0 0;">
-        <span style="color:white;font-size:17px;font-weight:700;letter-spacing:-0.3px;">Sequel Web Studio</span>
-        <div style="color:rgba(255,255,255,0.55);font-size:13px;margin-top:2px;">sequelwebstudio.com</div>
+      <div style="background:linear-gradient(135deg,#1F3864,#2E75B6);padding:20px 24px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <span style="color:white;font-size:17px;font-weight:700;letter-spacing:-0.3px;">Sequel Web Studio</span>
+          <div style="color:rgba(255,255,255,0.55);font-size:13px;margin-top:2px;">sequelwebstudio.com</div>
+        </div>
+        <span style="background:rgba(22,163,74,0.85);color:white;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">Payment received</span>
       </div>
       <div style="border:1px solid #e4eaf5;border-top:none;padding:32px;border-radius:0 0 10px 10px;background:white;">
         <h2 style="margin:0 0 6px;color:#0F1F3D;font-size:22px;font-weight:700;">Order confirmed — you're in.</h2>
@@ -60,18 +63,18 @@ function receiptHtml(params: {
 
         <table style="width:100%;border-collapse:collapse;margin-bottom:28px;">
           <tr style="background:#F4F6FB;">
-            <td colspan="2" style="padding:8px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#0F1F3D;">Order Summary</td>
+            <td colspan="2" style="padding:8px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#0F1F3D;">Payment Receipt</td>
           </tr>
           ${[
-            ['Product',   'Pro Diagnosis + Remedy Package'],
-            ['Website',   siteUrl],
-            ['Business',  businessName],
-            ['Amount',    '$350.00 USD'],
-            ['Delivery',  'Within 24 hours to this email address'],
-          ].map(([label, val]) => `
+            ['Product',      'Pro Diagnosis + Remedy Package'],
+            ['Website',      siteUrl],
+            ['Business',     businessName],
+            ['Amount Paid',  '$350.00 USD'],
+            ['Delivery',     'Within 24 hours to this email address'],
+          ].map(([label, val], i) => `
             <tr>
               <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:13px;font-weight:600;color:#0F1F3D;white-space:nowrap;width:120px;">${label}</td>
-              <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:13px;color:#595959;">${val}</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:13px;${i === 3 ? 'color:#16a34a;font-weight:600;' : 'color:#595959;'}">${i === 3 ? '&#10003; ' + val : val}</td>
             </tr>`).join('')}
         </table>
 
@@ -208,7 +211,7 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
         transporter.sendMail({
           from:    `"Sequel Web Studio" <${contactEmail}>`,
           to:      email,
-          subject: 'Your Pro Diagnosis + Remedy Package — Order Confirmed',
+          subject: 'Payment Receipt — Pro Diagnosis + Remedy Package',
           html:    receiptHtml({ clientName, businessName, siteUrl, paidAt, contactEmail }),
         }),
         // Briefing to Joe
