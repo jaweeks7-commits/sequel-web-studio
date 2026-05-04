@@ -43,20 +43,27 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const siteUrl = process.env.PUBLIC_SITE_URL ?? 'https://sequelwebstudio.com';
 
-  const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
-    customer_email: email,
-    metadata: {
-      clientName:   name,
-      businessName: business,
-      siteUrl:      url,
-      email,
-      notes:        notes.slice(0, 500), // Stripe metadata values max 500 chars
-    },
-    success_url: `${siteUrl}/audit?order=success`,
-    cancel_url:  `${siteUrl}/audit?order=cancelled`,
-  });
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      customer_email: email,
+      metadata: {
+        clientName:   name,
+        businessName: business,
+        siteUrl:      url,
+        email,
+        notes:        notes.slice(0, 500),
+      },
+      success_url: `${siteUrl}/audit?order=success`,
+      cancel_url:  `${siteUrl}/audit?order=cancelled`,
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown Stripe error';
+    console.error('[create-checkout-session] Stripe error:', message);
+    return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ error: `Stripe error: ${message}` }) };
+  }
 
   return {
     statusCode: 200,
