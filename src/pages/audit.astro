@@ -5,7 +5,7 @@ import { CONTACT_EMAIL } from '../config/site';
 const serviceSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: 'Pro Diagnosis + Upgrade Package',
+  name: 'Pro Diagnosis + Remedy Package',
   description: 'A 28-point deep technical diagnosis of a business homepage delivered as a branded report with ready-to-use code fixes for every issue found.',
   provider: {
     '@type': 'LocalBusiness',
@@ -22,7 +22,14 @@ const serviceSchema = JSON.stringify({
 
 const auditCategories = [
   {
-    num: '01', title: 'SEO Fundamentals', sub: 'Your business shows up in search results — correctly.',
+    num: '01', title: 'Platform & AI Discoverability', sub: 'You show up when people search on ChatGPT, Perplexity, or Siri.',
+    items: [
+      { name: 'What Website Builder Was This Site Built On?', desc: 'We identify exactly what system your site runs on so every fix in the Remedy Package is written for your specific platform — not generic instructions.' },
+      { name: 'Is Your Site Ready for AI-Powered Search?', desc: 'Search has changed. We check whether your site is structured so that when someone asks an AI about your topic, your content is part of the answer.' },
+    ],
+  },
+  {
+    num: '02', title: 'SEO Fundamentals', sub: 'Your business shows up in search results — correctly.',
     items: [
       { name: 'Your Website\'s Name in Google', desc: 'The headline that appears in Google search results. If it\'s missing or cut off mid-sentence, people scroll past you.' },
       { name: 'Your Google Elevator Pitch', desc: 'The short paragraph under your title in Google results. A compelling one can double the number of people who click.' },
@@ -33,7 +40,7 @@ const auditCategories = [
     ],
   },
   {
-    num: '02', title: 'Social Sharing & Open Graph', sub: 'Your brand looks professional everywhere it gets shared.',
+    num: '03', title: 'Social Sharing & Open Graph', sub: 'Your brand looks professional everywhere it gets shared.',
     items: [
       { name: 'The Photo That Shows Up When You Share Your Link', desc: 'Without this, shares on Facebook, LinkedIn, and iMessage show a blank box. Every share so far has looked incomplete.' },
       { name: 'The Full Story Behind Every Social Share', desc: 'Controls the title, description, and URL that appear alongside your image on every social platform.' },
@@ -41,7 +48,7 @@ const auditCategories = [
     ],
   },
   {
-    num: '03', title: 'Performance & Page Speed', sub: 'Real visitors don\'t wait. And neither does Google.',
+    num: '04', title: 'Performance & Page Speed', sub: 'Real visitors don\'t wait. And neither does Google.',
     items: [
       { name: 'How Fast Does Your Server Respond?', desc: 'How quickly your server wakes up when someone types your address. If this is slow, everything else is slow too.' },
       { name: 'How Long Until Your Page is Fully Ready', desc: 'The total time a real visitor waits before they can see and use your entire page. Over 5 seconds and roughly half your visitors have already left.' },
@@ -51,7 +58,7 @@ const auditCategories = [
     ],
   },
   {
-    num: '04', title: 'Schema & Structured Data', sub: 'Search engines and AI assistants know exactly who you are.',
+    num: '05', title: 'Schema & Structured Data', sub: 'Search engines and AI assistants know exactly who you are.',
     items: [
       { name: 'Do You Speak Google\'s Language?', desc: 'Google\'s rich results — star ratings, FAQ answers, event dates — all require this markup. Without it, you\'re invisible to all of those enhanced result types.' },
       { name: 'Are Your Schema Blocks Talking to Each Other?', desc: 'Having schema is good. Having it properly connected so Google builds a complete picture of your business is better.' },
@@ -59,7 +66,7 @@ const auditCategories = [
     ],
   },
   {
-    num: '05', title: 'Analytics & Tracking Integrity', sub: 'Your data tells you the truth — not a flattering lie.',
+    num: '06', title: 'Analytics & Tracking Integrity', sub: 'Your data tells you the truth — not a flattering lie.',
     items: [
       { name: 'Is Google Analytics Actually On?', desc: 'Without GA4, there\'s no baseline. Every conversation about what\'s working is guesswork.' },
       { name: 'Is Your Tracking Counting Everything Twice?', desc: 'A duplicate tracking pixel makes Facebook think every page visit is multiple conversions. You optimize toward fake data and wonder why ads aren\'t working.' },
@@ -67,7 +74,7 @@ const auditCategories = [
     ],
   },
   {
-    num: '06', title: 'Security & Crawlability', sub: 'No broken doors. No accidental stop signs for Google.',
+    num: '07', title: 'Security & Crawlability', sub: 'No broken doors. No accidental stop signs for Google.',
     items: [
       { name: 'What Are You Telling Search Engines They Can\'t Read?', desc: 'One misplaced line in this file can block Google from indexing your entire website — and it can take weeks to notice.' },
       { name: 'Is Your Website Secure?', desc: 'The padlock icon means secure. Without it, visitors see "Not Secure" and Google ranks you lower. We confirm your site is secured all the way through.' },
@@ -76,24 +83,17 @@ const auditCategories = [
     ],
   },
   {
-    num: '07', title: 'Accessibility', sub: 'Usable by everyone. Required by law in many jurisdictions.',
+    num: '08', title: 'Accessibility', sub: 'Usable by everyone. Required by law in many jurisdictions.',
     items: [
       { name: 'Can Google (and Blind Users) Understand Your Images?', desc: 'Every image is invisible to Google and to blind visitors unless it has a text description. We find every image missing one and write the correct text.' },
       { name: 'Does Your Site Know What Language It\'s Written In?', desc: 'A one-word fix that helps screen readers pronounce words correctly and helps Google serve your site to the right audience.' },
-    ],
-  },
-  {
-    num: '08', title: 'Platform & AI Discoverability', sub: 'You show up when people search on ChatGPT, Perplexity, or Siri.',
-    items: [
-      { name: 'What Website Builder Was This Site Built On?', desc: 'We identify exactly what system your site runs on so every fix in the Upgrade Package is written for your specific platform — not generic instructions.' },
-      { name: 'Is Your Site Ready for AI-Powered Search?', desc: 'Search has changed. We check whether your site is structured so that when someone asks an AI about your topic, your content is part of the answer.' },
     ],
   },
 ];
 ---
 
 <BaseLayout
-  title="Pro Diagnosis + Upgrade Package — $350"
+  title="Pro Diagnosis + Remedy Package — $350"
   description="A 28-point deep technical diagnosis of your homepage by a real AI agent — not an automated scanner. Delivered as a branded report with ready-to-paste code for every fix. $350, within 24 hours."
   ogImage="https://sequelwebstudio.com/images/audit-og.png"
 >
@@ -119,8 +119,8 @@ const auditCategories = [
           </div>
 
           <h1 style="font-size: clamp(34px, 5vw, 62px); font-weight: 700; color: white; line-height: 1.1; letter-spacing: -2px; margin-bottom: 24px;">
-            Your website probably has problems you don't know about.<br />
-            <span class="grad-text">Here's exactly what they are — and everything needed to fix them.</span>
+            Websites need to be updated to be found by AI searches.<br />
+            <span class="grad-text">That's exactly what this does for you.</span>
           </h1>
 
           <p style="font-size: 17px; color: rgba(255,255,255,0.62); line-height: 1.72; max-width: 560px; margin-bottom: 36px;">
@@ -131,7 +131,7 @@ const auditCategories = [
             data-order-cta
             style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 16px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 24px rgba(46,117,182,0.4); letter-spacing: -0.2px; border: none; cursor: pointer; font-family: inherit;"
           >
-            Order Your Pro Diagnosis — $350 →
+            Order Your Remedy Package — $350 →
           </button>
 
           <p style="margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.4);">
@@ -212,7 +212,7 @@ const auditCategories = [
       <div class="reveal" style="max-width: 680px; margin-bottom: 52px;">
         <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6;">The Difference</span>
         <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 16px;">
-          This isn't a scan. It's a diagnosis — with the remedy included.
+          This isn't a scan. It's a deep diagnosis with the remedy included.
         </h2>
         <p style="font-size: 16px; color: #595959; line-height: 1.72;">
           The free scan you just ran reads your HTML. The Professional Audit runs your website. Those are completely different things — the same difference as reading a car's spec sheet versus putting it on a diagnostic computer. We see what your visitors actually see: JavaScript that fires, pixels that duplicate, console errors that silently break things, and tracking that counts every visit three times.
@@ -234,7 +234,7 @@ const auditCategories = [
           {
             num: '03',
             title: 'Built for Your Platform',
-            body: 'Every fix in the Upgrade Package is written specifically for your platform. Webflow instructions look different from WordPress instructions. You get the version that matches what you\'ll actually see on your screen — not generic advice you have to translate.',
+            body: 'Every fix in the Remedy Package is written specifically for your platform. Webflow instructions look different from WordPress instructions. You get the version that matches what you\'ll actually see on your screen — not generic advice you have to translate.',
           },
         ].map((card, i) => (
           <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: #0F1F3D; border-radius: 18px; padding: 32px 28px; border: 1px solid rgba(255,255,255,0.08);">
@@ -292,7 +292,7 @@ const auditCategories = [
 
         <!-- Professional Audit column -->
         <div style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; border-top: 3px solid #0F1F3D; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
-          <div style="font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2E75B6; margin-bottom: 8px;">Pro Diagnosis + Upgrade Package</div>
+          <div style="font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2E75B6; margin-bottom: 8px;">Pro Diagnosis + Remedy Package</div>
           <div style="font-size: 18px; font-weight: 700; color: #0F1F3D; margin-bottom: 6px;">Runs your site.</div>
           <div style="font-size: 14px; color: #8892A0; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Finds what's hidden.</div>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px;">
@@ -304,7 +304,7 @@ const auditCategories = [
               'Whether your schema blocks are properly connected so Google builds a complete picture',
               'Console errors silently breaking things for real visitors',
               'Whether your site is structured for AI Overview eligibility',
-              'All of the above, plus the Upgrade Package: platform-specific code fixes, ready to use',
+              'All of the above, plus the Remedy Package: platform-specific code fixes, ready to use',
             ].map(item => (
               <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.5; align-items: flex-start;">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
@@ -323,7 +323,7 @@ const auditCategories = [
       <div class="reveal" style="margin-top: 28px; background: rgba(255,255,255,0.08); border-radius: 14px; border: 2px solid rgba(255,255,255,0.15); padding: 24px 28px; display: flex; align-items: center; gap: 16px;">
         <div style="width: 3px; height: 48px; background: #8E44AD; border-radius: 9999px; flex-shrink: 0;"></div>
         <p style="font-size: 16px; font-weight: 500; color: white; line-height: 1.55; margin: 0;">
-          The Upgrade Package has no equivalent in the free scan. It's not just a report — it's every fix we find, written for your platform, ready to paste.
+          The Remedy Package has no equivalent in the free scan. It's not just a report, it's every problem we find, a solution for each, written for your platform, with step-by-step instructions and code ready to paste.
         </p>
       </div>
 
@@ -368,7 +368,7 @@ const auditCategories = [
 
         <!-- Right: The Upgrade Kit -->
         <div class="reveal reveal-delay-2 hover-card" style="background: white; border-radius: 20px; padding: 36px 32px; border: 2px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.06);">
-          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">The Upgrade Package</div>
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">The Remedy Package</div>
           <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 8px;">Everything you need to actually fix what we find.</div>
           <div style="height: 1px; background: #e4eaf5; margin: 20px 0;"></div>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
@@ -395,12 +395,68 @@ const auditCategories = [
 
       </div>
 
+      <!-- Sample deliverables gallery -->
+      <div class="reveal" style="margin-bottom: 36px;">
+        <div style="font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8892A0; margin-bottom: 16px;">
+          Sample deliverable pages — names redacted
+        </div>
+        <div class="gallery-wrapper">
+          <button class="gallery-arrow gallery-arrow-left" aria-label="Scroll left" style="display:none;">&#8592;</button>
+          <button class="gallery-arrow gallery-arrow-right" aria-label="Scroll right">&#8594;</button>
+          <div class="deliverable-gallery" id="deliverable-gallery-scroll">
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-1-title-page.jpg" data-deliverable-src="/images/sample-deliverables/sample-1-title-page.jpg" alt="Title Page" />
+            <span class="sample-label">Title Page</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-2-exec-summary.jpg" data-deliverable-src="/images/sample-deliverables/sample-2-exec-summary.jpg" alt="Exec Summary" />
+            <span class="sample-label">Exec Summary</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-3-whats-included.jpg" data-deliverable-src="/images/sample-deliverables/sample-3-whats-included.jpg" alt="What's Included" />
+            <span class="sample-label">What's Included</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-4-priority-list.jpg" data-deliverable-src="/images/sample-deliverables/sample-4-priority-list.jpg" alt="Priority List" />
+            <span class="sample-label">Priority List</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-5-remedy-steps.jpg" data-deliverable-src="/images/sample-deliverables/sample-5-remedy-steps.jpg" alt="Remedy Steps" />
+            <span class="sample-label">Remedy Steps</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-6-remedy-steps-with-code.jpg" data-deliverable-src="/images/sample-deliverables/sample-6-remedy-steps-with-code.jpg" alt="Remedy Steps with Code" />
+            <span class="sample-label">Remedy Steps with Code</span>
+          </div>
+          <div class="sample-thumb-wrap">
+            <img class="sample-thumb" src="/images/sample-deliverables/sample-7-full-audit-results.jpg" data-deliverable-src="/images/sample-deliverables/sample-7-full-audit-results.jpg" alt="Full Audit Results" />
+            <span class="sample-label">Full Audit Results</span>
+          </div>
+        </div><!-- end .deliverable-gallery -->
+        </div><!-- end .gallery-wrapper -->
+      </div>
+
       <!-- Pull quote -->
       <div class="reveal" style="background: #0F1F3D; border-radius: 16px; padding: 32px 36px; border-left: 4px solid #8E44AD;">
         <p style="font-size: 17px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.65; margin: 0; font-style: italic;">
-          "We don't just find the problems. We hand you the solution. Most audits end with a list and a handshake. Ours ends with a to-do list and a file of everything you need."
+          "We don't just find the problems. We hand you the solution. Most audits end with a list and a handshake. Ours ends with a priority list and a file of everything you need. It's the answers you need on a silver platter."
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ── MID-PAGE CTA ── -->
+  <section style="padding: 48px 0; background: linear-gradient(135deg, #0F1F3D 0%, #1F3864 60%, #2E75B6 100%); text-align: center;">
+    <div style="max-width: 720px; margin: 0 auto; padding: 0 32px;">
+      <p style="font-size: 18px; font-weight: 600; color: white; margin: 0 0 20px; letter-spacing: -0.2px;">
+        Ready to find every gap — and get the fix for each one?
+      </p>
+      <button
+        data-order-cta
+        style="display: inline-block; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 15px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; box-shadow: 0 8px 24px rgba(46,117,182,0.4); border: none; cursor: pointer; font-family: inherit; letter-spacing: -0.2px;"
+      >
+        Order Your Pro Diagnosis + Remedy Package — $350 →
+      </button>
     </div>
   </section>
 
@@ -516,13 +572,13 @@ const auditCategories = [
           },
           {
             step: '03',
-            title: 'We build your Upgrade Package',
+            title: 'We build your Remedy Package',
             body: 'Every issue gets a plain-English explanation, a business impact statement, and a ready-to-use fix — code, content, or instructions tailored to your specific platform.',
           },
           {
             step: '04',
             title: 'You receive your report',
-            body: 'Within 24 hours, you receive a branded Word document with the complete diagnosis and Upgrade Package. Everything you need is in one file — organized, prioritized, and ready to act on.',
+            body: 'Within 24 hours, you receive a branded Word document with the complete diagnosis and Remedy Package. Everything you need is in one file — organized, prioritized, and ready to act on.',
           },
         ].map((s, i) => (
           <div class={`reveal reveal-delay-${i + 1}`} style="display: flex; flex-direction: column; gap: 12px;">
@@ -542,7 +598,7 @@ const auditCategories = [
       <div class="reveal">
         <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 16px;">Ready?</span>
         <h2 style="font-size: clamp(28px, 4vw, 52px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;">
-          Find out exactly what your website is missing.
+          Find out exactly what your website is missing, and plug every hole.
         </h2>
         <p style="font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 36px;">
           $350. Delivered within 24 hours. No retainer. No sales call unless you want one.
@@ -556,9 +612,6 @@ const auditCategories = [
           >
             Order Your Pro Diagnosis →
           </button>
-          <p style="margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.4);">
-            Questions first? <a href={`mailto:${CONTACT_EMAIL}`} style="color: #4B9FD4; text-decoration: underline;">Contact us</a> and we'll answer them.
-          </p>
         </div>
 
         <!-- Order form — revealed on CTA click -->
@@ -619,6 +672,38 @@ const auditCategories = [
     </div>
   </section>
 
+  <!-- Deliverable lightbox overlay -->
+  <div
+    id="deliverable-lightbox"
+    aria-modal="true"
+    role="dialog"
+    aria-label="Sample deliverable preview"
+    style="display: none; position: fixed; inset: 0; background: rgba(5,12,28,0.93); z-index: 9999; align-items: center; justify-content: center; cursor: zoom-out; padding: 40px 20px;"
+  >
+    <button
+      id="lightbox-close"
+      aria-label="Close preview"
+      style="position: absolute; top: 20px; right: 24px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.7); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 17px; font-family: inherit; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; z-index: 1;"
+    >✕</button>
+    <!-- Inner content wrapper — stops backdrop-click from closing when clicking image/caption -->
+    <div
+      id="lightbox-content"
+      style="display: flex; flex-direction: column; align-items: center; cursor: default; max-width: 90vw;"
+      onclick="event.stopPropagation()"
+    >
+      <img
+        id="lightbox-img"
+        src=""
+        alt=""
+        style="max-width: 88vw; max-height: 72vh; border-radius: 10px; object-fit: contain; box-shadow: 0 32px 80px rgba(0,0,0,0.6); display: block;"
+      />
+      <div id="lightbox-caption" style="margin-top: 18px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; width: 100%;">
+        <div style="font-size: 10px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(100,180,230,0.65); margin-bottom: 7px;">Sample Deliverable</div>
+        <div id="lightbox-caption-title" style="font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.92); letter-spacing: -0.2px;"></div>
+      </div>
+    </div>
+  </div>
+
 </BaseLayout>
 
 <style>
@@ -666,6 +751,74 @@ const auditCategories = [
   input::placeholder,
   textarea::placeholder {
     color: rgba(255,255,255,0.3);
+  }
+
+  /* Sample deliverables gallery */
+  .gallery-wrapper {
+    position: relative;
+    padding: 0 44px;
+  }
+  .gallery-arrow {
+    position: absolute;
+    top: 75px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(15,31,61,0.75);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background 0.15s, opacity 0.15s;
+    line-height: 1;
+  }
+  .gallery-arrow:hover { background: rgba(46,117,182,0.85); }
+  .gallery-arrow-left  { left: 0; }
+  .gallery-arrow-right { right: 0; }
+  .deliverable-gallery {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .deliverable-gallery::-webkit-scrollbar { display: none; }
+  .sample-thumb-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  .sample-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #3a5a7c;
+    text-align: center;
+    letter-spacing: 0.1px;
+    line-height: 1.35;
+    width: 200px;
+  }
+  .sample-thumb {
+    width: 200px;
+    min-width: 200px;
+    height: 150px;
+    border-radius: 12px;
+    object-fit: cover;
+    cursor: zoom-in;
+    border: 1px solid rgba(15,31,61,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .sample-thumb:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(15,31,61,0.15);
   }
 </style>
 
@@ -762,4 +915,50 @@ const auditCategories = [
       if (errorEl)   { errorEl.textContent = msg; errorEl.style.display = 'block'; }
     }
   });
+</script>
+
+<script>
+  // ── Deliverable gallery lightbox ─────────────────────────────────────────
+  const dlLightbox      = document.getElementById('deliverable-lightbox')    as HTMLElement | null;
+  const dlImg           = document.getElementById('lightbox-img')             as HTMLImageElement | null;
+  const dlCaptionTitle  = document.getElementById('lightbox-caption-title')   as HTMLElement | null;
+  const dlClose         = document.getElementById('lightbox-close');
+
+  if (dlLightbox) {
+    const openLightbox  = (src: string, alt: string) => {
+      if (dlImg)          { dlImg.src = src; dlImg.alt = alt; }
+      if (dlCaptionTitle) { dlCaptionTitle.textContent = alt; }
+      dlLightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+    const closeLightbox = () => {
+      dlLightbox.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+    document.querySelectorAll<HTMLImageElement>('.sample-thumb').forEach(img => {
+      img.addEventListener('click', () => openLightbox(img.dataset.deliverableSrc ?? img.src, img.alt));
+    });
+    dlLightbox.addEventListener('click', closeLightbox);
+    dlClose?.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+  }
+
+  // ── Gallery scroll arrows ─────────────────────────────────────────────────
+  const galleryScroll = document.getElementById('deliverable-gallery-scroll') as HTMLElement | null;
+  const arrowLeft  = document.querySelector<HTMLButtonElement>('.gallery-arrow-left');
+  const arrowRight = document.querySelector<HTMLButtonElement>('.gallery-arrow-right');
+  const SCROLL_STEP = 212; // 200px thumb + 12px gap
+
+  function updateArrows() {
+    if (!galleryScroll || !arrowLeft || !arrowRight) return;
+    arrowLeft.style.display  = galleryScroll.scrollLeft > 4 ? 'flex' : 'none';
+    arrowRight.style.display = galleryScroll.scrollLeft < galleryScroll.scrollWidth - galleryScroll.clientWidth - 4 ? 'flex' : 'none';
+  }
+
+  if (galleryScroll) {
+    arrowLeft?.addEventListener('click',  () => { galleryScroll.scrollBy({ left: -SCROLL_STEP, behavior: 'smooth' }); });
+    arrowRight?.addEventListener('click', () => { galleryScroll.scrollBy({ left:  SCROLL_STEP, behavior: 'smooth' }); });
+    galleryScroll.addEventListener('scroll', updateArrows, { passive: true });
+    updateArrows();
+  }
 </script>

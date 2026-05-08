@@ -40,6 +40,9 @@ const page    = await browser.newPage();
 
 // 816×1056 px = US Letter at 96 dpi → 100vh = one page height (matches cover min-height)
 await page.setViewport({ width: 816, height: 1056 });
+// Switch to print media before loading so Edge computes print layout from the start.
+// Without this, page.pdf() switches to print mid-render and long documents may truncate.
+await page.emulateMediaType('print');
 await page.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle0', timeout: 30000 });
 
 console.log('Generating PDF…');

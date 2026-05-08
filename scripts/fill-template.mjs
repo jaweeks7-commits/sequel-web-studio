@@ -4,6 +4,15 @@ import { dirname, join } from 'path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+// Escape HTML special characters in text fields so that references to HTML code in
+// step instructions (e.g. "<script type='application/ld+json'>") are rendered as
+// visible text rather than parsed as DOM elements. The standalone.code fields are
+// pre-escaped in the JSON and must NOT be double-escaped here.
+function esc(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 const inputArg = process.argv[2];
 if (!inputArg) {
   console.error('Usage: node scripts/fill-template.mjs <client>-audit-data-<month>-<year>.json');
@@ -88,10 +97,10 @@ function buildRemedyItems(items) {
 
     const badgeLabel = item.badge === 'critical' ? 'Critical' : 'High Value';
     const stepsHtml = item.steps.map(s =>
-      `        <div class="remedy-step">${s}</div>`
+      `        <div class="remedy-step">${esc(s)}</div>`
     ).join('\n');
     const standaloneHtml = item.standalone
-      ? `\n      <div class="standalone-callout">${item.standalone.label}</div>\n      <pre>${item.standalone.code}</pre>`
+      ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre>${item.standalone.code}</pre>`
       : '';
 
     out += `
@@ -100,7 +109,7 @@ function buildRemedyItems(items) {
     <div class="remedy-item-title">${item.title}</div>
     <div class="remedy-sub">
       <div class="remedy-sub-label">Audit Findings</div>
-      <div class="remedy-finding">${item.findings}</div>
+      <div class="remedy-finding">${esc(item.findings)}</div>
     </div>
     <div class="remedy-sub">
       <div class="remedy-sub-label">Remedy — Step by Step</div>
@@ -166,12 +175,12 @@ function buildCheckCard(checkId, check, displayName) {
 </div>`;
   }
   const technicalHtml = check.technical
-    ? `\n<div class="label">Technical Detail</div><div class="technical">${check.technical}</div>`
+    ? `\n<div class="label">Technical Detail</div><div class="technical">${esc(check.technical)}</div>`
     : '';
   return `<div class="check-card">
   <div class="check-header"><div class="check-name">${name}</div><span class="badge ${check.badgeClass}">${check.badgeLabel}</span></div>
-  <div class="check-found"><strong>Found:</strong> ${check.found}</div>
-  <div class="label">Business Impact</div><div class="impact">${check.impact}</div>${technicalHtml}
+  <div class="check-found"><strong>Found:</strong> ${esc(check.found)}</div>
+  <div class="label">Business Impact</div><div class="impact">${esc(check.impact)}</div>${technicalHtml}
 </div>`;
 }
 

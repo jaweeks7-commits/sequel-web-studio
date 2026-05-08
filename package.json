@@ -11,7 +11,8 @@
     "generate-og": "node scripts/generate-og.mjs",
     "generate-audit-docx": "node scripts/generate-audit-docx.mjs",
     "fill-audit-template": "node scripts/fill-template.mjs",
-    "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs"
+    "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs",
+    "send-delivery": "node --env-file=.env scripts/send-delivery.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

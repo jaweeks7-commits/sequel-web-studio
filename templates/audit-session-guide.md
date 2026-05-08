@@ -1,411 +1,702 @@
 # Live Audit Session Guide
 ## Pro Diagnosis + Remedy Package — Sequel Web Studio
 
-> **How to use this:** Open this file alongside your browser at the start of every audit. Work through the sections in order. Record every finding in the intake sheet as you go — don't wait until the end.
+> **How to use this:** Claude reads this file at the start of every autonomous audit session. Each check specifies the exact Playwright MCP action to run, the pass/fail criteria, the badge to assign, and the JSON key path for recording the finding. Execute checks in order. Record every finding immediately — do not batch.
 
 ---
 
-## Before You Start
+## Pre-Audit Setup
 
-**What to have ready:**
+### Step 0 — Verify Playwright MCP and navigate to client site
 
-1. Client's website URL and platform (ask before the session if unknown)
-2. A copy of the intake sheet, renamed for this client:
-   - Copy `templates/audit-intake-sheet-template.md`
-   - Save as `[client]-audit-intake-[month]-[year].md` in the project root
-   - Fill in the header fields (client name, URL, platform, date)
+Run this first. It confirms Playwright is connected and gives you the first visual of the site.
 
-**Tools — open these tabs before checking anything:**
+```
+playwright_navigate: [CLIENT_URL]
+playwright_snapshot
+```
 
-| Tool | URL | Used for |
-|---|---|---|
-| Client's homepage | (client URL) | Visual inspection, source view |
-| Google PageSpeed Insights | pagespeed.web.dev | Performance, image optimization, third-party scripts |
-| Google Rich Results Test | search.google.com/test/rich-results | Schema validation |
-| BuiltWith (optional) | builtwith.com | Platform identification |
+If navigation fails or returns an error: stop and report to Joe — Playwright MCP is not connected. Joe must reload the VS Code window (`Ctrl+Shift+P` → Reload Window) and restart the session.
 
-**Keyboard shortcuts you'll use constantly:**
-
-- `Ctrl+U` — View page source
-- `Ctrl+F` — Find in source (use to locate tags quickly)
-- `F12` — Browser DevTools (Elements tab, Network tab)
-- `Ctrl+Shift+I` — DevTools (alternative)
+**Also prepare:**
+- Note the client slug: lowercase business name, hyphens for spaces (e.g., `bsr-bikeshop`)
+- Note the month-year slug: `may-2026` format
+- Data file will be saved as: `[client-slug]-audit-data-[month]-[year].json`
 
 ---
 
-## Phase 1 — Platform Identification (Check 27 first)
+## Phase 1 — Platform Identification (do this before all other checks)
 
-Do this before anything else — the platform determines how to interpret almost every other finding.
+Platform determines how to interpret nearly every finding and what remedy steps to write. Do this first.
 
-**Check 27 — Website Builder / Platform**
+### Check 27 — Website Builder / Platform
+**JSON key:** `auditChecks.C08_1`
 
-View page source and look for:
+```js
+// playwright_evaluate:
+({
+  scripts: [...document.querySelectorAll('script[src]')].map(s => s.src).slice(0, 30),
+  links:   [...document.querySelectorAll('link[href]')].map(l => l.href).slice(0, 20),
+  meta:    [...document.querySelectorAll('meta[name="generator"]')].map(m => m.getAttribute('content')),
+})
+```
+
+**Identify platform from output:**
 - `squarespace.com` in script/CSS URLs → **Squarespace**
 - `wp-content/` or `wp-includes/` in URLs → **WordPress**
 - `wix.com` or `static.wixstatic.com` → **Wix**
 - `webflow.io` or `webflow.com` → **Webflow**
 - `shopify.com` in URLs → **Shopify**
-- Custom/unknown — note what you see (hosting provider, JS framework hints)
+- None of the above → Custom/Unknown — note any framework hints
 
-Record in intake sheet: platform name + any version hints found.
+**Badge:** Always Pass (informational)
+
+**Record:**
+```json
+"C08_1": {
+  "badgeClass": "pass",
+  "badgeLabel": "Pass",
+  "found": "[Platform name] — identified from [source URL fragment]",
+  "impact": "Knowing the platform ensures remedy steps are platform-specific and actionable.",
+  "technical": "[specific URL or generator meta tag that confirmed it]"
+}
+```
 
 ---
 
 ## Category 01 — SEO Fundamentals
 
-**View page source (`Ctrl+U`) and search (`Ctrl+F`) for each:**
-
 ### Check 1 — Page Title Tag
-Search for: `<title`
+**JSON key:** `auditChecks.C01_1`
 
-- Good: Descriptive, 50–60 characters, includes business name + primary keyword
-- Bad: Default CMS title ("Home | Site Title"), too short, cut off, missing
-- Copy the exact title text into the intake sheet
+```js
+// playwright_evaluate:
+({
+  title:  document.title,
+  length: document.title.length,
+})
+```
+
+**Badge assignment:**
+- **Pass:** 50–60 characters, includes business name or primary service keyword
+- **High Value (high):** Exists but wrong length (under 30 or over 70 chars), generic CMS default ("Home | Untitled Site"), no keyword
+- **Critical:** Missing entirely (`""` or `null`)
+
+**Record:** exact title text, character count, badge
+
+---
 
 ### Check 2 — Meta Description
-Search for: `name="description"`
+**JSON key:** `auditChecks.C01_2`
 
-- Good: 120–160 characters, plain-English summary, includes a soft CTA
-- Bad: Missing entirely, duplicate of title, too short (under 70 chars), too long (truncated in SERPs)
-- Copy the exact content value into the intake sheet
+```js
+// playwright_evaluate:
+({
+  content: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? null,
+  length:  (document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '').length,
+})
+```
+
+**Badge assignment:**
+- **Pass:** 120–160 characters, plain English, includes a soft CTA or value statement
+- **High Value:** Exists but under 70 chars, over 200 chars, duplicate of title, no CTA
+- **Critical:** Missing entirely
+
+**Record:** exact content value, character count, badge
+
+---
 
 ### Check 3 — Canonical Tag
-Search for: `rel="canonical"`
+**JSON key:** `auditChecks.C01_3`
 
-- Good: `<link rel="canonical" href="https://www.example.com/">` pointing to the page's own preferred URL
-- Bad: Missing, pointing to wrong URL, pointing to http:// on an https:// site
-- Note the exact href value
+```js
+// playwright_evaluate:
+document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null
+```
+
+**Badge assignment:**
+- **Pass:** Present, points to the page's own preferred URL (https://)
+- **High Value:** Missing on homepage, points to http:// on an https:// site, wrong URL
+- **Critical:** Points to a different page (e.g., all pages canonicalize to homepage)
+
+**Record:** exact href value or "missing", badge
+
+---
 
 ### Check 4 — Robots Meta Tag
-Search for: `name="robots"`
+**JSON key:** `auditChecks.C01_4`
 
-- Good: `<meta name="robots" content="index, follow">` — or absent (absence = index/follow by default)
-- Bad: `noindex` or `nofollow` on a page that should be indexed
-- If present, copy the exact content value
+```js
+// playwright_evaluate:
+document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? 'absent (defaults to index, follow)'
+```
+
+**Badge assignment:**
+- **Pass:** `index, follow` or absent (absence = follow by default)
+- **Critical:** Contains `noindex` on a page that should be indexed
+
+**Record:** exact content value or "absent", badge
+
+---
 
 ### Check 5 — Heading Structure
-Switch to DevTools Elements tab (F12). Expand `<body>` and look for `<h1>`, `<h2>`, `<h3>`.
+**JSON key:** `auditChecks.C01_5`
 
-Or search source for `<h1`, `<h2`, `<h3`.
+```js
+// playwright_evaluate:
+[...document.querySelectorAll('h1, h2, h3')].map(h => ({
+  tag:  h.tagName,
+  text: h.textContent.trim().substring(0, 80),
+}))
+```
 
-- Good: One `<h1>` per page, logical `<h2>` / `<h3>` hierarchy, headings describe content
-- Bad: Multiple `<h1>` tags, `<h3>` used before any `<h2>`, headings used for styling only, no `<h1>` at all
-- Note the actual `<h1>` text
+**Badge assignment:**
+- **Pass:** Exactly one `<h1>`, logical h2/h3 hierarchy, headings describe content
+- **High Value:** Multiple `<h1>` tags, no `<h1>` at all, `<h3>` appears before any `<h2>`, headings used for styling
+- **Critical:** Zero headings on a content-heavy homepage
+
+**Record:** the `<h1>` text, count of h1 tags, any hierarchy issues, badge
+
+---
 
 ### Check 6 — Inner Page Canonicals
-Navigate to 2–3 inner pages (Services, About, Contact). On each, view source and search for `rel="canonical"`.
+**JSON key:** `auditChecks.C01_6`
 
-- Good: Each page has its own canonical pointing to itself
-- Bad: All pages canonical back to the homepage, missing on inner pages
+Navigate to 2–3 inner pages (Services, About, Contact) and repeat the canonical check:
+```js
+// playwright_evaluate (run on each inner page):
+({ url: window.location.href, canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null })
+```
+
+**Badge assignment:**
+- **Pass:** Each inner page has its own canonical pointing to itself
+- **High Value:** All inner pages canonical back to homepage, or canonicals missing on inner pages
+
+**Record:** pages checked, findings per page, badge
 
 ---
 
 ## Category 02 — Social Sharing & Open Graph
 
-**Back on the homepage source (`Ctrl+U`). Search for `og:`**
-
 ### Check 7 — OG Image
-Search for: `og:image`
+**JSON key:** `auditChecks.C02_1`
 
-- Good: `<meta property="og:image" content="https://...">` with an absolute URL to an image (1200×630 recommended)
-- Bad: Missing, relative URL, image URL returns 404, wrong dimensions
+```js
+// playwright_evaluate:
+({
+  ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute('content') ?? null,
+})
+```
+
+**Badge assignment:**
+- **Pass:** Absolute https:// URL present, image is accessible (1200×630 ideal)
+- **High Value:** Present but relative URL, wrong dimensions, or generic/unbranded image
+- **Critical:** Missing entirely (link previews show no image on social share)
+
+**Record:** URL value or "missing", badge
+
+---
 
 ### Check 8 — Open Graph Tags
-Search for each:
-- `og:title` — should differ from page `<title>` if needed
-- `og:description` — typically same as meta description
-- `og:url` — should match canonical URL
-- `og:type` — typically `website`
+**JSON key:** `auditChecks.C02_2`
 
-Note which are present and which are missing.
+```js
+// playwright_evaluate:
+['og:title','og:description','og:url','og:type'].reduce((acc, p) => {
+  acc[p] = document.querySelector(`meta[property="${p}"]`)?.getAttribute('content') ?? null;
+  return acc;
+}, {})
+```
 
-### Check 9 — Twitter Cards
-Search for: `twitter:`
+**Badge assignment:**
+- **Pass:** All four present with appropriate values
+- **High Value:** One or two missing, or `og:url` doesn't match canonical
+- **Critical:** All OG tags missing (social sharing completely unbranded)
 
-- Look for `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`
-- Good: `twitter:card` at minimum (usually `summary_large_image`)
-- Bad: Completely missing (social previews will fall back to OG tags — acceptable, but note it)
+**Record:** which are present/missing, any mismatched values, badge
+
+---
+
+### Check 9 — Twitter / X Cards
+**JSON key:** `auditChecks.C02_3`
+
+```js
+// playwright_evaluate:
+['twitter:card','twitter:title','twitter:description','twitter:image'].reduce((acc, p) => {
+  acc[p] = document.querySelector(`meta[name="${p}"]`)?.getAttribute('content') ?? null;
+  return acc;
+}, {})
+```
+
+**Badge assignment:**
+- **Pass:** `twitter:card` present (at minimum)
+- **Nice to Have:** Completely missing (acceptable — Twitter/X falls back to OG tags, but explicit cards look better)
+
+**Record:** which are present/missing, badge
 
 ---
 
 ## Category 03 — Performance & Page Speed
 
-**Run PageSpeed Insights on the homepage now** (pagespeed.web.dev). Use **Mobile** tab first — it's the harder score.
+Run PageSpeed Insights on the mobile tab. Navigate to:
+```
+https://pagespeed.web.dev/analysis?url=[ENCODED_CLIENT_URL]
+```
+Take a snapshot. While it loads, continue with other checks and return to read the results.
 
-Wait for results before continuing. While it runs, keep going with Category 02 if not done.
+> **Shortcut for evaluation:** Use `playwright_evaluate` on the PageSpeed results page or take a screenshot to capture the score and diagnostics sections.
 
 ### Check 10 — TTFB (Time to First Byte)
-In PageSpeed results, expand "Reduce initial server response time" if present.
+**JSON key:** `auditChecks.C03_1`
 
-- Good: Under 600ms
-- Warning: 600ms–1500ms
-- Bad: Over 1500ms (flag as Critical if over 2s)
-- Note the actual ms value
+Look for "Reduce initial server response time" in PageSpeed diagnostics. Also:
+```js
+// playwright_evaluate (on client site after navigation):
+performance.getEntriesByType('navigation')[0]?.responseStart?.toFixed(0) + 'ms'
+```
 
-### Check 11 — Total Load Time / LCP
-Look at the **LCP (Largest Contentful Paint)** metric.
+**Badge assignment:**
+- **Pass:** Under 600ms
+- **High Value:** 600–1500ms
+- **Critical:** Over 1500ms (over 2000ms = Critical)
 
-- Good: Under 2.5s
-- Warning: 2.5s–4.0s
-- Bad: Over 4.0s
-- Note the actual value and what element is the LCP
+**Record:** actual ms value, badge
+
+---
+
+### Check 11 — Largest Contentful Paint (LCP)
+**JSON key:** `auditChecks.C03_2`
+
+Look for the LCP metric in PageSpeed results (mobile tab). Also capture what the LCP element is.
+
+**Badge assignment:**
+- **Pass:** Under 2.5s
+- **High Value:** 2.5s–4.0s
+- **Critical:** Over 4.0s
+
+**Record:** actual LCP value, LCP element description, badge
+
+---
 
 ### Check 12 — Image Optimization
-Look for "Properly size images", "Serve images in next-gen formats", "Efficiently encode images" in diagnostics.
+**JSON key:** `auditChecks.C03_3`
 
-- Note total image savings if shown (e.g., "Potential savings of 450 KiB")
-- Check what format images are in (JPEG/PNG = flag; WebP/AVIF = good)
+Look for "Properly size images", "Serve images in next-gen formats", "Efficiently encode images" in PageSpeed diagnostics. Also:
+```js
+// playwright_evaluate:
+[...document.querySelectorAll('img')].map(img => ({
+  src:    img.currentSrc?.split('/').pop()?.substring(0, 50),
+  format: img.currentSrc?.split('.').pop()?.split('?')[0],
+  width:  img.naturalWidth,
+  height: img.naturalHeight,
+})).slice(0, 10)
+```
 
-### Check 13 — Third-Party Services Impact
-Look for "Reduce the impact of third-party code" in diagnostics.
+**Badge assignment:**
+- **Pass:** All images WebP/AVIF, sized appropriately, no oversized images flagged
+- **High Value:** JPEG/PNG images, PageSpeed shows savings under 200 KiB
+- **Critical:** PageSpeed shows savings over 200 KiB, or images clearly oversized
 
-- Note which third-party scripts are present and their total blocking time
-- Common culprits: Booking widgets, live chat, social feed embeds, old analytics tags
+**Record:** formats found, estimated savings from PageSpeed, badge
 
-### Check 14 — Script Loading
-Look for "Eliminate render-blocking resources" in diagnostics.
+---
 
-- Note any render-blocking scripts or stylesheets flagged
-- Check source for `<script>` tags without `async` or `defer` in `<head>`
+### Check 13 — Third-Party Script Impact
+**JSON key:** `auditChecks.C03_4`
+
+Look for "Reduce the impact of third-party code" in PageSpeed diagnostics.
+
+**Badge assignment:**
+- **Pass:** No third-party blocking time, or under 250ms total
+- **High Value:** 250–500ms blocking time, identifiable scripts causing it
+- **Critical:** Over 500ms blocking time from third-party scripts
+
+**Record:** which third-party scripts are present and their total blocking time, badge
+
+---
+
+### Check 14 — Render-Blocking Scripts
+**JSON key:** `auditChecks.C03_5`
+
+Look for "Eliminate render-blocking resources" in PageSpeed. Also:
+```js
+// playwright_evaluate:
+[...document.querySelectorAll('head script[src]')].map(s => ({
+  src:   s.src?.split('/').pop()?.substring(0, 60),
+  async: s.async,
+  defer: s.defer,
+})).filter(s => !s.async && !s.defer)
+```
+
+**Badge assignment:**
+- **Pass:** No render-blocking scripts, or PageSpeed doesn't flag this
+- **High Value:** One or two render-blocking scripts with modest savings
+- **Critical:** Multiple render-blocking scripts with PageSpeed savings over 1s
+
+**Record:** which scripts are blocking, estimated savings, badge
 
 ---
 
 ## Category 04 — Schema & Structured Data
 
-**Run the Google Rich Results Test** (search.google.com/test/rich-results) on the homepage.
-
 ### Check 15 — Structured Data Presence
-In source, search for: `application/ld+json`
+**JSON key:** `auditChecks.C04_1`
 
-- Note what @type values are present (LocalBusiness, WebSite, BreadcrumbList, etc.)
-- Note if no structured data is found at all
+```js
+// playwright_evaluate:
+[...document.querySelectorAll('script[type="application/ld+json"]')].map(s => {
+  try { return JSON.parse(s.textContent); } catch { return 'parse error'; }
+})
+```
+
+**Badge assignment:**
+- **Pass:** At least LocalBusiness and WebSite schema present with complete data
+- **High Value:** Structured data present but minimal (WebSite only, no LocalBusiness)
+- **Critical:** No structured data whatsoever
+
+**Record:** all `@type` values found, any parse errors, badge
+
+---
 
 ### Check 16 — Schema Connectivity
-In any JSON-LD blocks found, look for `@id` properties and `sameAs` arrays.
+**JSON key:** `auditChecks.C04_2`
 
-- Good: Blocks linked to each other via `@id`, `sameAs` pointing to Google Business Profile, social profiles
-- Bad: Isolated blocks with no links, placeholder values left in
+Inspect the JSON-LD blocks from Check 15 for `@id` properties and `sameAs` arrays.
 
-### Check 17 — Rich Result Types
-In the Rich Results Test results, check which rich result types are detected vs. eligible but missing.
+**Badge assignment:**
+- **Pass:** Blocks linked via `@id`, `sameAs` points to Google Business Profile and social profiles
+- **High Value:** Schema present but isolated — no `@id` links, no `sameAs` connections
+- **Nice to Have:** `sameAs` present but incomplete (e.g., missing Google Business Profile)
 
-- Common wins available: FAQPage, LocalBusiness, BreadcrumbList, Review/AggregateRating (if they have reviews)
+**Record:** what `@id` and `sameAs` values are present, badge
+
+---
+
+### Check 17 — Rich Result Eligibility
+**JSON key:** `auditChecks.C04_3`
+
+Navigate to:
+```
+https://search.google.com/test/rich-results?url=[ENCODED_CLIENT_URL]
+```
+Take a snapshot of the results.
+
+**Badge assignment:**
+- **Pass:** Rich results detected (FAQPage, LocalBusiness rich result, etc.)
+- **High Value:** Eligible for rich results (e.g., FAQ content exists on page but no FAQPage schema)
+- **Nice to Have:** Not eligible for rich results given current content type
+
+**Record:** which rich results are detected vs. eligible-but-missing, badge
 
 ---
 
 ## Category 05 — Analytics & Tracking Integrity
 
-**View page source. Search for `gtag` or `G-`**
-
 ### Check 18 — GA4 / Analytics Present
-Look for: `gtag('config', 'G-XXXXXXXXXX')` or a Google Tag Manager snippet.
+**JSON key:** `auditChecks.C05_1`
 
-- Note the GA4 ID (G-XXXXXXXXXX) found
-- Check if GTM is used instead — note the GTM-XXXXXXX ID
+```js
+// playwright_evaluate:
+{
+  gtagIds: [...(document.documentElement.innerHTML.match(/G-[A-Z0-9]{6,12}/g) ?? [])],
+  gtmIds:  [...(document.documentElement.innerHTML.match(/GTM-[A-Z0-9]{5,8}/g) ?? [])],
+  hasGtag: typeof window.gtag === 'function',
+}
+```
+
+**Badge assignment:**
+- **Pass:** One GA4 ID (`G-XXXXXXXXXX`) or GTM container found, loaded once
+- **High Value:** Analytics present but GA4 not confirmed (Universal Analytics only, or GTM with unknown config)
+- **Critical:** No analytics whatsoever — owner is flying blind
+
+**Record:** GA4 / GTM IDs found, badge
+
+---
 
 ### Check 19 — Duplicate Pixel Firing
-Search source for the GA4 ID or GTM ID — count how many times it appears.
+**JSON key:** `auditChecks.C05_2`
 
-**Platform-specific duplicate sources:**
-- **Squarespace:** Settings > Analytics might have GA4 set, AND Code Injection might have a second copy. Two sources = duplicate.
-- **WordPress:** Multiple analytics plugins can fire the same tag (e.g., MonsterInsights + manual GA4 snippet).
-- Also check PageSpeed Insights for duplicate Google Analytics entries in third-party audit.
+Use the IDs found in Check 18. Count occurrences:
+```js
+// playwright_evaluate — replace G-XXXXXXXXXX with actual ID:
+(document.documentElement.innerHTML.match(/G-XXXXXXXXXX/g) ?? []).length
+```
 
-Flag as Critical if the same tag loads twice.
+Also check platform-specific sources:
+- **Squarespace:** GA4 ID in Settings → Analytics AND again in Code Injection = duplicate
+- **WordPress:** Multiple analytics plugins active simultaneously
 
-### Check 20 — Third-Party Inventory
-From PageSpeed Insights "Reduce the impact of third-party code" and a source scan — list every third-party script domain found.
+**Badge assignment:**
+- **Pass:** Each tag fires exactly once
+- **Critical:** Same tag loads twice — double-counts all traffic data
 
-Common inventory:
-- Google Analytics / GTM
-- Google Fonts
-- Facebook Pixel
-- HotJar / Clarity
-- Booking/scheduling widgets (Acuity, Calendly, etc.)
-- Live chat (Intercom, Drift, etc.)
-- Review widgets (Birdeye, Podium, etc.)
+**Record:** occurrence count per ID, likely cause, badge
 
-Note all present — this is informational, not automatically a fail.
+---
+
+### Check 20 — Third-Party Script Inventory
+**JSON key:** `auditChecks.C05_3`
+
+```js
+// playwright_evaluate:
+[...new Set([...document.querySelectorAll('script[src]')].map(s => {
+  try { return new URL(s.src).hostname; } catch { return null; }
+}).filter(Boolean))]
+```
+
+**Badge assignment:**
+- Always **Pass** (informational) — this is a baseline inventory, not a pass/fail check
+
+**Record:** list of all third-party domains found, badge = Pass
 
 ---
 
 ## Category 06 — Security & Crawlability
 
 ### Check 21 — Robots.txt
-Navigate directly to: `[client-url]/robots.txt`
+**JSON key:** `auditChecks.C06_1`
 
-- Good: File exists, `User-agent: *` with no problematic `Disallow` rules, sitemap URL referenced
-- Bad: Returns 404, blocks entire site (`Disallow: /`), blocks important paths incorrectly
-- Copy the full contents into the intake sheet
+Navigate to `[CLIENT_URL]/robots.txt` and take a snapshot.
+
+**Badge assignment:**
+- **Pass:** File exists, `User-agent: *` with no problematic Disallow rules, sitemap URL referenced
+- **High Value:** File exists but missing sitemap reference, or has overly restrictive rules
+- **Critical:** Returns 404 (missing), or `Disallow: /` blocks everything
+
+**Record:** full robots.txt content (or "404 not found"), badge
+
+---
 
 ### Check 22 — HTTPS / SSL
-Look at the browser address bar on every page visited.
+**JSON key:** `auditChecks.C06_2`
 
-- Good: Padlock icon, `https://` throughout
-- Bad: "Not Secure" warning, padlock with warning icon, mixed content warning in DevTools console
+```js
+// playwright_evaluate:
+({
+  protocol:    window.location.protocol,
+  mixedContent: [...document.querySelectorAll('[src]')].filter(el => el.src?.startsWith('http://')).length,
+})
+```
 
-### Check 23 — External Link noopener
-In source, search for: `target="_blank"`
+Also check: does `http://[CLIENT_URL]` redirect to `https://`?
+```
+playwright_navigate: http://[CLIENT_DOMAIN_NO_HTTPS]
+```
 
-- For every external link that opens in a new tab, it should also have `rel="noopener noreferrer"` (or at minimum `rel="noopener"`)
-- Bad: `<a href="..." target="_blank">` with no `rel` attribute
+**Badge assignment:**
+- **Pass:** `https://` everywhere, http redirects to https, no mixed content
+- **High Value:** https present but http doesn't redirect, or mixed content warnings
+- **Critical:** No SSL at all (rare in 2026, but flag immediately if found)
+
+**Record:** protocol, mixed content count, redirect behavior, badge
+
+---
+
+### Check 23 — External Link Security
+**JSON key:** `auditChecks.C06_3`
+
+```js
+// playwright_evaluate:
+[...document.querySelectorAll('a[target="_blank"]')].map(a => ({
+  text: a.textContent.trim().substring(0, 40),
+  href: a.href.substring(0, 60),
+  rel:  a.getAttribute('rel'),
+})).filter(a => !a.rel?.includes('noopener'))
+```
+
+**Badge assignment:**
+- **Pass:** All `target="_blank"` links include `rel="noopener noreferrer"`
+- **Nice to Have:** One or two links missing `rel` (low risk in modern browsers, but best practice)
+- **High Value:** Many external links missing `rel` — notable pattern
+
+**Record:** count of offending links, examples, badge
+
+---
 
 ### Check 24 — llms.txt
-Navigate to: `[client-url]/llms.txt`
+**JSON key:** `auditChecks.C06_4`
 
-- Good: File exists and describes the site's content and purpose for AI crawlers
-- Bad: 404 (file missing — this is a "Nice to Have" item and a natural upsell for Sequel Web Studio)
+Navigate to `[CLIENT_URL]/llms.txt` and check if it loads.
+
+**Badge assignment:**
+- **Pass:** File exists with descriptive content
+- **Nice to Have:** 404 (most sites don't have this yet — flag as a Sequel Web Studio upsell opportunity)
+
+**Record:** exists or "404 not found", badge
 
 ---
 
 ## Category 07 — Accessibility
 
 ### Check 25 — Image Alt Text
-In source, search for: `<img`
+**JSON key:** `auditChecks.C07_1`
 
-- For each `<img>` tag, check for an `alt` attribute
-- Good: Every image has a descriptive `alt` text; decorative images have `alt=""`
-- Bad: Missing `alt` attributes, `alt="image"` or `alt="photo"` (non-descriptive), `alt` filled with keywords (keyword stuffing)
-- Note approx. how many images are missing alt text
+```js
+// playwright_evaluate:
+{
+  total:   document.querySelectorAll('img').length,
+  missing: [...document.querySelectorAll('img')].filter(img => img.getAttribute('alt') === null).length,
+  empty:   [...document.querySelectorAll('img')].filter(img => img.getAttribute('alt') === '' && !img.getAttribute('role')).length,
+  samples: [...document.querySelectorAll('img')].slice(0, 6).map(img => ({
+    src: img.currentSrc?.split('/').pop()?.substring(0, 40),
+    alt: img.getAttribute('alt'),
+  })),
+}
+```
+
+**Badge assignment:**
+- **Pass:** All images have alt attributes (decorative images may use `alt=""`)
+- **High Value:** Under 25% of images missing alt text
+- **Critical:** Over 25% of images missing alt text, or hero/product images missing alt
+
+**Record:** total images, missing count, sample findings, badge
+
+---
 
 ### Check 26 — HTML Lang Attribute
-In source, look at the opening `<html` tag.
+**JSON key:** `auditChecks.C07_2`
 
-- Good: `<html lang="en">` (or appropriate language code)
-- Bad: `<html>` with no `lang` attribute
+```js
+// playwright_evaluate:
+document.documentElement.getAttribute('lang')
+```
+
+**Badge assignment:**
+- **Pass:** `lang="en"` (or appropriate language code)
+- **High Value:** Missing `lang` attribute entirely
+
+**Record:** value found or "missing", badge
 
 ---
 
 ## Category 08 — Platform & AI Discoverability
 
-### Check 27 — Platform (already done above)
-Confirm what you found in Phase 1. No additional work needed.
+### Check 27 — Platform (already done)
+**JSON key:** `auditChecks.C08_1`
+
+Already recorded in Phase 1. No additional work.
+
+---
 
 ### Check 28 — AI-Powered Search Readiness
-This is a holistic judgment based on what you've found. Consider:
+**JSON key:** `auditChecks.C08_2`
 
-- Is there clear, structured content on the homepage that describes what the business does?
-- Is there JSON-LD structured data (LocalBusiness + WebSite minimum)?
-- Is there an llms.txt? (Check 24)
-- Does the site have consistent NAP (Name, Address, Phone) across pages?
-- Would a search AI be able to accurately describe this business from the homepage content alone?
+Holistic judgment based on prior findings. Evaluate:
 
-Record your assessment (Pass / Needs Work) and a brief note on what's missing.
+```js
+// playwright_evaluate — check NAP consistency:
+({
+  hasAddress: /\d+\s+\w+\s+(st|street|ave|avenue|blvd|boulevard|rd|road|dr|drive|ln|lane|way|ct|court)/i.test(document.body.innerText),
+  hasPhone:   /\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}/.test(document.body.innerText),
+  hasHours:   /(monday|tuesday|wednesday|open|hours)/i.test(document.body.innerText),
+})
+```
 
----
+Also consider (from earlier findings):
+- Does LocalBusiness schema exist? (Check 15)
+- Does llms.txt exist? (Check 24)
+- Is homepage content structured clearly enough for an AI to describe the business?
 
-## B-Checks — Common Additional Issues
+**Badge assignment:**
+- **Pass:** Schema present, clear NAP, structured content, llms.txt ideally present
+- **High Value:** Missing LocalBusiness schema or no NAP data — AI can't accurately describe the business
+- **Critical:** Homepage is image-heavy with minimal text — AI crawlers get nothing useful
 
-Work through these after completing the standard 28. Not all will apply to every client.
-
-| B# | How to check |
-|---|---|
-| **B01** — Mobile viewport meta | Source: search `name="viewport"` |
-| **B02** — Mobile layout issues | Resize browser to 375px wide (DevTools device toolbar), check for overlap or cutoff |
-| **B03** — HTTP → HTTPS redirect | In browser address bar, type `http://[client-url]` — does it auto-redirect to https? |
-| **B04** — Non-www → www redirect | Type `http://[client-url]` without www — does it resolve correctly? |
-| **B05** — 404 page quality | Navigate to `[client-url]/this-page-does-not-exist` — is the 404 page helpful? |
-| **B06** — Sitemap accuracy | Navigate to `[client-url]/sitemap.xml` — does homepage URL match canonical? Any staging/draft URLs? |
-| **B07** — Draft pages in sitemap | Scan sitemap for `/draft/`, `/test/`, `/staging/`, or password-protected pages |
-| **B08** — Cookie consent / GDPR | Reload homepage in a fresh private window — does a cookie banner appear? |
-| **B09** — Privacy policy linked | Check footer for a Privacy Policy link |
-| **B10** — Physical address on homepage | Scan homepage for street address — is NAP (Name, Address, Phone) present? |
-| **B11** — Phone number format | Check that phone number is consistently formatted and clickable (`tel:` link on mobile) |
-| **B12** — Social media completeness | Look for social links in header/footer — are all active profiles linked? Any dead links? |
-| **B13** — Embedded map on Contact | Navigate to Contact page — is there a Google Map embed? |
-| **B14** — Web form on Contact | Is there a contact form, or only email/phone? |
-| **B15** — Inner page title quality | Check 3–4 inner page titles — unique, descriptive, right length? |
-| **B16** — Missing page-specific schema | FAQ page without FAQPage schema, Services page without Service schema, etc. |
-| **B18** — Developer artifacts in source | Source: look for TODO comments, `console.log`, staging URLs, commented-out blocks |
-| **B19** — Favicon formats | Check `<link rel="icon"` in source — is it just `.ico` or also `.png`/`.svg`/`apple-touch-icon`? |
-| **B20** — Copyright year in footer | Is the footer copyright year current? |
+**Record:** NAP presence, schema status, content structure assessment, badge
 
 ---
 
-## Platform-Specific Notes
+## B-Checks — Additional Diagnostics
+
+Run these after the 28 standard checks. Not all apply to every site. Only run the ones that are relevant given what you've already found.
+
+| B# | Check | Playwright action |
+|----|-------|-------------------|
+| **B01** | Mobile viewport meta | `document.querySelector('meta[name="viewport"]')?.getAttribute('content')` |
+| **B02** | Mobile layout issues | `playwright_screenshot` at 375px viewport width; assess visually |
+| **B03** | HTTP→HTTPS redirect | Navigate to `http://[domain]` (no www) — does it redirect to https? |
+| **B04** | Non-www→www redirect | Navigate to `http://[domain]` without www — does it resolve correctly? |
+| **B05** | 404 page quality | Navigate to `[url]/this-page-does-not-exist-404` — snapshot the result |
+| **B06** | Sitemap accuracy | Navigate to `[url]/sitemap.xml` — does homepage URL match canonical? |
+| **B07** | Draft pages in sitemap | Scan sitemap for `/draft/`, `/test/`, `/staging/` |
+| **B08** | Cookie consent | Navigate in a fresh context — does a cookie banner appear? |
+| **B09** | Privacy policy linked | `document.querySelector('a[href*="privacy"]')?.href` |
+| **B10** | Physical address on homepage | Already checked in C08_2 NAP evaluation |
+| **B11** | Phone number format | `[...document.querySelectorAll('a[href^="tel:"]')].map(a => a.href)` |
+| **B12** | Social media links | `[...document.querySelectorAll('a[href*="facebook"],a[href*="instagram"],a[href*="linkedin"],a[href*="twitter"],a[href*="x.com"]')].map(a => a.href)` |
+| **B13** | Embedded map on Contact | Navigate to Contact page — `document.querySelector('iframe[src*="google.com/maps"]')` |
+| **B14** | Web form on Contact | Navigate to Contact page — `document.querySelector('form')` |
+| **B15** | Inner page title quality | Navigate to 3 inner pages, run Check 1 on each |
+| **B16** | Missing page-specific schema | FAQ page without FAQPage schema, Services page without Service schema |
+| **B18** | Developer artifacts | `document.documentElement.innerHTML.match(/TODO|console\.log|staging\.|\.local/gi)` |
+| **B19** | Favicon formats | `[...document.querySelectorAll('link[rel*="icon"]')].map(l => ({rel: l.rel, href: l.href}))` |
+| **B20** | Copyright year in footer | `document.querySelector('footer')?.innerText?.match(/©\s*(\d{4})/)` |
+
+---
+
+## Platform-Specific Remedy Notes
+
+Use these when writing remedy steps. Platform-specific paths matter — a vague "update your SEO settings" is not useful.
 
 ### Squarespace
-
-**Where settings live:**
-- SEO fields: Pages panel → click the page → click the gear icon → SEO tab
-- Analytics/GA4: Settings → Analytics OR Settings → Advanced → External Services
-- Code Injection: Settings → Advanced → Code Injection (header/footer)
-- Schema: Squarespace adds minimal LocalBusiness schema automatically — check /sitemap.xml for what it generates
-
-**Common Squarespace issues:**
-- **Duplicate GA4:** Tag in Settings → Analytics AND again in Code Injection header. Very common. Flag Critical.
-- **Draft pages in sitemap:** Published test/draft pages appear at /sitemap.xml. Flag High Value.
-- **No OG image customization by page:** Squarespace uses the social image set at the page level (gear → social image). If not set, it uses the site-wide default or nothing.
-- **Missing meta descriptions:** Squarespace doesn't auto-generate them. Must be set per page.
-- **robots.txt:** Squarespace auto-generates this. Check it; it occasionally blocks things unnecessarily.
+- **SEO fields:** Pages panel → click page → gear icon → SEO tab
+- **Analytics/GA4:** Settings → Analytics OR Settings → Advanced → External Services
+- **Code Injection:** Settings → Advanced → Code Injection (header/footer) — check for duplicate GA4 here
+- **Duplicate GA4 pattern:** GA4 set in Settings → Analytics AND copied again in Code Injection = Critical duplicate
+- **Draft pages in sitemap:** Squarespace publishes test pages to /sitemap.xml — flag as High Value
+- **OG images:** Set per page via gear → Social Image tab; site-wide default if not set
 
 ### WordPress
-
-**Where settings live (depends on plugins):**
-- With Yoast SEO: SEO menu in left sidebar → most SEO fields there
-- With RankMath: RankMath menu in left sidebar
-- Without either: Settings → Reading (for basic indexing), theme header for meta tags (inconsistent)
-
-**Common WordPress issues:**
-- **Multiple SEO plugins active simultaneously:** Causes duplicate meta tags. Common when a site changed plugins and both are still active.
-- **Default robots.txt blocking search engines:** Settings → Reading has a "Discourage search engines" checkbox that is sometimes left checked.
-- **No OG images without a plugin:** Core WordPress doesn't add OG tags — requires Yoast, RankMath, or a dedicated OG plugin.
-- **Slow TTFB on shared hosting:** Very common. Flag and note the host if visible in source or response headers.
-- **Plugin bloat visible in source:** Count the number of scripts in `<head>`. More than 15–20 is a signal.
+- **With Yoast SEO:** SEO menu in left sidebar → most fields there
+- **With RankMath:** RankMath menu in left sidebar
+- **Without either:** Settings → Reading for indexing; theme header for meta tags (inconsistent)
+- **Multiple SEO plugins = duplicate meta tags:** Check if both Yoast and RankMath are active — very common after plugin switches
+- **"Discourage search engines" checkbox:** Settings → Reading — sometimes left checked accidentally (Critical if found)
+- **OG tags require a plugin:** Core WP doesn't add them — needs Yoast, RankMath, or a dedicated OG plugin
 
 ### Wix
-
-**Where settings live:**
-- SEO: Site & App → SEO Tools, or individual page Settings → SEO Basics
-- Analytics: Site & App → Marketing Integrations
-
-**Common Wix issues:**
-- **JavaScript-heavy = slow TTFB:** Wix pages are largely JS-rendered. TTFB over 2s is typical on Wix.
-- **Limited structured data control:** Wix adds some schema automatically; custom JSON-LD requires Wix Velo (developer mode).
-- **URL structure:** Wix URLs are sluggish and not always editable. Note any `/page/` or odd URL formats.
-- **robots.txt:** Wix auto-generates. Check it.
+- **SEO:** Site & App → SEO Tools, or individual page Settings → SEO Basics
+- **Analytics:** Site & App → Marketing Integrations
+- **JS-heavy = slow TTFB:** Wix pages are largely JS-rendered; TTFB over 2s is typical — flag but note it's platform-limited
+- **Schema:** Wix adds some automatically; custom JSON-LD requires Wix Velo (developer mode) — flag as High Value
+- **URL structure:** Wix URLs are sometimes not editable — note any `/page/` oddities
 
 ### Webflow
-
-**Common Webflow issues:**
-- Clean HTML and good semantic structure — usually better than average
-- Large exported JS bundles can hurt performance
-- SEO settings per-page in the Designer (Pages panel → page settings)
-- Schema: Webflow doesn't add structured data automatically — almost always missing
+- **SEO settings:** Pages panel in Designer → page settings per page
+- **Usually better HTML:** Webflow tends to produce cleaner semantic markup than Wix/Squarespace
+- **Schema:** Webflow doesn't add structured data automatically — almost always missing — flag as Critical
+- **Performance:** Large exported JS bundles can hurt LCP; check PageSpeed
 
 ---
 
-## Wrapping Up the Session
+## Wrapping Up
 
-Once all checks are complete:
+After all checks are complete:
 
-1. **Review B-checks for any additional numbered items** (B23, B24, etc.) for anything found that didn't fit an existing B-number — assign new B-numbers in sequence.
+1. **Review B-check findings** — assign B-numbers to any additional issues found
+2. **Score tally** — count by badge type: Critical / High Value / Pass / Nice to Have
+3. **Priority selection** — from all Critical and High Value items, select the 10 that most directly impact ranking, trust, or conversion for this specific client. All Criticals go first.
+4. **Write executive summary** — 2–3 sentences covering the overall state and the most urgent theme
+5. **List standalone deliverables** — any code blocks (JSON-LD, robots.txt content, meta tag snippets) that will be included in the Remedy Package
 
-2. **Score tally** — count your findings by badge type and fill in the intake sheet score grid:
-   - Critical (must fix — impacts ranking, trust, or conversion)
-   - High Value (significant improvement available)
-   - Pass (no action needed)
-   - Nice to Have (low priority improvement)
-
-3. **Tentative priority selection** — looking at all Critical and High Value findings, mark the ones with the highest business impact for the Priority Action List. Typical range is 5–12; aim for what genuinely moves the needle most for this client's situation.
-
-4. **Save the intake sheet.** The audit session is done. The next step is handing the completed intake sheet to Claude to produce the JSON data file, then running the pipeline to generate the PDF.
+Then generate the JSON data file per `templates/audit-data-schema.json` and run the pipeline.
 
 ---
 
-## Quick Reference — Pipeline After Session
+## Quick Reference — Pipeline After Audit
 
 ```
-1. [client]-audit-intake-[month]-[year].md   ← you filled this in
-        ↓  (Claude reads intake sheet, produces JSON)
-2. [client]-audit-data-[month]-[year].json
-        ↓  node scripts/fill-template.mjs [client]-audit-data-[month]-[year].json
-3. [client]-pro-diagnosis-[month]-[year].html
-        ↓  node scripts/generate-audit-pdf.mjs [client]-pro-diagnosis-[month]-[year].html
-4. [Client-Name]-Remedy-Package-[Month]-[Year].pdf   ← client deliverable
+Playwright audit → findings recorded
+        ↓
+Generate: [client-slug]-audit-data-[month]-[year].json
+        ↓  node scripts/fill-template.mjs [data-file]
+Generate: [client-slug]-pro-diagnosis-[month]-[year].html
+        ↓  node scripts/generate-audit-pdf.mjs [html-file]
+Generate: [Client-Slug]-Remedy-Package-[Month]-[Year].pdf
+        ↓  present to Joe for review
+        ↓  on approval: node --env-file=.env scripts/send-delivery.mjs --to [email] --name "[name]" --pdf "[pdf-file]"
+Delivered to client
 ```
-
-Run the QA checklist (`templates/audit-qa-checklist.html`) before sending.
 
 ---
 

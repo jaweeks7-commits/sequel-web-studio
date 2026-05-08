@@ -45,8 +45,8 @@ Every report must follow this exact order. Do not deviate without updating this 
 | 1 | Cover / Title Page | Client name, site URL, date, platform, total checks |
 | 2 | Executive Summary | Score grid only (Critical / High Value / Pass / Nice to Have counts) + 1–2 sentence overview |
 | 3 | What's Included | Four cards: Priority Action List, Remedy Package, Audit Results, Standalone Deliverables |
-| 4 | Priority Action List | 10 items ranked by impact, on its own page |
-| 5 | Remedy Package | 10 items, Criticals first then High Values. Each item: badge + title → Audit Findings → Remedy Steps |
+| 4 | Priority Action List | All Critical + High Value items ranked by impact, on its own page |
+| 5 | Remedy Package | One remedy per Critical and High Value item, Criticals first then High Values. Each item: badge + title → Audit Findings → Remedy Steps |
 | 6 | Audit Results | All 50 checks across 9 categories. Items covered in Remedy Package show a cross-reference note |
 | 7 | Footer | "Pro Diagnosis + Remedy Package prepared by Sequel Web Studio · sequelwebstudio.com" + date |
 
@@ -289,7 +289,7 @@ These are found during the live audit session — not all will apply to every cl
 | Deliverable format | PDF (not Word .docx) | Full CSS formatting preserved; all text including code is selectable/copyable in PDF |
 | PDF generator | Puppeteer + system Edge | No extra browser download; uses the same browser Joe views the HTML in |
 | Document name | "Pro Diagnosis + Remedy Package" | Replaced "Pro Diagnosis + Upgrade Package" — "Remedy" is more descriptive |
-| Remedy Package scope | Exactly 10 items (Priority Action List only) | Clear scope; clients know exactly what they're getting |
+| Remedy Package scope | All Critical + all High Value items (no cap) | Every finding that matters gets a fix. Prior 10-item cap removed May 2026 — it left high-value findings without remedies. |
 | Audit Results cross-referencing | Items in Remedy Package show "See Remedy Package — Item X" | Avoids duplication; keeps document navigable |
 | Code delivery | Inline in PDF as copyable code blocks | Client can select and copy directly from the PDF |
 | Standalone deliverables | Called out in What's Included + inline callout boxes | Ensures client doesn't miss ready-to-use artifacts |
