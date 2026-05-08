@@ -45,22 +45,29 @@ export const PRICING = {
 
 // Schema.org LocalBusiness — injected as JSON-LD on every page (D8)
 export const LOCAL_BUSINESS_SCHEMA = {
-  '@context':   'https://schema.org',
-  '@type':      'ProfessionalService',
-  name:         SITE_NAME,
-  url:          SITE_URL,
-  email:        CONTACT_EMAIL,
-  description:  'Custom-coded websites for small businesses across the US — built to rank on Google, ChatGPT, and voice search. Starting at $1,000.',
-  priceRange:   '$1,000 – $2,000',
-  image:        `${SITE_URL}/images/joe-headshot.png`,
+  '@context':  'https://schema.org',
+  '@type':     'ProfessionalService',
+  '@id':       'https://sequelwebstudio.com/#organization',
+  name:        SITE_NAME,
+  url:         SITE_URL,
+  telephone:   '+1-XXX-XXX-XXXX',   // Replace with real number once decided (audit Item 5)
+  email:       CONTACT_EMAIL,
+  description: 'Custom-coded websites for small businesses across the US — built to rank on Google, ChatGPT, and voice search. Starting at $1,000.',
+  priceRange:  '$1,000 – $2,000',
+  image:       `${SITE_URL}/images/joe-headshot.png`,
   founder: {
     '@type': 'Person',
+    '@id':   'https://sequelwebstudio.com/#founder',
     name:    'Joe Weeks',
   },
-  areaServed:   {
+  areaServed: {
     '@type': 'Country',
     name:    'United States',
   },
-  serviceType:  'Web Design',
-  sameAs:       [SITE_URL],
+  serviceType: 'Web Design',
+  sameAs: [
+    'https://www.linkedin.com/company/sequel-web-studio',   // Update with real URL (audit Item 6)
+    'https://www.instagram.com/sequelwebstudio',             // Update with real URL (audit Item 6)
+    // Add Google Business Profile URL here once created (audit Item 10)
+  ],
 };

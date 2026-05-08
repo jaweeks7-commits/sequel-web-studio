@@ -5,12 +5,14 @@ import { SITE_NAME, SITE_URL, CONTACT_EMAIL } from '../config/site';
 const personSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type':    'Person',
+  '@id':      'https://sequelwebstudio.com/#founder',
   name:       'Joe Weeks',
   jobTitle:   'Founder',
   url:        `${SITE_URL}/about`,
   email:      CONTACT_EMAIL,
   worksFor: {
     '@type': 'ProfessionalService',
+    '@id':   'https://sequelwebstudio.com/#organization',
     name:    SITE_NAME,
     url:     SITE_URL,
   },
@@ -18,8 +20,9 @@ const personSchema = JSON.stringify({
 ---
 
 <BaseLayout
-  title="About — Sequel Web Studio"
+  title="About"
   description="Sequel Web Studio builds custom-coded websites for small businesses across the US. Learn about how we work."
+  ogImage="https://sequelwebstudio.com/images/og-home.png"
 >
   <script type="application/ld+json" set:html={personSchema} slot="head" />
 

@@ -16,7 +16,7 @@ const {
   ogImage,
 } = Astro.props;
 
-const pageTitle    = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
+const pageTitle    = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
 const canonicalUrl = `${SITE_URL}${Astro.url.pathname}`;
 const schema       = JSON.stringify(LOCAL_BUSINESS_SCHEMA);
 

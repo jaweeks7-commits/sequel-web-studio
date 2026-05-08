@@ -7,6 +7,7 @@ import { layers } from '../data/layers';
 const faqSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type':    'FAQPage',
+  about:      { '@id': 'https://sequelwebstudio.com/#organization' },
   mainEntity: [
     { '@type': 'Question', name: "What's included in the price?",  acceptedAnswer: { '@type': 'Answer', text: 'Design, build, launch, and the full technical foundation — schema markup, sitemap, analytics setup, contact form, and 30 days of post-launch support.' } },
     { '@type': 'Question', name: 'What about hosting?',            acceptedAnswer: { '@type': 'Answer', text: 'We handle hosting for $20/month. That covers your server, SSL certificate, and uptime monitoring — no setup required on your end.' } },
@@ -18,8 +19,9 @@ const faqSchema = JSON.stringify({
 ---
 
 <BaseLayout
-  title="Sequel Web Studio"
+  title="Sequel Web Studio — Custom Websites for Small Businesses"
   description="Sequel Web Studio builds custom-coded websites for small businesses across the US that get found on Google, ChatGPT, and voice search. Starting at $1,000."
+  ogImage="https://sequelwebstudio.com/images/og-home.png"
 >
   <script type="application/ld+json" set:html={faqSchema} slot="head" />
 

@@ -24,3 +24,28 @@ Thumbs.db
 /Joe-headshot.PNG
 /Logo Option.png
 /How to use the audit tool.jpg
+
+# Client deliverables — confidential, not for the public repo
+*-audit-data-*.json
+*-diagnosis-*.html
+*-Diagnosis-*.pdf
+*-Remedy-Package-*.pdf
+*-Remedy-Package.pdf
+*-remedy-package-*.pdf
+*-remedy-package.pdf
+audit_comparison*.html
+
+# Working screenshots
+pagespeed-*.png
+*-screenshot.png
+*-mobile-screenshot.png
+
+# Tool / config artifacts
+.mcp.json
+.playwright-mcp/
+.claude/
+
+# Design files
+logo-options/
+design_handoff*/
+*.zip
