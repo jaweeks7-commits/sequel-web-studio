@@ -50,7 +50,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
   '@id':       'https://sequelwebstudio.com/#organization',
   name:        SITE_NAME,
   url:         SITE_URL,
-  telephone:   '+1-XXX-XXX-XXXX',   // Replace with real number once decided (audit Item 5)
+  telephone:   '+18177439806',
   email:       CONTACT_EMAIL,
   description: 'Custom-coded websites for small businesses across the US — built to rank on Google, ChatGPT, and voice search. Starting at $1,000.',
   priceRange:  '$1,000 – $2,000',
