@@ -78,9 +78,8 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('consent', 'default', {
-            analytics_storage: 'denied',
+            analytics_storage: 'granted',
             ad_storage: 'denied',
-            wait_for_update: 500,
           });
           gtag('js', new Date());
           gtag('config', ga4Id);
