@@ -1,8 +1,13 @@
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { dirname, join, basename } from 'path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+
+const MONTH_NUMS = {
+  january:'01', february:'02', march:'03', april:'04', may:'05', june:'06',
+  july:'07', august:'08', september:'09', october:'10', november:'11', december:'12'
+};
 
 // Escape HTML special characters in text fields so that references to HTML code in
 // step instructions (e.g. "<script type='application/ld+json'>") are rendered as
@@ -26,6 +31,22 @@ if (!existsSync(dataPath)) {
   process.exit(1);
 }
 
+// Compute output dir: {AUDIT_OUTPUT_DIR}/{YYYY-MM}/{client-slug}
+const fileBase = basename(inputArg, '.json');
+const dateMatch = fileBase.match(/-audit-data-([a-z]+)-(\d{4})$/i);
+const BASE_DIR = process.env.AUDIT_OUTPUT_DIR ?? 'C:\\Sequel Audit Deliverables';
+let outputDir;
+if (dateMatch) {
+  const monthNum = MONTH_NUMS[dateMatch[1].toLowerCase()] ?? '01';
+  const yearMonth = `${dateMatch[2]}-${monthNum}`;
+  const clientSlug = fileBase.slice(0, fileBase.indexOf('-audit-data-'));
+  outputDir = join(BASE_DIR, yearMonth, clientSlug);
+} else {
+  outputDir = join(BASE_DIR, 'unsorted');
+}
+mkdirSync(outputDir, { recursive: true });
+copyFileSync(dataPath, join(outputDir, basename(inputArg)));
+
 const data = JSON.parse(readFileSync(dataPath, 'utf8'));
 let html = readFileSync(join(ROOT, 'templates/audit-report-template.html'), 'utf8');
 
@@ -34,10 +55,10 @@ const totalChecks = 28 + data.bChecks.length;
 const categoryCount = 8 + (data.bChecks.length > 0 ? 1 : 0);
 
 // Output filename: swap -audit-data- for -pro-diagnosis-
-const outFilename = inputArg
+const outFilename = basename(inputArg)
   .replace(/\.json$/i, '.html')
   .replace('-audit-data-', '-pro-diagnosis-');
-const outPath = join(ROOT, outFilename);
+const outPath = join(outputDir, outFilename);
 
 // ── Scalar replacements ────────────────────────────────────────────────────
 const scalars = {
@@ -231,4 +252,4 @@ html = html.replace('{{B_CHECKS}}', bChecksHtml);
 // ── Write output ───────────────────────────────────────────────────────────
 writeFileSync(outPath, html, 'utf8');
 console.log('Done:', outPath);
-console.log(`Next: node scripts/generate-audit-pdf.mjs ${outFilename}`);
+console.log(`Next: node scripts/generate-audit-pdf.mjs "${outPath}"`);

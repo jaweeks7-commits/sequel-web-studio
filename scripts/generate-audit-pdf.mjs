@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-core';
-import { existsSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { dirname, join } from 'path';
+import { dirname, join, resolve } from 'path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -31,8 +31,9 @@ const outName = dateSlug
   ? `${titleCase(clientSlug)}-Remedy-Package-${titleCase(dateSlug)}.pdf`
   : `${titleCase(baseName)}-Remedy-Package.pdf`;
 
-const htmlPath = join(ROOT, inputArg);
-const outPath  = join(ROOT, outName);
+// resolve() handles both relative filenames (old usage) and absolute paths (new usage)
+const htmlPath = resolve(inputArg);
+const outPath  = join(dirname(htmlPath), outName);
 
 console.log('Launching Edge…');
 const browser = await puppeteer.launch({ executablePath, headless: true });
@@ -54,4 +55,5 @@ await page.pdf({
 });
 
 await browser.close();
+unlinkSync(htmlPath);
 console.log('Done:', outPath);

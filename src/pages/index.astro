@@ -257,11 +257,11 @@ const faqSchema = JSON.stringify({
 
       <div class="services-grid">
 
-        <!-- Card A: New Site (light) -->
-        <div class="reveal reveal-delay-1 hover-card" style="background: white; border-radius: 20px; padding: 40px 36px; box-shadow: 0 8px 32px rgba(15,31,61,0.1); border: 2px solid #b8cce0;">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Starting fresh</div>
-          <div style="font-size: 26px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
-          <p style="font-size: 14px; color: #595959; line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">
+        <!-- Card A: New Site (dark, blue accent) -->
+        <div class="reveal reveal-delay-1 hover-card" style="background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28); border: 2px solid #2E75B6;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Starting fresh</div>
+          <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.12);">
             For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile — but not a real website.
           </p>
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
@@ -271,26 +271,26 @@ const faqSchema = JSON.stringify({
               'Full setup: domain, hosting, SSL, email forwarding',
               'Launch + 30 days of post-launch support',
             ].map(f => (
-              <li style="display: flex; gap: 10px; font-size: 14px; color: #595959; line-height: 1.45; align-items: flex-start;">
+              <li style="display: flex; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.45; align-items: flex-start;">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px;">
-                  <circle cx="8" cy="8" r="7" fill="rgba(46,117,182,0.1)" />
-                  <path d="M5 8l2 2 4-4" stroke="#2E75B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <circle cx="8" cy="8" r="7" fill="rgba(75,159,212,0.2)" />
+                  <path d="M5 8l2 2 4-4" stroke="#4B9FD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 {f}
               </li>
             ))}
           </ul>
-          <div style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 20px; padding-top: 4px;">
+          <div style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 20px; padding-top: 4px;">
             Starting at $1,000
-            <span style="font-size: 13px; font-weight: 400; color: #999;"> · Hosting $20/month</span>
+            <span style="font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.5);"> · Hosting $20/month</span>
           </div>
-          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: #1F3864; border: 2px solid #1F3864; background: transparent;">
+          <a href="/contact" style="display: block; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; color: white; border: 2px solid #2E75B6; background: transparent;">
             Talk About a New Site
           </a>
         </div>
 
-        <!-- Card B: Modernize (dark featured) -->
-        <div class="reveal reveal-delay-2 hover-card" style="background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28);">
+        <!-- Card B: Modernize (dark, purple accent) -->
+        <div class="reveal reveal-delay-2 hover-card" style="background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28); border: 2px solid #8E44AD;">
           <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4; margin-bottom: 12px;">Existing site</div>
           <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Modernize Existing</div>
           <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">
@@ -321,8 +321,8 @@ const faqSchema = JSON.stringify({
           </a>
         </div>
 
-        <!-- Card C: Pro Diagnosis + Upgrade Package (teal accent) -->
-        <div class="reveal reveal-delay-3 hover-card" style="background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28);">
+        <!-- Card C: Pro Diagnosis + Upgrade Package (dark, teal accent) -->
+        <div class="reveal reveal-delay-3 hover-card" style="background: #0F1F3D; border-radius: 20px; padding: 40px 36px; box-shadow: 0 20px 56px rgba(15,31,61,0.28); border: 2px solid #00bcd4;">
           <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00bcd4; margin-bottom: 12px;">Existing Site</div>
           <div style="font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 14px;">Pro Diagnosis + Upgrade Package</div>
           <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">
