@@ -76,6 +76,20 @@ const priorityHtml = data.priorityItems.map((item, i) =>
 ).join('\n    ');
 html = html.replace('{{PRIORITY_ITEMS}}', priorityHtml);
 
+// ── Reverse map: remedyItem number → check IDs that share it ──────────────
+const remedyToChecks = {};
+for (const [id, check] of Object.entries(data.auditChecks)) {
+  if (id.startsWith('_')) continue;
+  if (check.remedyItem != null) {
+    (remedyToChecks[check.remedyItem] ||= []).push(id);
+  }
+}
+for (const bc of data.bChecks) {
+  if (bc.remedyItem != null) {
+    (remedyToChecks[bc.remedyItem] ||= []).push(bc.id);
+  }
+}
+
 // ── Remedy items with auto-inserted Critical / High Value dividers ─────────
 function buildRemedyItems(items) {
   let out = '';
@@ -103,10 +117,15 @@ function buildRemedyItems(items) {
       ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre>${item.standalone.code}</pre>`
       : '';
 
+    const coveredChecks = remedyToChecks[num] || [];
+    const coversNoteHtml = coveredChecks.length > 1
+      ? `\n    <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
+      : '';
+
     out += `
   <div class="remedy-item">
     <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">Item ${num}</span></div>
-    <div class="remedy-item-title">${item.title}</div>
+    <div class="remedy-item-title">${item.title}</div>${coversNoteHtml}
     <div class="remedy-sub">
       <div class="remedy-sub-label">Audit Findings</div>
       <div class="remedy-finding">${esc(item.findings)}</div>
@@ -121,8 +140,6 @@ ${stepsHtml}
   }
   return out;
 }
-html = html.replace('{{REMEDY_ITEMS}}', buildRemedyItems(data.remedyItems));
-
 // ── Check name lookup (28 standard checks — never changes) ────────────────
 const CHECK_NAMES = {
   C01_1: "Your Website's Name in Google (Page Title)",
@@ -154,6 +171,15 @@ const CHECK_NAMES = {
   C08_1: "What Website Builder Was This Site Built On?",
   C08_2: "Is Your Site Ready for AI-Powered Search?",
 };
+
+// Customer-friendly name lookup for covers-note (B-check names come from data)
+const bCheckNames = Object.fromEntries(
+  data.bChecks.map(bc => [bc.id, `${bc.id} · ${bc.name}`])
+);
+function checkDisplayName(id) {
+  return CHECK_NAMES[id] || bCheckNames[id] || id;
+}
+html = html.replace('{{REMEDY_ITEMS}}', buildRemedyItems(data.remedyItems));
 
 const CATEGORY_CHECKS = {
   CAT_01: ['C01_1','C01_2','C01_3','C01_4','C01_5','C01_6'],

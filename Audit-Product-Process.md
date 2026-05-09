@@ -4,6 +4,11 @@
 
 ---
 
+> **⚠ NON-NEGOTIABLE RULE — READ BEFORE EVERY AUDIT:**
+> The Priority Action List and Remedy Package must include **ALL Critical findings** and **ALL High Value findings** found in the audit — regardless of how many there are. There is no cap of 10 or any other number. If the audit finds 9 Criticals and 15 High Values, the deliverable contains 24 (or fewer if some share a remedy) priority items and 24 remedy items. Two findings may share one remedy item only when the fix steps are literally the same action. **If any Critical or High Value check has `remedyItem: null` in the JSON, that is a production error that must be fixed before delivery.** When a shared remedy item covers two or more findings, `fill-template.mjs` automatically renders a "This remedy addresses N audit findings" disclosure note below the item title in the final PDF — no manual action needed, but verify it rendered during QA.
+
+---
+
 ## What This Product Is
 
 A paid deliverable ($350 — may be repriced) that gives a small-business website owner:
@@ -50,13 +55,15 @@ Every report must follow this exact order. Do not deviate without updating this 
 | 6 | Audit Results | All 50 checks across 9 categories. Items covered in Remedy Package show a cross-reference note |
 | 7 | Footer | "Pro Diagnosis + Remedy Package prepared by Sequel Web Studio · sequelwebstudio.com" + date |
 
-### Remedy Package item structure (repeat for each of the 10 items)
+### Remedy Package item structure (repeat for each item)
 ```
-[Critical / High Value badge]  ·  Item N of 10
+[Critical / High Value badge]  ·  Item N
 [Item title]
+[Auto-generated if item covers multiple checks:
+  "This remedy addresses N audit findings: [check names] — see Audit Results for individual findings."]
 
 AUDIT FINDINGS
-  [What was found on this client's site — specific, factual]
+  [What was found on this client's site — specific, factual; if covering multiple checks, address all of them]
 
 REMEDY — STEP BY STEP
   Step 1: [Exact platform path + action, written so a non-technical person can follow]
@@ -279,6 +286,7 @@ These are found during the live audit session — not all will apply to every cl
 - `.check-card` — each audit result card (white, rounded)
 - `.badge-critical`, `.badge-high`, `.badge-pass`, `.badge-nice` — colored badges
 - `.see-remedy-note` — blue left-border cross-reference note
+- `.remedy-covers-note` — auto-generated informational note on remedy items that cover multiple checks
 
 ---
 

@@ -286,30 +286,35 @@ B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→
 
 ## SECTION 2 — Priority Selection
 
-> Fill this in **after** all Section 1 findings are complete. Review every Critical and High Value finding, then decide which items warrant full remedy steps. There is no required number — include as many as the findings warrant. Typical range: 5–12 items.
-
-**Rule of thumb:** Include all Criticals. Include High Values where the fix is actionable by the client and the payoff is clear. Exclude Pass and Nice to Have findings.
+> **⚠ MANDATORY RULE: Every Critical finding and every High Value finding MUST appear in this list. There is NO cap. If you found 9 Criticals and 15 High Values, all 24 items go in this table. Do not limit to 10 or any other number.**
+>
+> Two findings may share one row (and one remedy) only if the fix steps are literally identical. Example: "page title" and "inner page titles" share one remedy item because the fix is the same WordPress menu path. When in doubt, keep them separate.
+>
+> Order: all Criticals first, then all High Values.
 
 | # | Check ID | Item Title (brief, plain English) | Badge |
 |---|---|---|---|
-| 1 | | | Critical / High Value |
-| 2 | | | Critical / High Value |
-| 3 | | | Critical / High Value |
-| 4 | | | Critical / High Value |
-| 5 | | | Critical / High Value |
-| 6 | | | Critical / High Value |
-| 7 | | | Critical / High Value |
-| 8 | | | Critical / High Value |
-| 9 | | | Critical / High Value |
-| 10 | | | Critical / High Value |
+| 1 | | | Critical |
+| 2 | | | Critical |
+| 3 | | | Critical |
 
-*(Add or remove rows as needed. Order: all Criticals first, then High Values.)*
+*(Add one row for every Critical finding. Then continue with High Value rows below.)*
+
+| # | Check ID | Item Title (brief, plain English) | Badge |
+|---|---|---|---|
+| (next #) | | | High Value |
+| (next #) | | | High Value |
+| (next #) | | | High Value |
+
+*(Add one row for every High Value finding. No cap. Total rows = all Critical + all High Value findings from Section 1.)*
 
 ---
 
 ## SECTION 3 — Remedy Package
 
 > Write the detailed remedy steps for each item selected in Section 2. These populate the Remedy Package section of the HTML deliverable. Steps should be specific to the client's platform and written so a non-technical person can follow them.
+>
+> **Shared remedy items:** When a single remedy item covers multiple checks (two or more checks share the same Item # in Section 2), write the Findings paragraph to acknowledge all covered checks — either describe each finding in a separate sentence or write a unified description that encompasses all of them. The build script will automatically prepend a disclosure note listing the check IDs; the Findings text should still be complete and specific for each covered check.
 
 ---
 

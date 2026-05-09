@@ -53,7 +53,7 @@
 
   "remedyItems": [
     {
-      "_note": "Must be in the same order as priorityItems. One entry per priority item.",
+      "_note": "Must be in the same order as priorityItems. One entry per priority item. When a remedy item covers multiple checks (i.e., two or more audit checks share the same remedyItem number), fill-template.mjs automatically renders a 'This remedy addresses N audit findings' disclosure note below the item title — no extra field needed. Write the findings text to describe all covered checks.",
       "badge": "critical",
       "title": "Full remedy item title (can be slightly longer than the priority list entry)",
       "findings": "One to three sentences describing exactly what was found on this client's site — specific and factual. No remedy steps here.",
@@ -92,7 +92,7 @@
   ],
 
   "auditChecks": {
-    "_note": "All 28 standard checks required. Keys: C01_1 through C08_2. badgeClass: badge-critical | badge-high | badge-pass | badge-nice. badgeLabel: Critical | High Value | Pass | Nice to Have. remedyItem: integer (1-based) if this check is covered in Remedy Package, null otherwise.",
+    "_note": "All 28 standard checks required. Keys: C01_1 through C08_2. badgeClass: badge-critical | badge-high | badge-pass | badge-nice. badgeLabel: Critical | High Value | Pass | Nice to Have. remedyItem: integer (1-based) if this check is covered in Remedy Package, null otherwise. ⚠ RULE: Every check with badge-critical or badge-high MUST have a non-null remedyItem. Two checks may share the same remedyItem number only when their fix steps are literally identical. A null remedyItem on a Critical or High Value check is a production error.",
 
     "C01_1": {
       "badgeClass": "badge-critical",

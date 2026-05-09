@@ -232,11 +232,14 @@
       </li>
       <li>
         <input type="checkbox" id="c3">
-        <span><label for="c3">Priority Action List contains the correct number of items, ordered Critical first then High Value</label></span>
+        <span>
+          <label for="c3">Priority Action List contains ALL Critical and ALL High Value findings — count badges in Audit Results and confirm the total matches the Priority List</label>
+          <div class="note">⚠ NON-NEGOTIABLE: Every Critical and every High Value check must have a Priority item. Two checks may share one priority item only when their fix steps are identical. Any Critical or High Value check that shows "See Remedy Package" must be in the list; any that does NOT show "See Remedy Package" must have no Priority item and no remedy.</div>
+        </span>
       </li>
       <li>
         <input type="checkbox" id="c4">
-        <span><label for="c4">Remedy Package item count matches the Priority Action List, in the same order</label></span>
+        <span><label for="c4">Remedy Package has one entry for every item in the Priority Action List, in the same order — no skipped items</label></span>
       </li>
       <li>
         <input type="checkbox" id="c5">
@@ -260,6 +263,13 @@
       <li>
         <input type="checkbox" id="c9">
         <span><label for="c9">Footer shows correct delivery date and "Pro Diagnosis + Remedy Package prepared by Sequel Web Studio · sequelwebstudio.com"</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c10">
+        <span>
+          <label for="c10">If the remedy item count is less than the Critical + High Value count, confirm that every remedy item covering multiple findings displays an auto-generated "This remedy addresses N audit findings" note below its title</label>
+          <div class="note">This note is generated automatically by fill-template.mjs — it appears whenever two or more audit checks share the same remedyItem number. No manual action needed; just confirm it rendered and that the check IDs listed look correct.</div>
+        </span>
       </li>
     </ul>
   </div>
