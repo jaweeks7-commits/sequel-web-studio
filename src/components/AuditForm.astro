@@ -69,13 +69,14 @@ const { dark = false } = Astro.props;
 
   <!-- Post-audit upsell card -->
   <div data-audit-upsell hidden class="audit-upsell">
-    <p class="upsell-eyebrow">WANT THE FIXES TOO?</p>
-    <p class="upsell-headline">These scores show where your site stands. The Professional Audit tells you exactly what to change — and gives you the code to do it.</p>
+    <p class="upsell-eyebrow">YOUR SITE HAS FIXABLE ISSUES</p>
+    <p class="upsell-headline">These scores show what's wrong. The Pro Diagnosis + Remedy Package shows you exactly how to fix every issue — with ready-to-paste code.</p>
     <ul class="upsell-list">
       {[
-        'Platform-specific code fixes, ready to paste into your site',
-        '28+ checks across all eight layers, explained in plain English',
-        'Delivered as a report + Upgrade Package within 24 hours',
+        'Ready-to-paste code fixes for every problem we find',
+        '28-point deep scan across all eight layers, explained in plain English',
+        'Priority-ranked action list: critical, high-value, and nice-to-have',
+        'Delivered within 24 hours',
       ].map(item => (
         <li class="upsell-list-item">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="upsell-check">
@@ -86,7 +87,7 @@ const { dark = false } = Astro.props;
         </li>
       ))}
     </ul>
-    <a href="/audit" class="upsell-btn">Get Your Pro Diagnosis + Upgrade Package — $350 →</a>
+    <a href="/audit#order" class="upsell-btn">Get Your Pro Diagnosis + Remedy Package — $350 →</a>
     <p class="upsell-reassurance">One-time payment · No subscription · Delivered within 24 hours</p>
   </div>
 </div>

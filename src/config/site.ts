@@ -7,12 +7,11 @@ export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'jaweeks7@g
 export const SERVICE_AREA = 'United States';
 
 export const NAV_LINKS = [
-  { label: 'Home',      href: '/'          },
-  { label: 'Audit',     href: '/audit'     },
-  { label: 'Websites',  href: '/services'  },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'About',     href: '/about'     },
-  { label: 'Contact',   href: '/contact'   },
+  { label: 'Home',     href: '/'         },
+  { label: 'Audit',    href: '/audit'    },
+  { label: 'Services', href: '/services' },
+  { label: 'About',    href: '/about'    },
+  { label: 'Contact',  href: '/contact'  },
 ] as const;
 
 // D5: Pilot pricing through project #10; revisit at project #8-9
