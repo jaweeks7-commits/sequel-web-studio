@@ -1,5 +1,6 @@
 ---
 import { SITE_NAME, NAV_LINKS } from '../config/site';
+const { pathname } = Astro.url;
 ---
 
 <a href="#main-content" class="skip-nav">Skip to main content</a>
@@ -27,21 +28,23 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
 
     <!-- Desktop nav -->
     <nav aria-label="Main navigation" class="hidden md:flex" style="align-items: center; gap: 2px;">
-      {NAV_LINKS.filter(l => l.href !== '/').map(({ label, href }) => (
-        <a
-          href={href}
-          class="nav-link"
-          style="padding: 6px 13px; border-radius: 6px; font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.3s; color: rgba(255,255,255,0.8);"
-        >
-          {label}
-        </a>
-      ))}
+      {NAV_LINKS.filter(l => l.href !== '/').map(({ label, href }) => {
+        const isActive = pathname === href || (href !== '/' && pathname.startsWith(href + '/'));
+        return (
+          <a
+            href={href}
+            class={`nav-link${isActive ? ' nav-link-active' : ''}`}
+            style="padding: 6px 13px; border-radius: 6px; font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.3s, background 0.3s; color: rgba(255,255,255,0.8);"
+          >
+            {label}
+          </a>
+        );
+      })}
       <a
-        href="/#audit-form"
-        data-audit-cta
+        href="/audit#order"
         style="margin-left: 10px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgba(46,117,182,0.3); transition: opacity 0.2s; white-space: nowrap;"
       >
-        Free Audit
+        Get Your Diagnosis — $350
       </a>
     </nav>
 
@@ -80,11 +83,10 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
         </a>
       ))}
       <a
-        href="/#audit-form"
-        data-audit-cta
+        href="/audit#order"
         style="margin-top: 12px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; text-align: center; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none;"
       >
-        Free Audit
+        Get Your Diagnosis — $350
       </a>
     </div>
   </nav>
@@ -108,7 +110,17 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
       nav!.style.backdropFilter   = scrolled ? 'blur(16px)' : 'none';
       nav!.style.boxShadow        = scrolled ? '0 2px 20px rgba(15,31,61,0.08)' : 'none';
       wordmark!.style.setProperty('fill', scrolled ? '#0F1F3D' : 'white');
-      navLinks.forEach(l => { l.style.color = scrolled ? '#595959' : 'rgba(255,255,255,0.8)'; });
+      navLinks.forEach(l => {
+        if (l.classList.contains('nav-link-active')) {
+          l.style.color      = scrolled ? '#2E75B6' : 'white';
+          l.style.background = scrolled ? 'rgba(46,117,182,0.1)' : 'rgba(255,255,255,0.15)';
+          l.style.fontWeight = '700';
+        } else {
+          l.style.color      = scrolled ? '#595959' : 'rgba(255,255,255,0.8)';
+          l.style.background = '';
+          l.style.fontWeight = '';
+        }
+      });
       (toggle as HTMLButtonElement).style.color = scrolled ? '#0F1F3D' : 'white';
     }
 
@@ -124,23 +136,5 @@ import { SITE_NAME, NAV_LINKS } from '../config/site';
       toggle!.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
     });
 
-    // Smooth-scroll to #audit-form on the homepage; navigate on other pages
-    document.querySelectorAll<HTMLAnchorElement>('[data-audit-cta]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const form = document.getElementById('audit-form');
-        if (form) {
-          e.preventDefault();
-          form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // Close mobile menu if open
-          if (!menu!.classList.contains('hidden')) {
-            menu!.classList.add('hidden');
-            iconOpen!.classList.remove('hidden');
-            iconClose!.classList.add('hidden');
-            toggle!.setAttribute('aria-expanded', 'false');
-            toggle!.setAttribute('aria-label', 'Open navigation menu');
-          }
-        }
-      });
-    });
   })();
 </script>

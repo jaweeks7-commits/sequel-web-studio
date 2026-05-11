@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_NAME, SITE_URL } from '../config/site';
 import { layers } from '../data/layers';
+import { PORTFOLIO } from '../data/portfolio';
 
 const offerSchema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -97,6 +98,19 @@ const faqSchema = JSON.stringify({
     </svg>
   </section>
 
+  <!-- ── AUDIT BRIDGE ── -->
+  <section style="background: #F4F6FB; padding: 20px 32px; border-bottom: 1px solid #e4eaf5;">
+    <div style="max-width: 1160px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <p style="font-size: 15px; color: #595959; margin: 0; line-height: 1.5;">
+        <strong style="color: #0F1F3D;">Not sure which path is right for you?</strong>
+        &nbsp;Our $350 Pro Diagnosis + Remedy Package tells you exactly what your site needs, before you spend a dollar on a rebuild.
+      </p>
+      <a href="/audit#order" style="flex-shrink: 0; background: linear-gradient(135deg, #00bcd4, #0097a7); color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,188,212,0.3);">
+        Get Your Pro Diagnosis — $350 →
+      </a>
+    </div>
+  </section>
+
   <!-- ── PRICING ── -->
   <section style="padding: 96px 0; background: white;">
     <div style="max-width: 1160px; margin: 0 auto; padding: 0 32px;">
@@ -105,7 +119,7 @@ const faqSchema = JSON.stringify({
         <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: #0F1F3D; letter-spacing: -1px; line-height: 1.12; margin-top: 12px; margin-bottom: 8px;">
           One price to start. No surprises.
         </h2>
-        <p style="font-size: 18px; font-weight: 600; color: #595959; margin-bottom: 16px;">Two paths — same starting price.</p>
+        <p style="font-size: 18px; font-weight: 600; color: #595959; margin-bottom: 16px;">Two paths, same starting price.</p>
         <p style="font-size: 16px; color: #595959; line-height: 1.7;">
           Most small-business websites start at $1,000 flat — including design, build, launch, and the full technical foundation. Hosting is $20/month. If your business needs something beyond the standard build — additional pages, a custom integration — we quote those separately, up front, in plain English.
         </p>
@@ -118,7 +132,7 @@ const faqSchema = JSON.stringify({
           <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 12px;">Starting fresh</div>
           <div style="font-size: 26px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.5px; margin-bottom: 14px;">Create New Site</div>
           <p style="font-size: 14px; color: #595959; line-height: 1.65; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e4eaf5;">
-            For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile — but not a real website.
+            For businesses whose online presence is a Facebook page, an Instagram bio, or a Google Business Profile, but not a real website.
           </p>
           <div style="font-size: 52px; font-weight: 700; color: #0F1F3D; letter-spacing: -2px; line-height: 1;">$1,000</div>
           <div style="font-size: 13px; color: #999; margin-top: 4px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e4eaf5;">Starting price · one-time fee</div>
@@ -183,6 +197,49 @@ const faqSchema = JSON.stringify({
     </div>
   </section>
 
+  <!-- ── THE FIX ── -->
+  <section style="padding: 96px 0 152px; background: linear-gradient(135deg, #0F1F3D 0%, #1F3864 60%, #2E75B6 100%); position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.3;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="max-width: 800px; margin-bottom: 52px;">
+        <span style="font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16A34A;">What We Build In</span>
+        <h2 style="font-size: clamp(30px, 4vw, 50px); font-weight: 700; color: white; letter-spacing: -1.2px; line-height: 1.12; margin-top: 12px; margin-bottom: 20px;">Websites built for the way search works now.</h2>
+        <p style="font-size: 16px; color: rgba(255,255,255,0.62); line-height: 1.72;">
+          Whether we modernize your existing site or build from scratch, every project is engineered to be found by ChatGPT, Perplexity, voice assistants, and Google AI Overviews, not just traditional search.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        {[
+          {
+            num: '01',
+            title: 'We make your site readable by AI assistants.',
+            body: "ChatGPT, Claude, and Gemini pull from sites with clean, structured content. We build yours with semantic HTML and schema.org data so AI tools can find, quote, and recommend you, instead of a competitor.",
+          },
+          {
+            num: '02',
+            title: 'We structure your content for voice and assistant search.',
+            body: "Getting picked by Siri or Alexa isn't random. It requires clean schema data, a tight Google Business Profile, and FAQ content written the way people speak. We build all of that in from day one.",
+          },
+          {
+            num: '03',
+            title: "We help Google's AI include you, not bypass you.",
+            body: "Google's AI Overviews pull from sites with structured, machine-readable content. We make sure yours qualifies, so when someone searches your category, your business is part of the answer.",
+          },
+        ].map((card, i) => (
+          <div class={`reveal reveal-delay-${i + 1} hover-card`} style="background: rgba(255,255,255,0.07); border-radius: 18px; padding: 32px 28px; border: 1px solid rgba(255,255,255,0.12);">
+            <div style="font-size: 12px; font-family: 'Space Mono', monospace; color: #16A34A; letter-spacing: 1px; margin-bottom: 16px;">{card.num}</div>
+            <h3 style="font-size: 19px; font-weight: 700; color: white; line-height: 1.3; letter-spacing: -0.3px; margin-bottom: 12px;">{card.title}</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.68;">{card.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <svg viewBox="0 0 1440 60" fill="none" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="#0F1F3D" />
+    </svg>
+  </section>
+
   <!-- ── TECHNICAL FOUNDATION ── -->
   <section style="padding: 96px 0; background: #0F1F3D; position: relative; overflow: hidden;">
     <div class="dot-grid" style="position: absolute; inset: 0;"></div>
@@ -193,7 +250,7 @@ const faqSchema = JSON.stringify({
           Most designers stop at the pretty. We don't.
         </h2>
         <p style="font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.72;">
-          Every Sequel Web Studio site — whether new or modernized — is built across eight technical categories. This is what separates a site that looks good from a site that actually gets found, converts visitors into customers, and keeps working five years from now. We build for conversion and longevity from day one — not as an afterthought.
+          Every Sequel Web Studio site, whether new or modernized, is built across eight technical categories. This is what separates a site that looks good from a site that actually gets found, converts visitors into customers, and keeps working five years from now. We build for conversion and longevity from day one, not as an afterthought.
         </p>
       </div>
 
@@ -265,6 +322,53 @@ const faqSchema = JSON.stringify({
     </div>
   </section>
 
+  <!-- ── OUR WORK ── -->
+  <section style="padding: 96px 0 72px; background: #0F1F3D; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0; opacity: 0.5;"></div>
+    <div style="position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 32px;">
+      <div class="reveal" style="text-align: center; margin-bottom: 56px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4B9FD4;">Our Work</span>
+        <h2 style="font-size: clamp(32px, 5vw, 56px); font-weight: 700; color: white; letter-spacing: -1.5px; line-height: 1.1; margin-top: 14px; margin-bottom: 14px;">
+          Sites built by <span class="grad-text">Sequel Web Studio.</span>
+        </h2>
+        <p style="font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto;">
+          Every site is custom-coded from scratch, no templates, no page builders.
+        </p>
+      </div>
+
+      <div class="svc-portfolio-grid">
+        {PORTFOLIO.map((site, i) => (
+          <a
+            href={site.href}
+            target={site.external ? '_blank' : undefined}
+            rel={site.external ? 'noopener noreferrer' : undefined}
+            class={`reveal reveal-delay-${(i % 3) + 1} hover-card svc-portfolio-card`}
+          >
+            <div class="svc-portfolio-screenshot">
+              <img src={site.img} alt={`${site.name} ${site.tag.toLowerCase()} website built by Sequel Web Studio`} class="svc-portfolio-img" loading="lazy" />
+            </div>
+            <div style="padding: 18px 20px; background: white;">
+              <div style="font-size: 11px; font-weight: 600; color: #2E75B6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">{site.tag}</div>
+              <div style="font-size: 16px; font-weight: 700; color: #0F1F3D; margin-bottom: 4px;">{site.name}</div>
+              <div style="font-size: 13px; color: #595959; line-height: 1.6;">{site.description}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WORK CTA ── -->
+  <section style="background: linear-gradient(135deg, #1F3864 0%, #2E75B6 60%, #8E44AD 100%); padding: 80px 32px; text-align: center;">
+    <h2 style="font-size: 32px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 16px;">Want a site like these?</h2>
+    <p style="font-size: 16px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto 32px;">
+      Tell us about your business and we'll show you what's possible.
+    </p>
+    <a href="/contact" style="background: white; color: #0F1F3D; padding: 13px 32px; border-radius: 10px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+      Get in touch →
+    </a>
+  </section>
+
 </BaseLayout>
 
 <script>import '../scripts/accordion';</script>
@@ -276,18 +380,52 @@ const faqSchema = JSON.stringify({
     gap: 20px;
   }
   @media (max-width: 640px) {
-    .faq-grid {
-      grid-template-columns: 1fr;
-    }
+    .faq-grid { grid-template-columns: 1fr; }
+  }
+
+  .svc-portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .svc-portfolio-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(15,31,61,0.08);
+    border: 1px solid #e4eaf5;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+  .svc-portfolio-screenshot {
+    height: 220px;
+    overflow: hidden;
+    background: #0F1F3D;
+  }
+  .svc-portfolio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .svc-portfolio-card:hover .svc-portfolio-img {
+    transform: scale(1.04) translateY(-2%);
   }
 
   /* Dark-background accordion overrides for the Technical Foundation section */
   :global(.layers-dark .acc-item) {
-    background: white;
-    border-color: #e4eaf5;
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
   }
-  :global(.layers-dark .acc-title) { color: #0F1F3D; }
-  :global(.layers-dark .acc-sub)   { color: #8892A0; }
-  :global(.layers-dark .acc-icon)  { color: #8892A0; }
-  :global(.layers-dark .acc-list-item) { color: #595959; }
+  :global(.layers-dark .acc-item:hover) {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(46,117,182,0.45);
+  }
+  :global(.layers-dark .acc-title)     { color: white; }
+  :global(.layers-dark .acc-sub)       { color: rgba(255,255,255,0.45); }
+  :global(.layers-dark .acc-icon)      { color: rgba(255,255,255,0.45); }
+  :global(.layers-dark .acc-list-item) { color: rgba(255,255,255,0.65); }
 </style>
