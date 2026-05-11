@@ -662,7 +662,7 @@ const auditCategories = [
               type="submit"
               style="padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; box-shadow: 0 8px 24px rgba(46,117,182,0.4);"
             >
-              Submit Your Audit Request →
+              Go To Payment Details →
             </button>
             <p id="order-form-error" style="display: none; color: #fca5a5; font-size: 14px; text-align: center; margin: 0;"></p>
           </form>
@@ -862,6 +862,17 @@ const auditCategories = [
     window.history.replaceState({}, '', '/audit');
   }
 
+  // ── Auto-reveal order form when arriving via #order hash ─────────────────
+  if (window.location.hash === '#order') {
+    const wrapper = document.getElementById('order-form-wrapper');
+    const ctaArea = document.getElementById('order-cta-area');
+    if (wrapper && ctaArea) {
+      ctaArea.style.display = 'none';
+      wrapper.style.display = 'block';
+      setTimeout(() => wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+    }
+  }
+
   // ── Reveal order form on CTA click ──────────────────────────────────────
   document.querySelectorAll<HTMLElement>('[data-order-cta]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -910,7 +921,7 @@ const auditCategories = [
         throw new Error(json.error ?? 'Unknown error');
       }
     } catch (err) {
-      if (submitBtn) { submitBtn.textContent = 'Submit Your Audit Request →'; submitBtn.disabled = false; }
+      if (submitBtn) { submitBtn.textContent = 'Go To Payment Details →'; submitBtn.disabled = false; }
       const msg = (err instanceof Error && err.message && err.message !== 'Unknown error') ? err.message : 'Something went wrong — please try again or email us directly.';
       if (errorEl)   { errorEl.textContent = msg; errorEl.style.display = 'block'; }
     }

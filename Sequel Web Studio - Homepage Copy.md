@@ -113,7 +113,7 @@ Whether you're starting from nothing or starting from a site that's gone stale, 
 See exactly what your website is missing — in 60 seconds, for free.
 
 **Body:**
-Paste your URL. We check more than 30 signals that determine whether Google's AI, ChatGPT, and voice assistants can actually find your business. You get a scored report, a plain-English explanation of what each signal means, and a ranked list of what to fix — even if you never hire us to fix it.
+Paste your URL. We check the signals that determine whether Google's AI, ChatGPT, and voice assistants can actually find your business. You get a scored report, a plain-English explanation of what each signal means, and a ranked list of what to fix — even if you never hire us to fix it.
 
 **URL input (embedded, not a link to another page):**
 `[ yoursite.com ______________________ ]` `[ Run Free Audit ]`
