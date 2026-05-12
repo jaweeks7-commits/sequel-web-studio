@@ -153,12 +153,12 @@
 - **Code Block Deliverable:** [ ] Yes — JSON-LD to include in report  [ ] No
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
-#### C04-16: Schema Connectivity (blocks linked via @id)
-- **Badge:**
+#### C04-16: Schema Connectivity & sameAs Authority Links (blocks linked via @id, verified directory URLs)
+- **Badge:** *(High Value if sameAs missing or < 2 verified directory URLs; Pass if Google Maps + 1 other present AND @id linking in place)*
 - **Found:**
 - **Business Impact:**
-- **Technical Detail:** *(optional)*
-- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+- **Technical Detail:** *(list all sameAs URLs found; note which ones you verified load the correct business)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No *(usually shares same item # as C04-15)*
 
 #### C04-17: Rich Result Types Available But Missing
 - **Badge:**
@@ -254,12 +254,18 @@
 - **Technical Detail:** *(optional)*
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
-#### C08-28: AI-Powered Search Readiness
-- **Badge:**
-- **Found:**
+#### C08-28: AI Citation Readiness (5-Signal Score)
+- **Badge:** *(Pass = 4–5/5; High Value = 2–3/5; Critical = 0–1/5)*
+- **Score:** \_\_\_ / 5
+- **Signal 1 — LocalBusiness schema with complete data:** [ ] ✓  [ ] ✗
+- **Signal 2 — sameAs links to 2+ authoritative directories:** [ ] ✓  [ ] ✗
+- **Signal 3 — llms.txt present with substantive content:** [ ] ✓  [ ] ✗
+- **Signal 4 — FAQPage schema present:** [ ] ✓  [ ] ✗
+- **Signal 5 — Static readable text describing the business:** [ ] ✓  [ ] ✗
+- **Found:** *(list which signals pass and which fail)*
 - **Business Impact:**
 - **Technical Detail:** *(optional)*
-- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+- **In Remedy Package:** [ ] No *(this is a summary — individual gaps have their own remedy items)*
 
 ---
 
@@ -268,7 +274,7 @@
 Add a B-check entry for each issue found outside the standard 28. Number them B01, B02, etc. Not all will apply — skip ones that don't. Add new entries for issues that don't fit any existing label.
 
 *Reference list (check what applies, skip what doesn't):*
-B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · B14 · Contact Page — No Web Form · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags
+B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · B14 · Contact Page — No Web Form · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content**
 
 ---
 
@@ -281,6 +287,30 @@ B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
 *(Copy the block above for each B-check. Add new B-numbers beyond B22 for issues not on the reference list.)*
+
+---
+
+#### B_AI1: sameAs Authority Links — Is the Business Verifiable Across the Web?
+
+> Run only if C04-15 found LocalBusiness schema. If no schema exists yet, this is folded into that remedy item.
+
+- **Badge:** *(High Value if sameAs missing or < 2 verified directory URLs; Pass if Google Maps + 1 other verified)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(list each sameAs URL found and whether it loads the correct business listing)*
+- **Code Block Deliverable:** [ ] Yes — updated schema block with corrected sameAs array  [ ] No
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_AI2: FAQPage Schema from Site FAQ Content
+
+- **Badge:** *(High Value if FAQ content exists on site but no FAQPage schema; Nice to Have if no FAQ content found)*
+- **FAQ content found on site:** [ ] Yes — describe where: \_\_\_\_\_\_\_\_\_\_  [ ] No
+- **FAQPage schema present:** [ ] Yes  [ ] No
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(note how many Q&A pairs found and on which pages)*
+- **Code Block Deliverable:** [ ] Yes — FAQPage JSON-LD block  [ ] No
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
 ---
 

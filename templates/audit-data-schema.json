@@ -31,7 +31,12 @@
     },
     {
       "ref": "Remedy · Item 7",
-      "desc": "llms.txt file — complete content ready to publish at /llms.txt"
+      "desc": "llms.txt — complete file written for this business, ready to publish at /llms.txt"
+    },
+    {
+      "_note": "Example of a FAQPage schema deliverable — include when B_AI2 is a finding",
+      "ref": "Remedy · Item 8",
+      "desc": "FAQPage schema JSON-LD — structured Q&A ready to paste into code injection alongside the entity graph schema"
     }
   ],
 
@@ -75,18 +80,51 @@
       "standalone": null
     },
     {
-      "_note": "Example with a standalone code deliverable. Set standalone to null if not applicable.",
+      "_note": "Example with a standalone code deliverable — full entity graph. Set standalone to null if not applicable.",
       "badge": "high",
-      "title": "Add LocalBusiness Schema",
-      "findings": "No structured data was found on the homepage. Google cannot confirm your business name, address, or phone number from machine-readable markup.",
+      "title": "Add Complete Schema Entity Graph",
+      "findings": "No structured data markup was found on the homepage. Google, ChatGPT, and Perplexity cannot confirm your business name, address, phone number, or service area from machine-readable data. Without this, AI assistants cannot reliably recommend or describe your business when users ask about services in your area.",
       "steps": [
         "Step 1: In Squarespace, go to Settings → Advanced → Code Injection.",
-        "Step 2: Paste the JSON-LD block below into the Header field.",
-        "Step 3: Click Save, then test at search.google.com/test/rich-results."
+        "Step 2: Paste the complete JSON-LD block below into the Header field.",
+        "Step 3: Click Save.",
+        "Step 4: Test at search.google.com/test/rich-results to confirm Google can read the schema.",
+        "Step 5: Verify your Google Maps listing URL, Facebook page URL, and any other directory links in the sameAs array are correct before publishing."
       ],
       "standalone": {
-        "label": "Standalone Deliverable — LocalBusiness Schema JSON-LD",
-        "code": "<span class=\"kw\">&lt;script</span> <span class=\"at\">type</span>=<span class=\"val\">\"application/ld+json\"</span><span class=\"kw\">&gt;</span>\n{\n  <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n  <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"LocalBusiness\"</span>,\n  <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Acme Plumbing\"</span>\n}\n<span class=\"kw\">&lt;/script&gt;</span>"
+        "label": "Standalone Deliverable — Entity Graph Schema JSON-LD (WebSite + LocalBusiness + Person)",
+        "code": "<span class=\"kw\">&lt;script</span> <span class=\"at\">type</span>=<span class=\"val\">\"application/ld+json\"</span><span class=\"kw\">&gt;</span>\n[\n  {\n    <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n    <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"WebSite\"</span>,\n    <span class=\"at\">\"@id\"</span>: <span class=\"val\">\"https://acmeplumbing.com/#website\"</span>,\n    <span class=\"at\">\"url\"</span>: <span class=\"val\">\"https://acmeplumbing.com\"</span>,\n    <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Acme Plumbing\"</span>,\n    <span class=\"at\">\"publisher\"</span>: { <span class=\"at\">\"@id\"</span>: <span class=\"val\">\"https://acmeplumbing.com/#organization\"</span> },\n    <span class=\"at\">\"potentialAction\"</span>: {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"SearchAction\"</span>,\n      <span class=\"at\">\"target\"</span>: <span class=\"val\">\"https://acmeplumbing.com/?s={search_term_string}\"</span>,\n      <span class=\"at\">\"query-input\"</span>: <span class=\"val\">\"required name=search_term_string\"</span>\n    }\n  },\n  {\n    <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n    <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Plumber\"</span>,\n    <span class=\"at\">\"@id\"</span>: <span class=\"val\">\"https://acmeplumbing.com/#organization\"</span>,\n    <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Acme Plumbing\"</span>,\n    <span class=\"at\">\"url\"</span>: <span class=\"val\">\"https://acmeplumbing.com\"</span>,\n    <span class=\"at\">\"telephone\"</span>: <span class=\"val\">\"+18175550100\"</span>,\n    <span class=\"at\">\"email\"</span>: <span class=\"val\">\"info@acmeplumbing.com\"</span>,\n    <span class=\"at\">\"address\"</span>: {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"PostalAddress\"</span>,\n      <span class=\"at\">\"streetAddress\"</span>: <span class=\"val\">\"123 Main St\"</span>,\n      <span class=\"at\">\"addressLocality\"</span>: <span class=\"val\">\"Fort Worth\"</span>,\n      <span class=\"at\">\"addressRegion\"</span>: <span class=\"val\">\"TX\"</span>,\n      <span class=\"at\">\"postalCode\"</span>: <span class=\"val\">\"76102\"</span>,\n      <span class=\"at\">\"addressCountry\"</span>: <span class=\"val\">\"US\"</span>\n    },\n    <span class=\"at\">\"geo\"</span>: {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"GeoCoordinates\"</span>,\n      <span class=\"at\">\"latitude\"</span>: <span class=\"val\">32.7555</span>,\n      <span class=\"at\">\"longitude\"</span>: <span class=\"val\">-97.3308</span>\n    },\n    <span class=\"at\">\"hasMap\"</span>: <span class=\"val\">\"https://maps.google.com/?cid=123456789\"</span>,\n    <span class=\"at\">\"openingHoursSpecification\"</span>: [\n      {\n        <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"OpeningHoursSpecification\"</span>,\n        <span class=\"at\">\"dayOfWeek\"</span>: [<span class=\"val\">\"Monday\"</span>, <span class=\"val\">\"Tuesday\"</span>, <span class=\"val\">\"Wednesday\"</span>, <span class=\"val\">\"Thursday\"</span>, <span class=\"val\">\"Friday\"</span>],\n        <span class=\"at\">\"opens\"</span>: <span class=\"val\">\"07:00\"</span>,\n        <span class=\"at\">\"closes\"</span>: <span class=\"val\">\"17:00\"</span>\n      }\n    ],\n    <span class=\"at\">\"priceRange\"</span>: <span class=\"val\">\"$$\"</span>,\n    <span class=\"at\">\"knowsAbout\"</span>: [<span class=\"val\">\"Residential Plumbing\"</span>, <span class=\"val\">\"Water Heater Repair\"</span>, <span class=\"val\">\"Drain Cleaning\"</span>],\n    <span class=\"at\">\"sameAs\"</span>: [\n      <span class=\"val\">\"https://maps.google.com/?cid=123456789\"</span>,\n      <span class=\"val\">\"https://www.facebook.com/acmeplumbing\"</span>,\n      <span class=\"val\">\"https://www.yelp.com/biz/acme-plumbing-fort-worth\"</span>,\n      <span class=\"val\">\"https://www.bbb.org/us/tx/fort-worth/profile/plumber/acme-plumbing\"</span>\n    ]\n  },\n  {\n    <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n    <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Person\"</span>,\n    <span class=\"at\">\"@id\"</span>: <span class=\"val\">\"https://acmeplumbing.com/#owner\"</span>,\n    <span class=\"at\">\"name\"</span>: <span class=\"val\">\"John Smith\"</span>,\n    <span class=\"at\">\"worksFor\"</span>: { <span class=\"at\">\"@id\"</span>: <span class=\"val\">\"https://acmeplumbing.com/#organization\"</span> }\n  }\n]\n<span class=\"kw\">&lt;/script&gt;</span>"
+      }
+    },
+    {
+      "_note": "Example of an llms.txt remedy item. The code field contains the complete file content as plain text — no HTML spans needed, just the raw file text with \\n for line breaks.",
+      "badge": "critical",
+      "title": "Publish an llms.txt File So AI Tools Know Who You Are",
+      "findings": "No llms.txt file was found at acmeplumbing.com/llms.txt. AI assistants (ChatGPT, Perplexity, Siri) have no structured guidance on how to represent this business — they rely on general page content, which produces incomplete or inaccurate descriptions when users ask about local plumbers.",
+      "steps": [
+        "Step 1: Copy the complete file text from the Standalone Deliverable below.",
+        "Step 2: In Squarespace, go to Pages → Not Linked → Add Blank Page. Title it 'llms' and set the URL slug to exactly 'llms.txt'.",
+        "Step 3: Add a Code Block to the page. Paste the file text into the code block.",
+        "Step 4: Publish the page, then verify it loads at acmeplumbing.com/llms.txt."
+      ],
+      "standalone": {
+        "label": "Standalone Deliverable — llms.txt (complete file, ready to publish)",
+        "code": "# Acme Plumbing\n> Residential and commercial plumber serving Fort Worth, TX and surrounding Tarrant County communities.\n\nAcme Plumbing is a licensed plumbing company serving homeowners and small businesses in Fort Worth and northern Tarrant County. We specialize in emergency repairs, water heater replacement, and drain cleaning, with same-day availability Monday through Friday.\n\n## Services\n- Emergency Plumbing Repair: Same-day service for burst pipes, leaks, and sewage backups. Call for pricing.\n- Water Heater Replacement: Installation of gas, electric, and tankless water heaters. Most jobs completed in one visit.\n- Drain Cleaning: Hydro-jetting and snake service for clogs in kitchen, bath, and main sewer lines.\n- Fixture Installation: Faucets, toilets, garbage disposals, and shut-off valves.\n\n## Contact\n- Phone: (817) 555-0100\n- Email: info@acmeplumbing.com\n- Address: 123 Main St, Fort Worth, TX 76102\n- Hours: Monday–Friday 7am–5pm. Emergency service available after hours.\n\n## Frequently Asked Questions\nQ: Do you offer emergency plumbing service?\nA: Yes. We provide emergency service 7 days a week. Call (817) 555-0100 any time.\n\nQ: What areas do you serve?\nA: We serve Fort Worth and the surrounding communities in Tarrant County, including Arlington, Keller, Southlake, and Grapevine.\n\nQ: Are you licensed and insured?\nA: Yes. Acme Plumbing is fully licensed in Texas and carries general liability and workers' compensation insurance.\n\n## About\nAcme Plumbing was founded in 2008 by John Smith, a master plumber with 20 years of experience. We are a family-owned business committed to honest pricing and same-day service.\n\n## Key Pages\n- Homepage: https://acmeplumbing.com/\n- Services: https://acmeplumbing.com/services\n- About: https://acmeplumbing.com/about\n- Contact: https://acmeplumbing.com/contact"
+      }
+    },
+    {
+      "_note": "Example of a FAQPage schema remedy item — only include when B_AI2 finds FAQ content on the site without FAQPage schema.",
+      "badge": "high",
+      "title": "Add FAQPage Schema So AI Assistants Can Quote Your Answers Directly",
+      "findings": "The site has a Frequently Asked Questions section, but no FAQPage structured data markup. Google AI Overviews, ChatGPT, and Perplexity can surface FAQ answers directly in search results and AI responses — but only when those Q&A pairs are in FAQPage schema format.",
+      "steps": [
+        "Step 1: In Squarespace, go to Settings → Advanced → Code Injection.",
+        "Step 2: Paste the FAQPage JSON-LD block below into the Header field, after the entity graph schema already added.",
+        "Step 3: Click Save, then test at search.google.com/test/rich-results — the tool should now show FAQ rich results as detected."
+      ],
+      "standalone": {
+        "label": "Standalone Deliverable — FAQPage Schema JSON-LD",
+        "code": "<span class=\"kw\">&lt;script</span> <span class=\"at\">type</span>=<span class=\"val\">\"application/ld+json\"</span><span class=\"kw\">&gt;</span>\n{\n  <span class=\"at\">\"@context\"</span>: <span class=\"val\">\"https://schema.org\"</span>,\n  <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"FAQPage\"</span>,\n  <span class=\"at\">\"mainEntity\"</span>: [\n    {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Question\"</span>,\n      <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Do you offer emergency plumbing service?\"</span>,\n      <span class=\"at\">\"acceptedAnswer\"</span>: {\n        <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Answer\"</span>,\n        <span class=\"at\">\"text\"</span>: <span class=\"val\">\"Yes. We provide emergency service 7 days a week. Call (817) 555-0100 any time.\"</span>\n      }\n    },\n    {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Question\"</span>,\n      <span class=\"at\">\"name\"</span>: <span class=\"val\">\"What areas do you serve?\"</span>,\n      <span class=\"at\">\"acceptedAnswer\"</span>: {\n        <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Answer\"</span>,\n        <span class=\"at\">\"text\"</span>: <span class=\"val\">\"We serve Fort Worth and surrounding communities in Tarrant County, including Arlington, Keller, Southlake, and Grapevine.\"</span>\n      }\n    },\n    {\n      <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Question\"</span>,\n      <span class=\"at\">\"name\"</span>: <span class=\"val\">\"Are you licensed and insured?\"</span>,\n      <span class=\"at\">\"acceptedAnswer\"</span>: {\n        <span class=\"at\">\"@type\"</span>: <span class=\"val\">\"Answer\"</span>,\n        <span class=\"at\">\"text\"</span>: <span class=\"val\">\"Yes. Acme Plumbing is fully licensed in Texas and carries general liability and workers' compensation insurance.\"</span>\n      }\n    }\n  ]\n}\n<span class=\"kw\">&lt;/script&gt;</span>"
       }
     }
   ],
@@ -311,10 +349,11 @@
       "remedyItem": null
     },
     "C08_2": {
+      "_note": "This check uses a 5-signal scoring rubric. See audit-session-guide.md Check 28 for full criteria. remedyItem should always be null — the individual failing checks (C04_1, C04_2, C06_4, B_AI2) carry their own remedy items.",
       "badgeClass": "badge-high",
       "badgeLabel": "High Value",
-      "found": "No llms.txt, no FAQ schema, no structured NAP data. AI search engines have minimal structured content to work from.",
-      "impact": "When users ask ChatGPT or Perplexity about plumbers in your area, this site is less likely to be cited accurately.",
+      "found": "Score: 2/5. LocalBusiness schema: ✓ (present but minimal). sameAs links: ✗ (no directory links in schema). llms.txt: ✗ (404 — file missing). FAQPage schema: ✗ (no FAQ content on site). Static text content: ✓ (homepage has readable NAP and service descriptions).",
+      "impact": "Gaps in signals 2 and 3 are the highest priority. sameAs links are addressed in the Schema remedy; the llms.txt file is provided as a standalone deliverable in that same remedy.",
       "technical": null,
       "remedyItem": null
     }

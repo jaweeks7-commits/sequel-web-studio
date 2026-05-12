@@ -356,6 +356,89 @@ Look for "Eliminate render-blocking resources" in PageSpeed. Also:
 
 **Record:** all `@type` values found, any parse errors, badge
 
+**Standalone deliverable — always write when schema is Critical or High Value:**
+
+Write a complete three-block entity graph as the standalone code deliverable. This goes far beyond a single LocalBusiness block — it creates an interconnected knowledge graph that AI systems can traverse. All three blocks must be in a single `<script type="application/ld+json">` tag as a JSON array.
+
+Field sourcing instructions:
+- `@id` URLs: always `https://[client-domain]/#website`, `#organization`, `#owner`
+- Business name, phone, address, hours: read from homepage footer, Contact page, or schema already on site
+- `geo` coordinates: get from their Google Maps listing (right-click the pin → copy coordinates)
+- `hasMap`: full Google Maps URL from their listing
+- `sameAs`: collect every directory URL you can confirm (Google Maps, Facebook, Yelp, LinkedIn, BBB) — verify each one loads the correct business before including it
+- `knowsAbout`: list the client's 3–5 primary services as plain strings
+- `openingHoursSpecification`: use `dayOfWeek` array with schema.org day names (Monday, Tuesday, etc.), `opens`/`closes` in 24h format
+- Owner name: from About page, homepage bio, or footer signature
+- `potentialAction` target: use `https://[domain]/?s={search_term_string}` (works even if the site doesn't have search — it's a schema hint to search engines, not a functional URL requirement)
+
+```json
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://[DOMAIN]/#website",
+    "url": "https://[DOMAIN]",
+    "name": "[BUSINESS NAME]",
+    "publisher": { "@id": "https://[DOMAIN]/#organization" },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://[DOMAIN]/?s={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://[DOMAIN]/#organization",
+    "name": "[BUSINESS NAME]",
+    "url": "https://[DOMAIN]",
+    "telephone": "[PHONE]",
+    "email": "[EMAIL if public]",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "[STREET]",
+      "addressLocality": "[CITY]",
+      "addressRegion": "[STATE]",
+      "postalCode": "[ZIP]",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "[LAT]",
+      "longitude": "[LNG]"
+    },
+    "hasMap": "[GOOGLE MAPS URL]",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "17:00"
+      }
+    ],
+    "priceRange": "$",
+    "knowsAbout": ["[SERVICE 1]", "[SERVICE 2]", "[SERVICE 3]"],
+    "sameAs": [
+      "[GOOGLE MAPS URL]",
+      "[FACEBOOK PAGE URL]",
+      "[YELP LISTING URL]",
+      "[LINKEDIN PAGE URL]",
+      "[BBB PROFILE URL]"
+    ],
+    "image": "[OG IMAGE URL or logo URL]"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://[DOMAIN]/#owner",
+    "name": "[OWNER NAME]",
+    "worksFor": { "@id": "https://[DOMAIN]/#organization" }
+  }
+]
+```
+
+Remove any fields you cannot source accurately — a complete block with real data is better than a full block with placeholder guesses. After writing the block, note in the `technical` field of C04_1 which fields you populated and which were omitted.
+
 ---
 
 ### Check 16 — Schema Connectivity
@@ -363,12 +446,27 @@ Look for "Eliminate render-blocking resources" in PageSpeed. Also:
 
 Inspect the JSON-LD blocks from Check 15 for `@id` properties and `sameAs` arrays.
 
-**Badge assignment:**
-- **Pass:** Blocks linked via `@id`, `sameAs` points to Google Business Profile and social profiles
-- **High Value:** Schema present but isolated — no `@id` links, no `sameAs` connections
-- **Nice to Have:** `sameAs` present but incomplete (e.g., missing Google Business Profile)
+```js
+// playwright_evaluate — extract @id and sameAs from all LD+JSON blocks:
+[...document.querySelectorAll('script[type="application/ld+json"]')].flatMap(s => {
+  try {
+    const d = JSON.parse(s.textContent);
+    const blocks = Array.isArray(d) ? d : [d];
+    return blocks.map(b => ({ type: b['@type'], id: b['@id'], sameAs: b['sameAs'] }));
+  } catch { return []; }
+})
+```
 
-**Record:** what `@id` and `sameAs` values are present, badge
+**Badge assignment:**
+- **Pass:** Schema blocks are linked via `@id` cross-references AND `sameAs` includes Google Maps + at least one other authoritative directory (Facebook, Yelp, BBB, LinkedIn)
+- **High Value:** Schema present but `sameAs` is missing entirely, has fewer than 2 verifiable URLs, or blocks have no `@id` linking
+- **Nice to Have:** `sameAs` present but incomplete (has 1 directory URL, missing Google Maps specifically)
+
+**Why sameAs matters for AI search:** `sameAs` is how ChatGPT, Perplexity, and Google AI Overviews verify a business's identity before recommending it. An AI system cross-checks schema entities against directories it's already indexed. Without `sameAs` links, the AI cannot confirm the business is real — and the default behavior is not to recommend an unverifiable entity.
+
+**Record:** all `@id` values found, all `sameAs` URLs found (verify each one resolves to the correct business listing), badge
+
+> **Note:** If sameAs is High Value or the entity graph is incomplete, this finding is addressed by the same remedy item as C04_1 — the full entity graph standalone deliverable includes a complete sameAs array. Set `remedyItem` for C04_2 to the same number as C04_1.
 
 ---
 
@@ -519,10 +617,63 @@ playwright_navigate: http://[CLIENT_DOMAIN_NO_HTTPS]
 Navigate to `[CLIENT_URL]/llms.txt` and check if it loads.
 
 **Badge assignment:**
-- **Pass:** File exists with descriptive content
-- **Nice to Have:** 404 (most sites don't have this yet — flag as a Sequel Web Studio upsell opportunity)
+- **Pass:** File exists with substantive descriptive content (not just a placeholder)
+- **High Value:** File exists but is empty or has only a one-liner
+- **Critical:** 404 — file is missing entirely
 
 **Record:** exists or "404 not found", badge
+
+**Standalone deliverable — write the complete file when Critical or High Value:**
+
+Do not just tell the client to add an llms.txt. Write the complete file content for them during the audit session. Source each section from the live site — About page, Services page, homepage content, and Contact page.
+
+Structure the file as follows (use actual client data, not these placeholder labels):
+
+```
+# [Business Name]
+> [One sentence: who they are, what they do, where they're located]
+
+[Business Name] is a [business type] serving [city/region]. [One sentence on what makes them different or their key approach — from homepage hero or About page.]
+
+## Services
+- [Service 1 name]: [One sentence description]. [Price if publicly listed.]
+- [Service 2 name]: [One sentence description]. [Price if publicly listed.]
+- [Continue for all primary services]
+
+## Contact
+- Phone: [number]
+- Email: [email address if public]
+- Address: [full street address]
+- Hours: [e.g., Monday–Friday 8am–5pm]
+
+## Frequently Asked Questions
+Q: [Question sourced from site FAQ, or a common question implied by their services]
+A: [Answer from site, written in plain English]
+
+Q: [Second question]
+A: [Answer]
+
+Q: [Third question if applicable]
+A: [Answer]
+
+## About
+[2–3 sentences about the business or owner, sourced from the About page. Who they are, how long they've been in business, what they stand for.]
+
+## Key Pages
+- Homepage: https://[DOMAIN]/
+- Services: https://[DOMAIN]/services (or wherever services live)
+- About: https://[DOMAIN]/about
+- Contact: https://[DOMAIN]/contact
+```
+
+Sourcing notes:
+- Services: pull names and descriptions from the Services page or homepage service cards
+- FAQ: look for accordion sections, "Frequently Asked Questions" headings, or Q&A-style content anywhere on the site. If no FAQ exists, write 2–3 questions implied by the business type (e.g., for a plumber: "Do you offer emergency service?", "What areas do you serve?")
+- About: pull from the About page bio or founder statement
+- Hours: check homepage footer, Contact page, or LocalBusiness schema already present
+- Omit any section you cannot populate with real data — a shorter accurate file is better than a longer one with guesses
+
+After writing, include the complete file text as the `code` field in the standalone deliverable object in the JSON data file.
 
 ---
 
@@ -578,31 +729,44 @@ Already recorded in Phase 1. No additional work.
 
 ---
 
-### Check 28 — AI-Powered Search Readiness
+### Check 28 — AI Citation Readiness (5-Signal Score)
 **JSON key:** `auditChecks.C08_2`
 
-Holistic judgment based on prior findings. Evaluate:
+Score this check using five concrete signals drawn from earlier findings in the session. Do not assign a holistic impression — count the signals.
 
+**The 5 signals:**
+
+| # | Signal | Pass condition |
+|---|--------|---------------|
+| 1 | LocalBusiness schema with complete data | `@type: LocalBusiness` present with name, address, phone, and hours all populated |
+| 2 | sameAs links to 2+ authoritative directories | `sameAs` array includes Google Maps + at least one other (Facebook, Yelp, BBB, LinkedIn) |
+| 3 | llms.txt present with substantive content | `/llms.txt` returns a file with more than a one-liner |
+| 4 | FAQPage schema present | At least one `@type: FAQPage` block with populated `mainEntity` Q&A pairs |
+| 5 | Static text content describing the business | Homepage has readable, indexable text (not all content in image sliders, JS-rendered carousels, or video-only sections) |
+
+**Evaluate signal 5 with:**
 ```js
-// playwright_evaluate — check NAP consistency:
+// playwright_evaluate — check for readable body text:
 ({
+  bodyTextLength: document.body.innerText.replace(/\s+/g, ' ').trim().length,
   hasAddress: /\d+\s+\w+\s+(st|street|ave|avenue|blvd|boulevard|rd|road|dr|drive|ln|lane|way|ct|court)/i.test(document.body.innerText),
   hasPhone:   /\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}/.test(document.body.innerText),
   hasHours:   /(monday|tuesday|wednesday|open|hours)/i.test(document.body.innerText),
 })
 ```
 
-Also consider (from earlier findings):
-- Does LocalBusiness schema exist? (Check 15)
-- Does llms.txt exist? (Check 24)
-- Is homepage content structured clearly enough for an AI to describe the business?
+Signal 5 passes if bodyTextLength > 400 AND at least one of hasAddress / hasPhone / hasHours is true.
 
 **Badge assignment:**
-- **Pass:** Schema present, clear NAP, structured content, llms.txt ideally present
-- **High Value:** Missing LocalBusiness schema or no NAP data — AI can't accurately describe the business
-- **Critical:** Homepage is image-heavy with minimal text — AI crawlers get nothing useful
+- **Pass:** 5/5 or 4/5 signals present
+- **High Value:** 3/5 or 2/5 signals present
+- **Critical:** 1/5 or 0/5 signals present
 
-**Record:** NAP presence, schema status, content structure assessment, badge
+**Record:** list all 5 signals and mark each ✓ or ✗, state the score (e.g., "3/5"), badge
+
+The `found` field in the JSON should name which signals passed and which failed — e.g.: "Score: 2/5. LocalBusiness schema: ✓. sameAs links: ✗ (none present). llms.txt: ✗ (404). FAQPage schema: ✗ (no FAQ content). Static text content: ✓."
+
+This check is informational — it is a summary of findings from C04_1, C04_2, C06_4, and B_AI2. It does not need its own remedy item if those other checks already have remedy items. Set `remedyItem: null` for this check and note in the `impact` field which remedy items address the gaps.
 
 ---
 
@@ -631,6 +795,93 @@ Run these after the 28 standard checks. Not all apply to every site. Only run th
 | **B18** | Developer artifacts | `document.documentElement.innerHTML.match(/TODO|console\.log|staging\.|\.local/gi)` |
 | **B19** | Favicon formats | `[...document.querySelectorAll('link[rel*="icon"]')].map(l => ({rel: l.rel, href: l.href}))` |
 | **B20** | Copyright year in footer | `document.querySelector('footer')?.innerText?.match(/©\s*(\d{4})/)` |
+| **B_AI1** | sameAs authority links | Extract `sameAs` from all LD+JSON blocks (see Check 16 script); verify each URL loads the correct business listing |
+| **B_AI2** | FAQPage schema from site FAQ content | Scan for FAQ-like content (`document.querySelectorAll('[class*="faq"],[id*="faq"],details,summary')`); check whether FAQPage schema exists |
+
+---
+
+### B_AI1 — sameAs Authority Links
+
+Run only if C04_1 found LocalBusiness schema (otherwise sameAs is moot until schema is added — flag as part of that remedy instead).
+
+```js
+// playwright_evaluate — extract sameAs from all LD+JSON blocks:
+[...document.querySelectorAll('script[type="application/ld+json"]')].flatMap(s => {
+  try {
+    const d = JSON.parse(s.textContent);
+    const blocks = Array.isArray(d) ? d : [d];
+    return blocks.flatMap(b => b.sameAs ? (Array.isArray(b.sameAs) ? b.sameAs : [b.sameAs]) : []);
+  } catch { return []; }
+})
+```
+
+For each URL returned: navigate to it briefly and confirm it loads the correct business listing (right name, right location). Flag any URL that resolves to the wrong business or a 404.
+
+**Badge assignment:**
+- **Pass:** `sameAs` contains a verified Google Maps listing URL + at least one other verified directory (Facebook business page, Yelp listing, BBB profile, or LinkedIn company page)
+- **High Value:** `sameAs` is missing entirely OR has fewer than 2 verified directory URLs OR does not include Google Maps
+- **Nice to Have:** `sameAs` present but missing Google Maps specifically (has Yelp/Facebook but not Maps)
+
+**Impact copy for High Value:** "When ChatGPT or Perplexity encounters your business in schema markup, they cross-check it against directory listings they've already indexed. Without verified sameAs links, AI tools can't confirm your business identity — and the conservative default is not to recommend an entity they can't verify."
+
+**Standalone deliverable — write when High Value:**
+Write an updated LocalBusiness schema block (or the full entity graph if C04_1 was also a finding) with a corrected `sameAs` array. Include:
+1. Google Maps listing URL (copy from their Google Business Profile — it looks like `https://maps.app.goo.gl/...` or `https://www.google.com/maps/place/...`)
+2. Facebook business page URL (if they have one)
+3. Yelp listing URL (if they have one)
+4. BBB profile URL (if they have one)
+5. LinkedIn company page URL (if they have one)
+
+Note in the findings which of these directory profiles the client actually has. If they don't have a Google Business Profile claimed, flag that separately as a high-priority action — it's the single most impactful thing they can do for local AI search visibility.
+
+---
+
+### B_AI2 — FAQPage Schema from Site FAQ Content
+
+```js
+// playwright_evaluate — check for FAQ-like content and existing FAQPage schema:
+({
+  faqElements: document.querySelectorAll('[class*="faq" i],[id*="faq" i],details,summary,[class*="accordion" i],[class*="question" i]').length,
+  faqHeadings: [...document.querySelectorAll('h2,h3,h4')].filter(h => /faq|frequently asked|questions/i.test(h.textContent)).map(h => h.textContent.trim()),
+  hasFaqSchema: [...document.querySelectorAll('script[type="application/ld+json"]')].some(s => {
+    try { const d = JSON.parse(s.textContent); const b = Array.isArray(d) ? d : [d]; return b.some(x => x['@type'] === 'FAQPage'); } catch { return false; }
+  }),
+})
+```
+
+**Badge assignment:**
+- **High Value:** `faqElements > 0` or `faqHeadings.length > 0`, AND `hasFaqSchema` is false (FAQ content exists but no FAQPage schema)
+- **Nice to Have:** No FAQ content found anywhere on the site
+- **Pass:** FAQPage schema present and populated
+
+**Impact copy for High Value:** "FAQPage schema is the most directly quotable structured data type for AI assistants. When a user asks ChatGPT or Google AI Overview a question that your FAQ answers, those tools can surface your answer directly — but only if the question and answer are in FAQPage schema format, not just readable HTML."
+
+**Standalone deliverable — write when High Value:**
+Navigate to each FAQ section on the site and extract the actual questions and answers. Write a complete FAQPage JSON-LD block:
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "[Question text exactly as on the site]",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "[Answer text, written in plain prose. Do not include HTML tags.]"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "[Second question]",
+      "acceptedAnswer": { "@type": "Answer", "text": "[Second answer]" }
+    }
+  ]
+}
+```
+
+Include all FAQ questions found on the site (no minimum or maximum). Deliver as a standalone code block with instructions to add it to the same code injection location as the LocalBusiness schema.
 
 ---
 
