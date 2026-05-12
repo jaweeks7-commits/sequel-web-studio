@@ -9,6 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "generate-og": "node scripts/generate-og.mjs",
+    "generate-favicons": "node scripts/generate-favicons.mjs",
+    "optimize-images": "node scripts/optimize-images.mjs",
     "generate-audit-docx": "node scripts/generate-audit-docx.mjs",
     "fill-audit-template": "node scripts/fill-template.mjs",
     "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs",

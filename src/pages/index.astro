@@ -17,7 +17,7 @@ const faqSchema = JSON.stringify({
 
 <BaseLayout
   title="Sequel Web Studio — AI Search Visibility for Small Businesses"
-  description="Is your website invisible to ChatGPT, Claude, Gemini, and Perplexity? Get a 28-point Pro Diagnosis + Remedy Package with ready-to-paste code fixes. Delivered in 24 hours for $350."
+  description="Is your website invisible to ChatGPT and Google? 28-point Pro Diagnosis + Remedy Package — ready-to-paste fixes delivered in 24 hours for $350."
   ogImage="https://sequelwebstudio.com/images/og-home.png"
 >
   <script type="application/ld+json" set:html={faqSchema} slot="head" />
@@ -278,13 +278,13 @@ const faqSchema = JSON.stringify({
           <button class="gallery-arrow-dark gallery-arrow-dark-right" aria-label="Scroll right">&#8594;</button>
           <div class="deliverable-gallery-dark" id="homepage-gallery-scroll">
             {[
-              ['/images/sample-deliverables/sample-1-title-page.jpg',           'Title Page'],
-              ['/images/sample-deliverables/sample-2-exec-summary.jpg',          'Exec Summary'],
-              ['/images/sample-deliverables/sample-4-priority-list.jpg',         'Priority List'],
-              ['/images/sample-deliverables/sample-5-remedy-steps.jpg',          'Remedy Steps'],
-              ['/images/sample-deliverables/sample-6-remedy-steps-with-code.jpg','Remedy + Code'],
-              ['/images/sample-deliverables/sample-3-whats-included.jpg',        "What's Included"],
-              ['/images/sample-deliverables/sample-7-full-audit-results.jpg',    'Full Results'],
+              ['/images/sample-deliverables/sample-1-title-page.webp',           'Title Page'],
+              ['/images/sample-deliverables/sample-2-exec-summary.webp',          'Exec Summary'],
+              ['/images/sample-deliverables/sample-4-priority-list.webp',         'Priority List'],
+              ['/images/sample-deliverables/sample-5-remedy-steps.webp',          'Remedy Steps'],
+              ['/images/sample-deliverables/sample-6-remedy-steps-with-code.webp','Remedy + Code'],
+              ['/images/sample-deliverables/sample-3-whats-included.webp',        "What's Included"],
+              ['/images/sample-deliverables/sample-7-full-audit-results.webp',    'Full Results'],
             ].map(([img, label]) => (
               <div class="sample-thumb-wrap-dark" data-lightbox-trigger data-img={img} data-label={label}>
                 <div class="browser-frame">
@@ -292,7 +292,7 @@ const faqSchema = JSON.stringify({
                     <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
                     <span class="browser-address">{label}</span>
                   </div>
-                  <img src={img} alt={`${label} — Pro Diagnosis sample`} loading="lazy" class="sample-thumb-dark" />
+                  <img src={img} alt={`${label} — Pro Diagnosis sample`} loading="lazy" width="752" height="757" class="sample-thumb-dark" />
                 </div>
                 <span class="sample-label-dark">{label}</span>
               </div>

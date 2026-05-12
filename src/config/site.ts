@@ -42,6 +42,16 @@ export const PRICING = {
   },
 } as const;
 
+// Schema.org WebSite — injected as JSON-LD on every page alongside LocalBusiness
+export const WEBSITE_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type':    'WebSite',
+  '@id':      'https://sequelwebstudio.com/#website',
+  url:        SITE_URL,
+  name:       SITE_NAME,
+  publisher:  { '@id': 'https://sequelwebstudio.com/#organization' },
+};
+
 // Schema.org LocalBusiness — injected as JSON-LD on every page (D8)
 export const LOCAL_BUSINESS_SCHEMA = {
   '@context':  'https://schema.org',
@@ -49,6 +59,14 @@ export const LOCAL_BUSINESS_SCHEMA = {
   '@id':       'https://sequelwebstudio.com/#organization',
   name:        SITE_NAME,
   url:         SITE_URL,
+  address: {
+    '@type':         'PostalAddress',
+    streetAddress:   '9533 Courtright Drive',
+    addressLocality: 'Fort Worth',
+    addressRegion:   'TX',
+    postalCode:      '76244',
+    addressCountry:  'US',
+  },
   telephone:   '+18177439806',
   email:       CONTACT_EMAIL,
   description: 'Custom-coded websites for small businesses across the US — built to rank on Google, ChatGPT, and voice search. Starting at $1,000.',
@@ -65,8 +83,6 @@ export const LOCAL_BUSINESS_SCHEMA = {
   },
   serviceType: 'Web Design',
   sameAs: [
-    'https://www.linkedin.com/company/sequel-web-studio',   // Update with real URL (audit Item 6)
-    'https://www.instagram.com/sequelwebstudio',             // Update with real URL (audit Item 6)
-    // Add Google Business Profile URL here once created (audit Item 10)
+    // Add Google Business Profile URL once created — highest-value AI citation signal
   ],
 };

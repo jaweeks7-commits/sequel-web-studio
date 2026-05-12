@@ -1,0 +1,19 @@
+{
+  "name": "Sequel Web Studio",
+  "short_name": "Sequel",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#1F3864",
+  "background_color": "#F7F8FA",
+  "display": "standalone"
+}
