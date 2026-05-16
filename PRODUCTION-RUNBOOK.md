@@ -123,7 +123,7 @@ node --env-file=.env scripts/send-delivery.mjs \
   --pdf "Client-Slug-Remedy-Package-Month-Year.pdf"
 ```
 - Requires `GMAIL_USER` and `GMAIL_APP_PASSWORD` in `.env`
-- Attaches the PDF and sends from `jaweeks7@gmail.com`
+- Attaches the PDF and sends from `jaweeks7@gmail.com` (Gmail SMTP — see note below about business email)
 - Subject: `Your Pro Diagnosis + Remedy Package — [Business Name]`
 - Logs success to console with timestamp
 

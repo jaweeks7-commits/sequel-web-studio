@@ -6,8 +6,26 @@
 
 We build custom-coded websites for small businesses — sites that load fast, rank on Google, and show up in AI assistants and voice search. Every site is hand-coded from scratch: no templates, no page builders.
 
+## Pro Diagnosis + Remedy Package ($350)
+
+A 28-point deep technical audit of a business homepage, run by a real AI agent in a live browser — not an automated scanner. Delivered within 24 hours as a branded report with a Remedy Package: ready-to-paste code for every fixable issue, platform-specific installation steps, and a prioritized to-do checklist. One-time fee, no retainer.
+
+The audit covers eight categories:
+
+1. **Platform & AI Discoverability** — Identifies the site's platform and evaluates whether its structure, crawl permissions, and content signals meet the requirements for appearing in AI-generated answers (ChatGPT, Perplexity, Gemini, voice search).
+2. **SEO Fundamentals** — Checks title tags, meta descriptions, canonical URLs, robots meta directives, and heading hierarchy for completeness and correctness.
+3. **Social Sharing & Open Graph** — Evaluates Open Graph image, title, description, and URL tags, plus the separate Twitter/X Card tags that control how every link share appears across platforms.
+4. **Performance & Page Speed** — Measures server response time, full load time, image optimization, and identifies the specific scripts and third-party services adding the most latency.
+5. **Schema & Structured Data** — Verifies JSON-LD markup is present, valid, and correctly cross-linked so search engines and AI assistants can build an accurate knowledge graph entry for the business.
+6. **Analytics & Tracking Integrity** — Confirms GA4 is active and correctly installed, checks for duplicate pixels that corrupt conversion data, and inventories every third-party service loading on the page.
+7. **Security & Crawlability** — Reviews robots.txt for accidental indexing blocks, confirms HTTPS is enforced sitewide, and checks whether an llms.txt file is present and accurate.
+8. **Accessibility** — Verifies all images have descriptive alt text and that the HTML language attribute is correctly set.
+
+More information: https://sequelwebstudio.com/audit
+
 ## Services & Pricing
 
+- **Pro Diagnosis + Remedy Package** ($350, one-time): 28-point audit + ready-to-paste code fixes. See the Pro Diagnosis section above for full details.
 - **Create New Site** ($1,000 starting price, one-time): Full website built from scratch. Includes homepage, services, about, contact, privacy, and 404 pages — plus the full technical foundation (schema markup, sitemap, analytics setup, contact form). Hosting is $20/month after launch. 30 days of post-launch support included.
 - **Modernize Existing** ($1,000 starting price, one-time): Full audit and rebuild of an existing site. Content preserved and restructured, rebuilt on the same technical foundation as a new site, launched on your existing domain with no lost SEO. Hosting is $20/month after launch.
 - Future support available at $60/hour with a half-hour minimum.
@@ -31,7 +49,7 @@ United States (nationwide)
 
 ## Contact
 
-Email: jaweeks7@gmail.com
+Email: joe@sequelwebstudio.com
 Website: https://sequelwebstudio.com
 
 ## AI Usage Policy

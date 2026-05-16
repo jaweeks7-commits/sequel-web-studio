@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import { existsSync, unlinkSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { dirname, join, resolve } from 'path';
+import { dirname, join, resolve, basename } from 'path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -21,7 +21,7 @@ if (!inputArg) {
 
 // Derive output PDF name from input HTML name:
 //   acme-plumbing-pro-diagnosis-may-2026.html → Acme-Plumbing-Remedy-Package-May-2026.pdf
-const baseName = inputArg.replace(/\.html$/i, '');
+const baseName = basename(inputArg, '.html');
 const diagMatch = baseName.match(/^(.+)-pro-diagnosis-(.+)$/i);
 const titleCase = s => s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
 const [clientSlug, dateSlug] = diagMatch

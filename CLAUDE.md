@@ -6,7 +6,7 @@
 
 ## 1. What this project is
 
-**Sequel Web Studio** is a one-person small-business website company serving Northern Tarrant County, TX. The owner is Joe Weeks (jaweeks7@gmail.com). This repo contains the company's own website at **sequelwebstudio.com**.
+**Sequel Web Studio** is a one-person small-business website company serving Northern Tarrant County, TX. The owner is Joe Weeks (joe@sequelwebstudio.com). This repo contains the company's own website at **sequelwebstudio.com**.
 
 The site has three jobs:
 1. **Convert visitors to leads** — small-business owners who need a website.
@@ -22,7 +22,7 @@ Joe is **non-technical**. Treat him as a stakeholder, not an engineer. When you 
 - **Domain**: sequelwebstudio.com (Namecheap, 2-year term, WhoisGuard on, auto-renew on)
 - **DNS**: Namecheap-managed (per decision D2). A record at `@` and CNAME at `www` point to Netlify.
 - **Hosting**: Netlify
-- **Live now**: A static "Coming Soon" page in `/coming-soon/index.html` is currently deployed. It uses Joe's brand palette and a mailto link to jaweeks7@gmail.com. **Do not delete this folder until the real site replaces it on the same Netlify deployment.**
+- **Live now**: A static "Coming Soon" page in `/coming-soon/index.html` is currently deployed. It uses Joe's brand palette and a mailto link to joe@sequelwebstudio.com. **Do not delete this folder until the real site replaces it on the same Netlify deployment.**
 - **SSL**: Let's Encrypt via Netlify (automatic).
 
 ---
@@ -123,7 +123,7 @@ Nine matched the recommended path. Six deviated. **Do not re-decide these.** If 
 
 ## 7. Things that aren't ready yet (don't block on these)
 
-- **Google Workspace** — Joe is buying this later. Until then, contact email everywhere is `jaweeks7@gmail.com`. **Make this a single source-of-truth constant** in the codebase (e.g., `src/config/site.ts` exporting `CONTACT_EMAIL`) so it's a one-line swap when Workspace lands.
+- **Google Workspace** — Joe is buying this later. Until then, contact email everywhere is `joe@sequelwebstudio.com`. **Make this a single source-of-truth constant** in the codebase (e.g., `src/config/site.ts` exporting `CONTACT_EMAIL`) so it's a one-line swap when Workspace lands.
 - **SPF/DKIM/DMARC** — depends on Workspace. Not blocking the marketing site.
 - **GA4 property** — Joe will create. Wire the loader behind a `PUBLIC_GA4_ID` env var that's empty for now; the loader should no-op when the var is empty.
 - **CookieYes account** — same pattern: env-var-gated.
@@ -150,7 +150,7 @@ Create `.env.example` in the repo root with these keys (values empty/placeholder
 
 ```
 PUBLIC_SITE_URL=https://sequelwebstudio.com
-PUBLIC_CONTACT_EMAIL=jaweeks7@gmail.com
+PUBLIC_CONTACT_EMAIL=joe@sequelwebstudio.com
 PUBLIC_GA4_ID=
 PUBLIC_COOKIEYES_ID=
 PUBLIC_TURNSTILE_SITE_KEY=
@@ -201,3 +201,52 @@ Once you've read this file and the PRD:
 - When you make a judgment call, say so explicitly: "I chose X because Y — let me know if you'd rather Z."
 - Joe's working folder is `C:\Claude Code Projects\Sequel Web Studio`. Stay inside it.
 - The Work Log (`Sequel Web Studio - Work Log.docx`) is the running history. Add an entry when you complete a phase or make a non-trivial decision.
+
+---
+
+## 13. Audit Deliverables Archive — do this at the end of every audit
+
+After generating the PDF for any Pro Diagnosis + Remedy Package audit, **always** copy the deliverables to the archive folder on the C drive before closing the session.
+
+**Archive root:** `C:\Sequel Audit Deliverables\`
+
+**Folder naming convention:**
+```
+C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\
+```
+- `{YYYY-MM}` = year and month of audit delivery (e.g., `2026-05`)
+- `{client-slug}` = lowercase hyphenated client name (e.g., `fort-worth-report`, `straight-edge-lawns`)
+
+**Files to copy into the client folder:**
+1. The **Remedy Package PDF** — e.g., `Fort-Worth-Report-Remedy-Package-May-2026.pdf`
+2. Any **audit data JSON** — e.g., `fort-worth-report-audit-data-may-2026.json` (if produced via fill-template pipeline) or the network/data log JSON if the audit was done directly
+3. Any **screenshots** taken during the Playwright session — rename them to `{client-slug}-screenshot-{description}.png`
+
+**PowerShell commands to use (run in sequence after PDF is confirmed good):**
+```powershell
+New-Item -ItemType Directory -Force "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}"
+Copy-Item "audit-tool\{PDF-filename}.pdf" "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+Copy-Item "audit-tool\{data}.json"        "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\{client-slug}-audit-data-{mon-yyyy}.json" -Force
+# Repeat Copy-Item for each screenshot PNG
+```
+
+**Why:** This archive is the single source of truth for all delivered audits. Joe uses it to reference past work, track client history, and retrieve files for follow-up. Never skip this step.
+
+---
+
+## 14. Audit HTML — PDF pagination rules
+
+When writing the audit HTML report, all self-contained content blocks (remedy cards, priority action items, audit result rows, bonus diagnostic cards, standalone deliverable blocks) **must not be split across pages** unless the block is too tall to fit on a single page by itself.
+
+Apply this CSS to every discrete block element:
+
+```css
+break-inside: avoid;
+page-break-inside: avoid; /* legacy fallback */
+```
+
+**What counts as a block:** any `.remedy-card`, `.action-item`, `.check-row`, `.bonus-card`, `.deliverable-block`, or equivalent wrapper `<div>` that represents one complete idea or finding. If a block is short enough to fit on one page, it must start at the top of the next page rather than be cut in the middle.
+
+**What this does NOT apply to:** section headers that intentionally bleed into content below, or blocks that are demonstrably longer than one full page (those will always span pages — that is acceptable).
+
+This rule exists because split cards look unprofessional in the delivered PDF and undermine client confidence in the report.

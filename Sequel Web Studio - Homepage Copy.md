@@ -262,7 +262,7 @@ It takes less than a minute. No email required to see your score. If your site i
 
 - **Left:** Sequel Web Studio · Serving Northern Tarrant County, TX
 - **Middle:** Home · Services · Portfolio · About · Contact · Privacy
-- **Right:** jaweeks7@gmail.com · [phone, if displaying] · © 2026 Sequel Web Studio
+- **Right:** joe@sequelwebstudio.com · [phone, if displaying] · © 2026 Sequel Web Studio
 
 ---
 

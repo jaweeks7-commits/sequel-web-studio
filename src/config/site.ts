@@ -3,7 +3,7 @@
 
 export const SITE_NAME    = 'Sequel Web Studio';
 export const SITE_URL     = import.meta.env.PUBLIC_SITE_URL    ?? 'https://sequelwebstudio.com';
-export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'jaweeks7@gmail.com';
+export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'joe@sequelwebstudio.com';
 export const SERVICE_AREA = 'United States';
 
 export const NAV_LINKS = [
