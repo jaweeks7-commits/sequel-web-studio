@@ -83,6 +83,6 @@ export const LOCAL_BUSINESS_SCHEMA = {
   },
   serviceType: 'Web Design',
   sameAs: [
-    // Add Google Business Profile URL once created — highest-value AI citation signal
+    'https://share.google/oOa5qcJgSMqjwMKYd',
   ],
 };
