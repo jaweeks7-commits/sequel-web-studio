@@ -9,6 +9,7 @@ export const SERVICE_AREA = 'United States';
 export const SOCIAL_LINKS = {
   linkedin: 'https://www.linkedin.com/company/sequel-web-studio/',
   gbp:      'https://share.google/oOa5qcJgSMqjwMKYd',
+  clutch:   'https://clutch.co/profile/sequel-web-studio',
 } as const;
 
 export const NAV_LINKS = [
@@ -90,5 +91,6 @@ export const LOCAL_BUSINESS_SCHEMA = {
   sameAs: [
     'https://share.google/oOa5qcJgSMqjwMKYd',
     'https://www.linkedin.com/company/sequel-web-studio/',
+    'https://clutch.co/profile/sequel-web-studio',
   ],
 };
