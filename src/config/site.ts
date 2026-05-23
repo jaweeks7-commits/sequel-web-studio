@@ -6,6 +6,11 @@ export const SITE_URL     = import.meta.env.PUBLIC_SITE_URL    ?? 'https://seque
 export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'joe@sequelwebstudio.com';
 export const SERVICE_AREA = 'United States';
 
+export const SOCIAL_LINKS = {
+  linkedin: 'https://www.linkedin.com/company/sequel-web-studio/',
+  gbp:      'https://share.google/oOa5qcJgSMqjwMKYd',
+} as const;
+
 export const NAV_LINKS = [
   { label: 'Home',     href: '/'         },
   { label: 'Audit',    href: '/audit'    },
@@ -84,5 +89,6 @@ export const LOCAL_BUSINESS_SCHEMA = {
   serviceType: 'Web Design',
   sameAs: [
     'https://share.google/oOa5qcJgSMqjwMKYd',
+    'https://www.linkedin.com/company/sequel-web-studio/',
   ],
 };
