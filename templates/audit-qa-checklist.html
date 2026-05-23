@@ -299,6 +299,10 @@
         <span><label for="f5">Code blocks are monospace and visually distinct from surrounding text</label></span>
       </li>
       <li>
+        <input type="checkbox" id="f5b">
+        <span><label for="f5b">Score summary grid (Critical / High Value / Passing / Nice to Have cards) stays intact — no card splits between its label, number, and description line</label></span>
+      </li>
+      <li>
         <input type="checkbox" id="f6">
         <span><label for="f6">No audit check card splits awkwardly across a page break</label></span>
       </li>
@@ -384,6 +388,41 @@
       <li>
         <input type="checkbox" id="p4">
         <span><label for="p4">Spot-check on mobile or tablet: document is legible at default zoom</label></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECTION 6 — Archive & Cleanup -->
+  <div class="section">
+    <div class="section-title">6 — Archive &amp; Cleanup</div>
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="q1">
+        <span>
+          <label for="q1">Client folder created at correct archive path</label>
+          <div class="note">Format: <code>C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\</code></div>
+        </span>
+      </li>
+      <li>
+        <input type="checkbox" id="q2">
+        <span><label for="q2">PDF copied to archive folder</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="q3">
+        <span><label for="q3">Audit data JSON copied to archive folder with correct naming convention</label>
+          <div class="note">Format: <code>{client-slug}-audit-data-{mon-yyyy}.json</code></div>
+        </span>
+      </li>
+      <li>
+        <input type="checkbox" id="q4">
+        <span><label for="q4">All screenshots moved to archive folder and renamed with <code>{client-slug}-screenshot-{description}.png</code></label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="q5">
+        <span>
+          <label for="q5"><code>audit-tool/</code> is clean — no session artifacts remain</label>
+          <div class="note">Only permanent files should remain: <code>audit.js</code>, <code>README.md</code>, <code>audits/</code>, <code>Example Images/</code>, <code>_for-deletion-review/</code>. All HTML reports, PDFs, JSON data files, and screenshots must be moved out.</div>
+        </span>
       </li>
     </ul>
   </div>

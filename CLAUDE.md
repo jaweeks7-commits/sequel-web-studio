@@ -232,6 +232,19 @@ Copy-Item "audit-tool\{data}.json"        "C:\Sequel Audit Deliverables\{YYYY-MM
 
 **Why:** This archive is the single source of truth for all delivered audits. Joe uses it to reference past work, track client history, and retrieve files for follow-up. Never skip this step.
 
+**Step: Clean up `audit-tool/` after archiving.** After all files are confirmed in the archive, **move** (not delete) every client-specific file out of `audit-tool/` and into its archive folder. Files that belong in `audit-tool/` permanently: `audit.js`, `README.md`, `audits/`, `Example Images/`, `_for-deletion-review/`. Everything else — HTML reports, PDFs, JSON data files, and all screenshots — is a session artifact and must not remain in `audit-tool/` after the session ends.
+
+```powershell
+# Move source HTML and remaining screenshots/JSON after archiving
+Move-Item "audit-tool\{client-slug}-*.png"  "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+Move-Item "audit-tool\{ClientName}-*.html"  "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+Move-Item "audit-tool\{client-slug}-*.json" "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+# If a PDF was written to audit-tool first, move it too
+Move-Item "audit-tool\{ClientName}-*.pdf"   "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+```
+
+Verify `audit-tool/` is clean before closing the session — only the permanent files listed above should remain.
+
 ---
 
 ## 14. Audit HTML — PDF pagination rules
@@ -245,7 +258,7 @@ break-inside: avoid;
 page-break-inside: avoid; /* legacy fallback */
 ```
 
-**What counts as a block:** any `.remedy-card`, `.action-item`, `.check-row`, `.bonus-card`, `.deliverable-block`, or equivalent wrapper `<div>` that represents one complete idea or finding. If a block is short enough to fit on one page, it must start at the top of the next page rather than be cut in the middle.
+**What counts as a block:** any `.remedy-card`, `.action-item`, `.check-row`, `.bonus-card`, `.deliverable-block`, `.score-card`, `.score-grid`, or equivalent wrapper `<div>` that represents one complete idea or finding. Score summary cards (Critical / High Value / Passing / Nice to Have) are especially prone to splitting because the label, number, and description span three lines — always keep them together. If a block is short enough to fit on one page, it must start at the top of the next page rather than be cut in the middle.
 
 **What this does NOT apply to:** section headers that intentionally bleed into content below, or blocks that are demonstrably longer than one full page (those will always span pages — that is acceptable).
 
