@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-core';
-import { existsSync, unlinkSync } from 'fs';
+import { existsSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join, resolve, basename } from 'path';
 
@@ -55,5 +55,4 @@ await page.pdf({
 });
 
 await browser.close();
-unlinkSync(htmlPath);
 console.log('Done:', outPath);

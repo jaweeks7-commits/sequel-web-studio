@@ -23,6 +23,26 @@ If navigation fails or returns an error: stop and report to Joe — Playwright M
 - Note the month-year slug: `may-2026` format
 - Data file will be saved as: `[client-slug]-audit-data-[month]-[year].json`
 
+**Create the intake progress file now — before any checks:**
+
+```
+Write: audit-tool/[client-slug]-intake-progress.md
+```
+
+Start it with the client header (name, URL, platform, date). After each category of checks, append that category's findings in compact format — one line per check:
+
+```
+[CheckID] | [Badge] | [Key fact] | [Specific values/IDs found]
+```
+
+Example: `C01_1 | Pass | Title "Acme Plumbing | Fort Worth TX" (43 chars) |`
+
+This externalizes findings from context to disk. Playwright snapshot payloads are large — on a complex platform like Wix or WordPress, a full session can exhaust the context window before the JSON is written. The progress file is the recovery point if that happens. Write to it after every category without exception.
+
+**Use targeted evaluations over full snapshots whenever possible.**
+
+`playwright_evaluate` with a specific query returns only the data needed — a few tokens. `playwright_snapshot` returns the full DOM accessibility tree — thousands of tokens. Reserve full snapshots for checks that genuinely require reading page structure (heading hierarchy, visual layout, navigation). Use targeted `evaluate` calls for everything extractable by a specific query (title, canonical, meta tags, schema blocks, script src attributes, etc.).
+
 ---
 
 ## Phase 1 — Platform Identification (do this before all other checks)
@@ -61,6 +81,11 @@ Platform determines how to interpret nearly every finding and what remedy steps 
   "technical": "[specific URL or generator meta tag that confirmed it]"
 }
 ```
+
+---
+
+> **Checkpoint — write Platform ID to intake progress file before continuing:**
+> `C08_1 | Pass | [Platform name] | [Identifying URL fragment or generator tag]`
 
 ---
 
@@ -176,6 +201,12 @@ Navigate to 2–3 inner pages (Services, About, Contact) and repeat the canonica
 
 ---
 
+> **Checkpoint — write Category 01 findings to intake progress file before continuing:**
+> One line per check: `[CheckID] | [Badge] | [Key fact] | [Specific values found]`
+> Example: `C01_1 | Pass | Title "Acme Plumbing | Fort Worth TX" (43 chars) |`
+
+---
+
 ## Category 02 — Social Sharing & Open Graph
 
 ### Check 7 — OG Image
@@ -233,6 +264,10 @@ Navigate to 2–3 inner pages (Services, About, Contact) and repeat the canonica
 - **Nice to Have:** Completely missing (acceptable — Twitter/X falls back to OG tags, but explicit cards look better)
 
 **Record:** which are present/missing, badge
+
+---
+
+> **Checkpoint — write Category 02 findings to intake progress file before continuing.**
 
 ---
 
@@ -334,6 +369,11 @@ Look for "Eliminate render-blocking resources" in PageSpeed. Also:
 - **Critical:** Multiple render-blocking scripts with PageSpeed savings over 1s
 
 **Record:** which scripts are blocking, estimated savings, badge
+
+---
+
+> **Checkpoint — write Category 03 findings to intake progress file before continuing.**
+> Include PageSpeed scores and any specific numbers (LCP ms, TTFB ms, savings KiB) — these are easy to lose from context.
 
 ---
 
@@ -488,6 +528,11 @@ Take a snapshot of the results.
 
 ---
 
+> **Checkpoint — write Category 04 findings to intake progress file before continuing.**
+> Include all `@type` values found, all `@id` and `sameAs` values, and the standalone deliverable trigger (yes/no).
+
+---
+
 ## Category 05 — Analytics & Tracking Integrity
 
 ### Check 18 — GA4 / Analytics Present
@@ -549,6 +594,11 @@ Also check platform-specific sources:
 
 ---
 
+> **Checkpoint — write Category 05 findings to intake progress file before continuing.**
+> Include all tag IDs found (GA4 G-XXXXXXX, GTM container, ad pixels) — these are needed for remedy steps.
+
+---
+
 ## Category 06 — Security & Crawlability
 
 ### Check 21 — Robots.txt
@@ -561,7 +611,7 @@ Navigate to `[CLIENT_URL]/robots.txt` and take a snapshot.
 - **High Value:** File exists but missing sitemap reference, or has overly restrictive rules
 - **Critical:** Returns 404 (missing), or `Disallow: /` blocks everything
 
-**Record:** full robots.txt content (or "404 not found"), badge
+**Record:** full robots.txt content (or "404 not found"), badge — paste key lines into the progress file now, not later.
 
 ---
 
@@ -677,6 +727,11 @@ After writing, include the complete file text as the `code` field in the standal
 
 ---
 
+> **Checkpoint — write Category 06 findings to intake progress file before continuing.**
+> If llms.txt content was found, paste a brief summary of what it contains (e.g., "Wix auto-generated API docs" or "present, substantive business description").
+
+---
+
 ## Category 07 — Accessibility
 
 ### Check 25 — Image Alt Text
@@ -717,6 +772,10 @@ document.documentElement.getAttribute('lang')
 - **High Value:** Missing `lang` attribute entirely
 
 **Record:** value found or "missing", badge
+
+---
+
+> **Checkpoint — write Category 07 findings to intake progress file before continuing.**
 
 ---
 
@@ -767,6 +826,13 @@ Signal 5 passes if bodyTextLength > 400 AND at least one of hasAddress / hasPhon
 The `found` field in the JSON should name which signals passed and which failed — e.g.: "Score: 2/5. LocalBusiness schema: ✓. sameAs links: ✗ (none present). llms.txt: ✗ (404). FAQPage schema: ✗ (no FAQ content). Static text content: ✓."
 
 This check is informational — it is a summary of findings from C04_1, C04_2, C06_4, and B_AI2. It does not need its own remedy item if those other checks already have remedy items. Set `remedyItem: null` for this check and note in the `impact` field which remedy items address the gaps.
+
+---
+
+> **Checkpoint — write Category 08 findings to intake progress file before continuing.**
+> Record the 5-signal score (e.g., "1/5 — signals 2, 3, 4 failing") and confirm which gaps are already covered by earlier remedy items.
+>
+> At this point all 28 standard checks are done. Review the progress file briefly — confirm no badge is missing. If the JSON synthesis step runs out of context from here, the progress file is the complete recovery point.
 
 ---
 
@@ -885,6 +951,12 @@ Include all FAQ questions found on the site (no minimum or maximum). Deliver as 
 
 ---
 
+> **Checkpoint — write all B-check findings to intake progress file before wrapping up.**
+> Use B-numbers consistently (B01, B05, B_AI1, etc.). Include the badge and any specific value found.
+> This is the final checkpoint. The progress file should now contain every check's badge and key finding.
+
+---
+
 ## Platform-Specific Remedy Notes
 
 Use these when writing remedy steps. Platform-specific paths matter — a vague "update your SEO settings" is not useful.
@@ -926,11 +998,13 @@ After all checks are complete:
 
 1. **Review B-check findings** — assign B-numbers to any additional issues found
 2. **Score tally** — count by badge type: Critical / High Value / Pass / Nice to Have
-3. **Priority selection** — from all Critical and High Value items, select the 10 that most directly impact ranking, trust, or conversion for this specific client. All Criticals go first.
+3. **Priority selection** — include ALL Critical findings and ALL High Value findings. There is no cap. If you found 4 Criticals and 14 High Values, all 18 go in the list. All Criticals first, then all High Values. Two checks may share one entry only when their fix steps are literally identical (e.g., C04_1 and C04_2 sharing one entity graph remedy).
 4. **Write executive summary** — 2–3 sentences covering the overall state and the most urgent theme
 5. **List standalone deliverables** — any code blocks (JSON-LD, robots.txt content, meta tag snippets) that will be included in the Remedy Package
 
 Then generate the JSON data file per `templates/audit-data-schema.json` and run the pipeline.
+
+> **If context is running low:** Read `audit-tool/[client-slug]-intake-progress.md` to reconstruct any findings that have been compressed out of context before writing the JSON. The progress file is the source of truth — not memory.
 
 ---
 
