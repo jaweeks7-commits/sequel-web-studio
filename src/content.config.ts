@@ -11,6 +11,7 @@ const insights = defineCollection({
     publishOrder:           z.number(),
     linkedinReleaseOrder:   z.number().optional(),
     publishDate:            z.coerce.date(),
+    featured:               z.boolean().optional(),
   }),
 });
 

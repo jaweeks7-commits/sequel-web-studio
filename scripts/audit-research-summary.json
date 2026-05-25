@@ -1,0 +1,228 @@
+{
+  "generatedAt": "2026-05-25T14:24:41.341Z",
+  "archiveRoot": "C:\\Sequel Audit Deliverables\\2026-05",
+  "totalFiles": 25,
+  "uniqueSites": 24,
+  "averages": {
+    "critical": 4.8,
+    "highValue": 12.3,
+    "pass": 19.5,
+    "niceToHave": 3.1
+  },
+  "criticalDistribution": {
+    "0": 1,
+    "1": 1,
+    "2": 7,
+    "3": 2,
+    "4": 3,
+    "5": 2,
+    "7": 2,
+    "8": 1,
+    "9": 1,
+    "10": 2,
+    "11": 2
+  },
+  "sitesWithAnyCritical": {
+    "count": 23,
+    "pct": 96
+  },
+  "sitesWithZeroCritical": {
+    "count": 1,
+    "pct": 4
+  },
+  "mostMissedChecks": [
+    {
+      "id": "C08_2",
+      "name": "AI Citation Readiness Score (0-5)",
+      "critical": 10,
+      "high": 11,
+      "total": 21,
+      "pct": 88
+    },
+    {
+      "id": "C03_2",
+      "name": "Core Web Vitals / LCP on mobile",
+      "critical": 8,
+      "high": 12,
+      "total": 20,
+      "pct": 83
+    },
+    {
+      "id": "C03_5",
+      "name": "Render-blocking resources",
+      "critical": 9,
+      "high": 11,
+      "total": 20,
+      "pct": 83
+    },
+    {
+      "id": "C03_3",
+      "name": "Image optimization (WebP / compression)",
+      "critical": 9,
+      "high": 10,
+      "total": 19,
+      "pct": 79
+    },
+    {
+      "id": "C01_5",
+      "name": "H1 heading present on homepage",
+      "critical": 12,
+      "high": 6,
+      "total": 18,
+      "pct": 75
+    },
+    {
+      "id": "C04_1",
+      "name": "Schema.org LocalBusiness markup",
+      "critical": 5,
+      "high": 13,
+      "total": 18,
+      "pct": 75
+    },
+    {
+      "id": "C04_2",
+      "name": "Schema entity linking (@id and sameAs)",
+      "critical": 3,
+      "high": 15,
+      "total": 18,
+      "pct": 75
+    },
+    {
+      "id": "C02_1",
+      "name": "Open Graph image (proper 1200x630 social share image)",
+      "critical": 4,
+      "high": 11,
+      "total": 15,
+      "pct": 63
+    },
+    {
+      "id": "C03_4",
+      "name": "Third-party script inventory",
+      "critical": 8,
+      "high": 6,
+      "total": 14,
+      "pct": 58
+    },
+    {
+      "id": "C06_4",
+      "name": "llms.txt presence",
+      "critical": 9,
+      "high": 5,
+      "total": 14,
+      "pct": 58
+    },
+    {
+      "id": "C07_1",
+      "name": "Image alt text quality",
+      "critical": 4,
+      "high": 10,
+      "total": 14,
+      "pct": 58
+    },
+    {
+      "id": "C05_2",
+      "name": "GA4 duplicate tag detection",
+      "critical": 11,
+      "high": 2,
+      "total": 13,
+      "pct": 54
+    },
+    {
+      "id": "C01_2",
+      "name": "Meta description quality",
+      "critical": 2,
+      "high": 10,
+      "total": 12,
+      "pct": 50
+    },
+    {
+      "id": "C02_2",
+      "name": "Open Graph tags completeness",
+      "critical": 2,
+      "high": 9,
+      "total": 11,
+      "pct": 46
+    },
+    {
+      "id": "B08",
+      "name": "Cookie consent / GDPR compliance",
+      "critical": 3,
+      "high": 8,
+      "total": 11,
+      "pct": 46
+    },
+    {
+      "id": "C04_3",
+      "name": "Rich Results eligibility",
+      "critical": 1,
+      "high": 9,
+      "total": 10,
+      "pct": 42
+    },
+    {
+      "id": "C06_3",
+      "name": "External link security (noopener)",
+      "critical": 0,
+      "high": 10,
+      "total": 10,
+      "pct": 42
+    },
+    {
+      "id": "B05",
+      "name": "404 error page quality",
+      "critical": 0,
+      "high": 10,
+      "total": 10,
+      "pct": 42
+    },
+    {
+      "id": "B_AI1",
+      "name": "sameAs authority links for AI entity verification",
+      "critical": 0,
+      "high": 10,
+      "total": 10,
+      "pct": 42
+    },
+    {
+      "id": "C02_3",
+      "name": "Twitter/X card tags",
+      "critical": 2,
+      "high": 7,
+      "total": 9,
+      "pct": 38
+    }
+  ],
+  "platforms": {
+    "Squarespace": 2,
+    "Custom CMS (Community Impact proprietary platform — jQuery 3.4.0, Bootstrap, custom theme_community_impact)": 1,
+    "WordPress (custom theme) + Cloudflare CDN": 1,
+    "WordPress 6.8.5 (Voice Media Group custom theme)": 1,
+    "Unknown": 1,
+    "WordPress 6.9 · Yoast SEO · WP Rocket · Newspaper Theme (TagDiv)": 1,
+    "WordPress 5.2.24 (Yoast SEO, Visual Composer)": 1,
+    "Custom-built website (HTML/CSS/JS — no CMS)": 1,
+    "Custom HTML / Bootstrap 4": 1,
+    "WordPress 6.9.4 + Elementor 4.0.8": 1,
+    "WordPress (Yoast SEO)": 2,
+    "Custom CMS (IU Rivet Design System + LiveWhale)": 1,
+    "WordPress 6.9.4 + Avada Theme (Fusion Builder)": 1,
+    "WordPress 6.9.4 (GoodNews5 theme · WPBakery · Slider Revolution)": 1,
+    "Wix": 2,
+    "TownNews BLOX CMS": 1,
+    "Custom Astro Build": 1,
+    "McClatchy/Escenic CMS (proprietary newspaper publishing platform)": 1,
+    "Custom HTML/CSS/JS — hosted on Netlify": 1,
+    "Shopify": 1,
+    "Custom Dental CMS (Manticore)": 1
+  },
+  "aiReadiness": {
+    "sitesWithData": 17,
+    "average": 1.5,
+    "distribution": {
+      "0": 1,
+      "1": 10,
+      "2": 3,
+      "3": 3
+    }
+  }
+}
