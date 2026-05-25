@@ -5,7 +5,7 @@
 set -e
 
 echo "=== Installing npm dependencies ==="
-npm install
+npm install --legacy-peer-deps
 
 echo "=== Installing system Chromium (for PDF generation) ==="
 sudo apt-get update -qq
