@@ -5,12 +5,26 @@ import { dirname, join, resolve, basename } from 'path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const edgePaths = [
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-const executablePath = edgePaths.find(p => existsSync(p));
-if (!executablePath) throw new Error('Microsoft Edge not found — install Edge or switch to the puppeteer package.');
+let executablePath;
+if (process.platform === 'win32') {
+  const edgePaths = [
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  ];
+  executablePath = edgePaths.find(p => existsSync(p));
+  if (!executablePath) throw new Error('Microsoft Edge not found — install Edge or switch to the puppeteer package.');
+} else {
+  // Linux — system Chromium installed by codespace-init.sh
+  const chromiumPaths = [
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/snap/bin/chromium',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+  ];
+  executablePath = chromiumPaths.find(p => existsSync(p));
+  if (!executablePath) throw new Error('Chromium not found. Run: sudo apt-get install -y chromium');
+}
 
 const inputArg = process.argv[2];
 if (!inputArg) {
@@ -35,7 +49,7 @@ const outName = dateSlug
 const htmlPath = resolve(inputArg);
 const outPath  = join(dirname(htmlPath), outName);
 
-console.log('Launching Edge…');
+console.log(`Launching ${process.platform === 'win32' ? 'Edge' : 'Chromium'}…`);
 const browser = await puppeteer.launch({ executablePath, headless: true });
 const page    = await browser.newPage();
 

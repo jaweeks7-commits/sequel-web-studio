@@ -14,7 +14,7 @@
     "generate-audit-docx": "node scripts/generate-audit-docx.mjs",
     "fill-audit-template": "node scripts/fill-template.mjs",
     "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs",
-    "send-delivery": "node --env-file=.env scripts/send-delivery.mjs",
+    "send-delivery": "node scripts/send-delivery.mjs",
     "generate-linkedin-docx": "node scripts/generate-linkedin-docx.mjs"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "@types/nodemailer": "^8.0.0",
     "astro": "^6.1.9",
     "nodemailer": "^8.0.6",
+    "resend": "^6.12.4",
     "stripe": "^22.1.0",
     "tailwindcss": "^3.4.19"
   },
