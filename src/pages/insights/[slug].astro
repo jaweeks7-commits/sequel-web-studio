@@ -1,0 +1,304 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_NAME, SITE_URL } from '../../config/site';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('insights');
+  return articles.map(article => ({
+    params: { slug: article.id },
+    props:  { slug: article.id },
+  }));
+}
+
+const { slug } = Astro.props;
+const article  = await getEntry('insights', slug);
+if (!article) return Astro.redirect('/404');
+
+const { Content } = await render(article);
+
+const { title, description, category, length, publishDate } = article.data;
+
+const categoryLabel: Record<string, string> = {
+  methodology:  'Methodology',
+  pricing:      'Pricing & ROI',
+  findings:     'Common Findings',
+  myths:        'Myths & Misconceptions',
+  deliverable:  'What You Receive',
+};
+
+const categoryBadgeStyle: Record<string, string> = {
+  methodology:  'background: #e8f0fb; color: #1F3864;',
+  pricing:      'background: #e8f5ec; color: #1a6633;',
+  findings:     'background: #f3eafb; color: #5e2a8a;',
+  myths:        'background: #fef3e2; color: #8a5200;',
+  deliverable:  'background: #e8f0fb; color: #1F3864;',
+};
+
+const lengthLabel: Record<string, string> = {
+  short:  '~5 min read',
+  medium: '~8 min read',
+  long:   '~12 min read',
+};
+
+const dateStr = publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const articleUrl = `${SITE_URL}/insights/${slug}`;
+
+const articleSchema = JSON.stringify({
+  '@context':       'https://schema.org',
+  '@type':          'Article',
+  headline:         title,
+  description:      description,
+  url:              articleUrl,
+  datePublished:    publishDate.toISOString().split('T')[0],
+  dateModified:     publishDate.toISOString().split('T')[0],
+  author: {
+    '@type': 'Organization',
+    '@id':   'https://sequelwebstudio.com/#organization',
+    name:    SITE_NAME,
+    url:     SITE_URL,
+  },
+  publisher: {
+    '@type': 'Organization',
+    '@id':   'https://sequelwebstudio.com/#organization',
+    name:    SITE_NAME,
+    url:     SITE_URL,
+  },
+  isPartOf: {
+    '@type': 'WebSite',
+    '@id':   'https://sequelwebstudio.com/#website',
+  },
+});
+
+const breadcrumbSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type':    'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home',     item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Insights', item: `${SITE_URL}/insights` },
+    { '@type': 'ListItem', position: 3, name: title,      item: articleUrl },
+  ],
+});
+
+// Related articles: same category, different slug, up to 3
+const allArticles = await getCollection('insights');
+const related = allArticles
+  .filter(a => a.data.category === category && a.id !== slug)
+  .sort((a, b) => a.data.publishOrder - b.data.publishOrder)
+  .slice(0, 3);
+---
+
+<BaseLayout title={`${title} | Sequel Web Studio`} description={description}>
+  <script type="application/ld+json" set:html={articleSchema}   slot="head" />
+  <script type="application/ld+json" set:html={breadcrumbSchema} slot="head" />
+
+  <!-- ── ARTICLE HERO ── -->
+  <section style="background: #0F1F3D; padding: 120px 32px 64px; position: relative; overflow: hidden;">
+    <div class="dot-grid" style="position: absolute; inset: 0;"></div>
+    <div style="position: relative; z-index: 1; max-width: 760px; margin: 0 auto;">
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" style="margin-bottom: 20px;">
+        <a href="/insights" style="font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s;" class="bread-link">
+          ← All Insights
+        </a>
+      </nav>
+
+      <!-- Category + read-time -->
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;">
+        <span style={`font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 5px; ${categoryBadgeStyle[category]}`}>
+          {categoryLabel[category]}
+        </span>
+        <span style="font-size: 12px; color: rgba(255,255,255,0.35);">{lengthLabel[length]}</span>
+      </div>
+
+      <h1 style="font-size: clamp(24px, 4vw, 44px); font-weight: 700; color: white; letter-spacing: -1px; line-height: 1.15; margin-bottom: 18px;">
+        {title}
+      </h1>
+      <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin-bottom: 18px;"></div>
+      <p style="font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 12px;">
+        {description}
+      </p>
+      <p style="font-size: 12px; color: rgba(255,255,255,0.3);">Published {dateStr} by Sequel Web Studio</p>
+    </div>
+    <svg viewBox="0 0 1440 60" style="position: absolute; bottom: -1px; left: 0; right: 0; display: block; width: 100%;" fill="none">
+      <path d="M0 60 L0 30 Q720 -10 1440 30 L1440 60 Z" fill="white" />
+    </svg>
+  </section>
+
+  <!-- ── ARTICLE BODY ── -->
+  <section style="background: white; padding: 64px 32px;">
+    <div style="max-width: 720px; margin: 0 auto;">
+      <article class="article-body">
+        <Content />
+      </article>
+    </div>
+  </section>
+
+  <!-- ── AUDIT CTA ── -->
+  <section style="background: #F4F6FB; padding: 64px 32px;">
+    <div style="max-width: 640px; margin: 0 auto; background: white; border-radius: 18px; padding: 40px 36px; border: 1px solid #e4eaf5; box-shadow: 0 4px 24px rgba(15,31,61,0.07);">
+      <div style="height: 3px; width: 40px; background: #8E44AD; border-radius: 9999px; margin-bottom: 18px;"></div>
+      <h2 style="font-size: 22px; font-weight: 700; color: #0F1F3D; letter-spacing: -0.3px; margin-bottom: 12px;">
+        See what's actually on your site.
+      </h2>
+      <p style="font-size: 15px; color: #595959; line-height: 1.7; margin-bottom: 24px;">
+        The Pro Diagnosis + Remedy Package is a 50-item human-reviewed audit delivered as a single PDF within 24 hours. Every Critical and High Value finding comes with step-by-step instructions to fix it.
+      </p>
+      <a
+        href="/audit#order"
+        style="background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; padding: 12px 26px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 6px 20px rgba(46,117,182,0.3);"
+      >
+        Order Your Diagnosis — $350
+      </a>
+    </div>
+  </section>
+
+  <!-- ── RELATED ARTICLES ── -->
+  {related.length > 0 && (
+    <section style="background: #F7F8FA; padding: 64px 32px 96px;">
+      <div style="max-width: 1060px; margin: 0 auto;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #0F1F3D; margin-bottom: 28px; letter-spacing: -0.3px;">
+          More from {categoryLabel[category]}
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px;">
+          {related.map(rel => (
+            <a
+              href={`/insights/${rel.id}`}
+              style="background: white; border-radius: 12px; padding: 24px; border: 1px solid #e4eaf5; text-decoration: none; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s;"
+              class="related-card"
+            >
+              <h3 style="font-size: 15px; font-weight: 700; color: #0F1F3D; line-height: 1.4; margin-bottom: 8px;">{rel.data.title}</h3>
+              <p style="font-size: 13px; color: #595959; line-height: 1.55; flex: 1; margin-bottom: 14px;">{rel.data.description}</p>
+              <span style="font-size: 13px; font-weight: 600; color: #2E75B6;">Read more →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .bread-link:hover {
+    color: rgba(255,255,255,0.75) !important;
+  }
+
+  .related-card:hover {
+    box-shadow: 0 8px 28px rgba(15,31,61,0.1) !important;
+    transform: translateY(-2px);
+  }
+
+  /* Article body prose styles */
+  .article-body {
+    font-size: 17px;
+    line-height: 1.78;
+    color: #373737;
+  }
+
+  .article-body h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0F1F3D;
+    letter-spacing: -0.3px;
+    margin-top: 48px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e4eaf5;
+  }
+
+  .article-body h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F3864;
+    margin-top: 32px;
+    margin-bottom: 10px;
+  }
+
+  .article-body p {
+    margin-bottom: 20px;
+  }
+
+  .article-body strong {
+    font-weight: 700;
+    color: #0F1F3D;
+  }
+
+  .article-body em {
+    font-style: italic;
+  }
+
+  .article-body ul,
+  .article-body ol {
+    margin-left: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .article-body ul {
+    list-style-type: disc;
+  }
+
+  .article-body ol {
+    list-style-type: decimal;
+  }
+
+  .article-body li {
+    line-height: 1.65;
+  }
+
+  .article-body blockquote {
+    border-left: 3px solid #8E44AD;
+    padding: 14px 20px;
+    margin: 24px 0;
+    background: #f9f4fd;
+    border-radius: 0 8px 8px 0;
+    color: #444;
+    font-style: italic;
+  }
+
+  .article-body blockquote p {
+    margin-bottom: 0;
+  }
+
+  .article-body hr {
+    border: none;
+    border-top: 2px solid #e4eaf5;
+    margin: 40px 0;
+  }
+
+  .article-body code {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 14px;
+    background: #f0f3fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #1F3864;
+  }
+
+  .article-body pre {
+    background: #f0f3fa;
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  .article-body pre code {
+    background: none;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .article-body a {
+    color: #2E75B6;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-body a:hover {
+    color: #1F3864;
+  }
+</style>

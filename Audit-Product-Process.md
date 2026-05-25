@@ -331,6 +331,6 @@ Output PDF name is derived automatically from the input filename (client slug + 
 ## Section 7: Pricing & Packaging (current)
 
 - **Price:** $350 (pilot pricing through first ~10 clients — per CLAUDE.md decision log)
-- **Turnaround:** Not yet formally committed; BSR was delivered ~1 week after engagement
+- **Turnaround:** 24 hours from purchase. This is the commitment stated on the marketing site (audit.astro, index.astro, AuditForm.astro) and in customer-facing LinkedIn content, so every audit session must be planned to deliver within that window.
 - **What the client receives:** Single PDF file (the Pro Diagnosis + Remedy Package)
 - **Upsell:** Post-audit implementation help ("Sequel Web Studio can implement any or all of these items")
