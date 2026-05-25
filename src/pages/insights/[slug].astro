@@ -116,7 +116,7 @@ const related = allArticles
         {title}
       </h1>
       <div style="height: 3px; width: 48px; background: #8E44AD; border-radius: 9999px; margin-bottom: 18px;"></div>
-      <p style="font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 12px;">
+      <p style="font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 12px; max-width: 560px;">
         {description}
       </p>
       <p style="font-size: 12px; color: rgba(255,255,255,0.3);">Published {dateStr} by Sequel Web Studio</p>
@@ -128,7 +128,7 @@ const related = allArticles
 
   <!-- ── ARTICLE BODY ── -->
   <section style="background: white; padding: 40px 32px 64px;">
-    <div style="max-width: 720px; margin: 0 auto;">
+    <div style="max-width: 700px; margin: 0 auto;">
       <article class="article-body">
         <Content />
       </article>
@@ -168,7 +168,7 @@ const related = allArticles
               style="background: white; border-radius: 12px; padding: 24px; border: 1px solid #e4eaf5; text-decoration: none; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s;"
               class="related-card"
             >
-              <h3 style="font-size: 15px; font-weight: 700; color: #0F1F3D; line-height: 1.4; margin-bottom: 8px;">{rel.data.title}</h3>
+              <h3 style="font-size: 16px; font-weight: 700; color: #0F1F3D; line-height: 1.4; margin-bottom: 8px;">{rel.data.title}</h3>
               <p style="font-size: 13px; color: #595959; line-height: 1.55; flex: 1; margin-bottom: 14px;">{rel.data.description}</p>
               <span style="font-size: 13px; font-weight: 600; color: #2E75B6;">Read more →</span>
             </a>
@@ -179,7 +179,7 @@ const related = allArticles
   )}
 </BaseLayout>
 
-<style>
+<style is:global>
   .bread-link:hover {
     color: rgba(255,255,255,0.75) !important;
   }
@@ -191,13 +191,20 @@ const related = allArticles
 
   /* Article body prose styles */
   .article-body {
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1.78;
-    color: #373737;
+    color: #2D2D2D;
+  }
+
+  .article-body > p:first-of-type {
+    font-size: 19px;
+    color: #1F3864;
+    font-weight: 500;
+    line-height: 1.7;
   }
 
   .article-body h2 {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     color: #0F1F3D;
     letter-spacing: -0.3px;
@@ -207,8 +214,18 @@ const related = allArticles
     border-bottom: 2px solid #e4eaf5;
   }
 
+  .article-body h2::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: #8E44AD;
+    border-radius: 9999px;
+    margin-bottom: 14px;
+  }
+
   .article-body h3 {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 700;
     color: #2E75B6;
     margin-top: 52px;
@@ -230,11 +247,8 @@ const related = allArticles
 
   .article-body ul,
   .article-body ol {
-    margin-left: 24px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    margin: 0 0 28px 28px;
+    padding: 0;
   }
 
   .article-body ul {
@@ -246,7 +260,12 @@ const related = allArticles
   }
 
   .article-body li {
-    line-height: 1.65;
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+
+  .article-body ul li::marker {
+    color: #8E44AD;
   }
 
   .article-body blockquote {
@@ -265,8 +284,10 @@ const related = allArticles
 
   .article-body hr {
     border: none;
-    border-top: 2px solid #e4eaf5;
-    margin: 40px 0;
+    height: 1px;
+    background: #e4eaf5;
+    margin: 56px auto;
+    width: 80px;
   }
 
   .article-body code {
