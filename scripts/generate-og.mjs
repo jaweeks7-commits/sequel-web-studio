@@ -124,3 +124,62 @@ await sharp(Buffer.from(homeSvg))
   .toFile(join(outputDir, 'og-home.png'));
 
 console.log('Generated public/images/og-home.png (1200x630)');
+
+// ── Insights editorial OG image ────────────────────────────────────────────
+const insightsSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.1)"/>
+    </pattern>
+    <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2E75B6"/>
+      <stop offset="100%" stop-color="#8E44AD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F1F3D"/>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="8" height="630" fill="url(#purpleGrad)"/>
+
+  <!-- Eyebrow pill -->
+  <rect x="80" y="72" width="252" height="38" rx="19" fill="rgba(142,68,173,0.2)" stroke="#8E44AD" stroke-width="1.5"/>
+  <text x="206" y="97" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#c084fc" text-anchor="middle" letter-spacing="2.5">WEBSITE AUDIT · INSIGHTS</text>
+
+  <!-- Headline -->
+  <text x="80" y="196" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="white">What a Real Website Audit</text>
+  <text x="80" y="268" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="#4B9FD4">Looks Like</text>
+
+  <!-- Subheadline -->
+  <text x="80" y="324" font-family="Arial, sans-serif" font-size="22" fill="rgba(255,255,255,0.65)">23 articles on what we find, what breaks,</text>
+  <text x="80" y="356" font-family="Arial, sans-serif" font-size="22" fill="rgba(255,255,255,0.65)">and what to do about it.</text>
+
+  <!-- Checklist rows -->
+  <rect x="80" y="404" width="20" height="20" rx="10" fill="rgba(142,68,173,0.25)"/>
+  <text x="90" y="419" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#c084fc" text-anchor="middle">&#x2713;</text>
+  <text x="114" y="419" font-family="Arial, sans-serif" font-size="19" fill="rgba(255,255,255,0.82)">Methodology · Findings · Common Mistakes</text>
+
+  <rect x="80" y="444" width="20" height="20" rx="10" fill="rgba(142,68,173,0.25)"/>
+  <text x="90" y="459" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#c084fc" text-anchor="middle">&#x2713;</text>
+  <text x="114" y="459" font-family="Arial, sans-serif" font-size="19" fill="rgba(255,255,255,0.82)">Why free scanners miss what matters</text>
+
+  <rect x="80" y="484" width="20" height="20" rx="10" fill="rgba(142,68,173,0.25)"/>
+  <text x="90" y="499" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#c084fc" text-anchor="middle">&#x2713;</text>
+  <text x="114" y="499" font-family="Arial, sans-serif" font-size="19" fill="rgba(255,255,255,0.82)">Plain English, no jargon</text>
+
+  <!-- Divider line -->
+  <line x1="80" y1="560" x2="1120" y2="560" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- Brand wordmark -->
+  <text x="1120" y="596" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="rgba(255,255,255,0.45)" text-anchor="end">Sequel Web Studio</text>
+  <text x="80" y="596" font-family="Arial, sans-serif" font-size="17" fill="rgba(255,255,255,0.3)">sequelwebstudio.com/insights</text>
+</svg>`;
+
+await sharp(Buffer.from(insightsSvg))
+  .resize(1200, 630)
+  .png()
+  .toFile(join(outputDir, 'og-insights.png'));
+
+console.log('Generated public/images/og-insights.png (1200x630)');

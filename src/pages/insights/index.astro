@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SITE_URL } from '../../config/site';
+import { SITE_NAME, SITE_URL } from '../../config/site';
 
 const allArticles = await getCollection('insights');
 const sorted = allArticles.sort((a, b) => a.data.publishOrder - b.data.publishOrder);
@@ -47,13 +47,31 @@ const insightsBreadcrumb = JSON.stringify({
     { '@type': 'ListItem', position: 2, name: 'Insights', item: `${SITE_URL}/insights` },
   ],
 });
+
+const itemListSchema = JSON.stringify({
+  '@context':     'https://schema.org',
+  '@type':        'ItemList',
+  name:           'Website Audit Insights',
+  description:    'Articles on professional website audits — methodology, findings, pricing, and what you receive.',
+  url:            `${SITE_URL}/insights`,
+  numberOfItems:  sorted.length,
+  itemListElement: sorted.map((a, i) => ({
+    '@type':      'ListItem',
+    position:     i + 1,
+    name:         a.data.title,
+    url:          `${SITE_URL}/insights/${a.id}`,
+    description:  a.data.description,
+  })),
+});
 ---
 
 <BaseLayout
   title="Insights — Website Audit Education | Sequel Web Studio"
-  description="22 articles on what a professional website audit is, what we find on small business sites, why automated scanners miss what matters, and how a $350 audit pays for itself."
+  description="23 articles on what a professional website audit is, what we find on small business sites, why automated scanners miss what matters, and how a $350 audit pays for itself."
+  ogImage={`${SITE_URL}/images/og-insights.png`}
 >
   <script type="application/ld+json" set:html={insightsBreadcrumb} slot="head" />
+  <script type="application/ld+json" set:html={itemListSchema}     slot="head" />
 
   <!-- ── HERO ── -->
   <section style="background: #0F1F3D; padding: 140px 32px 100px; position: relative; overflow: hidden;">

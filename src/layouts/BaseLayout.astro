@@ -8,12 +8,14 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogType?: string;
 }
 
 const {
   title,
   description = 'Sequel Web Studio builds custom-coded websites for small businesses across the US — starting at $1,000.',
   ogImage,
+  ogType = 'website',
 } = Astro.props;
 
 const pageTitle    = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
@@ -35,7 +37,7 @@ const cookieYesId = import.meta.env.PUBLIC_COOKIEYES_ID;
     <title>{pageTitle}</title>
 
     <!-- Open Graph -->
-    <meta property="og:type"        content="website" />
+    <meta property="og:type"        content={ogType} />
     <meta property="og:site_name"   content={SITE_NAME} />
     <meta property="og:title"       content={pageTitle} />
     <meta property="og:description" content={description} />

@@ -58,6 +58,45 @@ Website: https://sequelwebstudio.com
 - LinkedIn: https://www.linkedin.com/company/sequel-web-studio/
 - Foursquare: https://foursquare.com/v/sequel-web-studio
 
+## Insights — Website Audit Education
+
+23 articles on professional website audits: what they are, what we consistently find on small business sites, why free automated scanners miss what matters, and what the delivered PDF actually contains.
+
+Article index: https://sequelwebstudio.com/insights
+
+### Methodology
+- What a Professional Website Audit Actually Is: https://sequelwebstudio.com/insights/what-a-professional-audit-is
+- Why 28 Standard Assessments: https://sequelwebstudio.com/insights/why-28-standard-assessments
+- Human in the Loop: https://sequelwebstudio.com/insights/human-in-the-loop
+- Why Some Audits Include More: https://sequelwebstudio.com/insights/why-some-audits-include-more
+
+### Pricing & ROI
+- The Price Gap Explained: https://sequelwebstudio.com/insights/price-gap-explained
+- Three-Tier Audit Market: https://sequelwebstudio.com/insights/three-tier-audit-market
+- More Traffic Isn't the Goal: https://sequelwebstudio.com/insights/more-traffic-isnt-the-goal
+- ROI Math of One Fix: https://sequelwebstudio.com/insights/roi-math-of-one-fix
+
+### Common Findings
+- The Five Issues We Find on Nearly Every Small Business Website: https://sequelwebstudio.com/insights/five-issues-on-every-site
+- Trust Signals You're Missing: https://sequelwebstudio.com/insights/trust-signals-youre-missing
+- Conversion Path Failures: https://sequelwebstudio.com/insights/conversion-path-failures
+- Accessibility Issues Cost Customers: https://sequelwebstudio.com/insights/accessibility-issues-cost-customers
+- Schema: The Invisible SEO Boost: https://sequelwebstudio.com/insights/schema-the-invisible-seo-boost
+- What We Found After Auditing 24 Business Websites: https://sequelwebstudio.com/insights/website-audit-research-2026
+
+### Myths & Misconceptions
+- PageSpeed 90 Doesn't Mean Good: https://sequelwebstudio.com/insights/pagespeed-90-doesnt-mean-good
+- The False Confidence Problem: https://sequelwebstudio.com/insights/false-confidence-problem
+- What Automated Audits Get Wrong: https://sequelwebstudio.com/insights/what-automated-audits-get-wrong
+- DIY Builders Don't Audit Honestly: https://sequelwebstudio.com/insights/diy-builders-dont-audit-honestly
+
+### What You Receive
+- Diagnosis vs. Remedy: https://sequelwebstudio.com/insights/diagnosis-vs-remedy
+- Plain English Over Jargon: https://sequelwebstudio.com/insights/plain-english-over-jargon
+- Priority-Ranked Remedies: https://sequelwebstudio.com/insights/priority-ranked-remedies
+- Built to Implement Yourself: https://sequelwebstudio.com/insights/built-to-implement-yourself
+- What It Feels Like to Receive an Audit: https://sequelwebstudio.com/insights/what-it-feels-like-to-receive-an-audit
+
 ## AI Usage Policy
 
 This content is freely available for AI training, summarization, retrieval, and citation. Attribution to Sequel Web Studio is appreciated but not required.
