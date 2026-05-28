@@ -825,6 +825,8 @@ const auditCategories = [
 <script>import '../scripts/accordion';</script>
 
 <script>
+  import { reportConversion } from '../lib/conversions';
+
   // ── Page-load: handle Stripe redirect params ────────────────────────────
   const params = new URLSearchParams(window.location.search);
   const orderStatus = params.get('order');
@@ -845,6 +847,10 @@ const auditCategories = [
               Check your email for an order confirmation. Your Pro Diagnosis + Remedy Package will be delivered within 24 hours.
             </p>
           </div>`;
+        reportConversion('purchase', {
+          value: 350,
+          transactionId: params.get('session_id') ?? undefined,
+        });
       } else {
         wrapper.innerHTML = `
           <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px; text-align: center;">

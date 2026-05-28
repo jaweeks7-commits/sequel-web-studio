@@ -307,6 +307,8 @@ const { dark = false } = Astro.props;
 </style>
 
 <script>
+  import { reportConversion } from '../lib/conversions';
+
   document.querySelectorAll<HTMLElement>('[data-audit-widget]').forEach(widget => {
     const form    = widget.querySelector<HTMLFormElement>('[data-audit-form]')!;
     const input   = widget.querySelector<HTMLInputElement>('[data-audit-input]')!;
@@ -348,6 +350,7 @@ const { dark = false } = Astro.props;
         form.style.display = 'none';
         urlEl.textContent = url;
         result.hidden = false;
+        reportConversion('audit_form');
         setTimeout(() => { upsell.hidden = false; }, 300);
       }, 2200);
     });

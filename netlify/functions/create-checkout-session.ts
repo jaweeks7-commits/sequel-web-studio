@@ -56,7 +56,7 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
         email,
         notes:        notes.slice(0, 500),
       },
-      success_url: `${siteUrl}/audit?order=success`,
+      success_url: `${siteUrl}/audit?order=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${siteUrl}/audit?order=cancelled`,
     });
   } catch (err: unknown) {
