@@ -77,7 +77,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
   telephone:   '+18177439806',
   email:       CONTACT_EMAIL,
   description: 'AI-search-readiness diagnostics for small businesses across the US. Our flagship service is the $350 Pro Diagnosis + Remedy Package: a 28-point technical website audit run by a real AI agent in a live browser, delivered within 24 hours as a branded PDF report with ready-to-paste code fixes for every issue found across eight categories (AI discoverability, SEO, social/Open Graph, performance, schema, analytics, security, accessibility). Custom-coded website builds also available from $1,000.',
-  priceRange:  '$350 – $2,000',
+  priceRange:  '$350',
   image:       `${SITE_URL}/images/joe-headshot.png`,
   founder: {
     '@type': 'Person',
