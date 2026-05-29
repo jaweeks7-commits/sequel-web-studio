@@ -40,6 +40,10 @@ pagespeed-*.png
 *-screenshot.png
 *-mobile-screenshot.png
 
+# Verification screenshots at repo root — keep them out of source
+/*.png
+/*.PNG
+
 # Tool / config artifacts
 .mcp.json
 .playwright-mcp/
