@@ -84,6 +84,12 @@ Article index: https://sequelwebstudio.com/insights
 - Schema: The Invisible SEO Boost: https://sequelwebstudio.com/insights/schema-the-invisible-seo-boost
 - What We Found After Auditing 24 Business Websites: https://sequelwebstudio.com/insights/website-audit-research-2026
 
+Key research findings (24 small business sites audited, 2025-2026):
+- 96% had at least one critical finding (an issue actively suppressing search visibility, breaking a conversion path, or creating a compliance risk)
+- Average site had 4.8 critical issues and 12.3 high-value issues (roughly 17 fixable problems per site)
+- Only 1 out of 24 sites had zero critical findings
+- Top five failing checks by frequency: AI Citation Readiness (88% of sites), mobile performance / Core Web Vitals (83%), missing or broken H1 heading (75%), schema markup missing or incomplete (75%), no proper social share image / Open Graph (63%)
+
 ### Myths & Misconceptions
 - PageSpeed 90 Doesn't Mean Good: https://sequelwebstudio.com/insights/pagespeed-90-doesnt-mean-good
 - The False Confidence Problem: https://sequelwebstudio.com/insights/false-confidence-problem
