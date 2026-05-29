@@ -262,4 +262,37 @@ page-break-inside: avoid; /* legacy fallback */
 
 **What this does NOT apply to:** section headers that intentionally bleed into content below, or blocks that are demonstrably longer than one full page (those will always span pages — that is acceptable).
 
+**For cards with 5+ steps that are too tall to fit on one page:** split them into two sibling `.remedy-item` cards (Part A / Part B) in the HTML source. This is the only reliable solution — CSS `break-inside: avoid` is a hint the browser ignores for elements taller than one full page.
+
+**NEVER use JavaScript `getBoundingClientRect()` measurements to inject `break-before: page` on content cards.** Screen-mode layout heights are measured in a continuous scrollable viewport and do not match paginated print-mode layout. Injecting forced page breaks based on screen heights causes blank navy pages by pushing cards away from their natural print position. The `generate-audit-pdf.mjs` script intentionally omits this pattern — do not re-add it. The only safe programmatic fix in that script is orphaned-divider detection (`.remedy-divider` elements), which are small enough that a false positive adds minimal whitespace.
+
+**First card per section.** The first `.remedy-item` immediately following a `.remedy-section` header MUST share the page with the section intro paragraph and divider — it must NOT get pushed to the next page, because the dark navy section background fills the unused space on the originating page and creates the appearance of a deliberate blank page.
+
+To make this work, follow these budgets (all in print-layout pixels on a US Letter 1056 px page):
+- Section header (`.section-eyebrow` + `.section-title` + `.section-sub` + `.remedy-divider`): **≤280 px**
+- First `.remedy-item` in each section: **≤640 px**
+- Cards 2-N: ≤1000 px (standard `break-inside: avoid`); editorially split anything larger into Part A / Part B
+
+If the first topic in a section needs more than 640 px of content, split it into Part A (the short first card) and Part B (continues on the next page). For Squarespace audits, that means: Audit Findings paragraph ≤4 sentences, 1-2 steps maximum in Part A, with the rest in Part B.
+
+The required template CSS to keep the first card on the section start page:
+```css
+.remedy-section { padding: 36px 72px 56px; }  /* top 36px (was 56px) to free space */
+.section-sub    { margin-bottom: 20px; break-inside: avoid; page-break-inside: avoid; }
+.remedy-divider { margin: 18px 0 14px; break-after: avoid; page-break-after: avoid; break-before: avoid; page-break-before: avoid; }
+
+/* The first card after ANY divider (Critical Items, High Value, etc.) shares the page
+   with the section header. Tighter padding and step line-height shave the ~40px needed
+   to make it fit. Subsequent cards keep the original spacing. */
+.remedy-divider + .remedy-item                 { padding: 22px 32px 28px; }
+.remedy-divider + .remedy-item .remedy-step    { line-height: 1.55; }
+.remedy-divider + .remedy-item .remedy-sub     { padding-top: 14px; margin-top: 14px; }
+
+@media print {
+  .section-sub { page-break-inside: avoid; }
+}
+```
+
+**Post-PDF QC.** `scripts/generate-audit-pdf.mjs` parses the generated PDF with `pdf-parse` and flags any page with fewer than 80 characters of text. The script logs `⚠ Page N: only X chars of text — possible blank page.` Investigate any flagged page before delivering the report.
+
 This rule exists because split cards look unprofessional in the delivered PDF and undermine client confidence in the report.

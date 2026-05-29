@@ -1,7 +1,10 @@
 import puppeteer from 'puppeteer-core';
+import { PDFParse } from 'pdf-parse';
 import { existsSync } from 'fs';
+import { readFile } from 'fs/promises';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join, resolve, basename } from 'path';
+import { exec } from 'child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -60,6 +63,22 @@ await page.setViewport({ width: 816, height: 1056 });
 await page.emulateMediaType('print');
 await page.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle0', timeout: 30000 });
 
+// Orphaned-divider fix only. Screen-mode heights ≠ print-mode layout, so injecting
+// break-before:page on .remedy-item cards based on measured heights creates blank pages.
+// Oversized cards must be handled editorially (Part A / Part B split in the HTML).
+await page.evaluate(() => {
+  const PAGE_H   = 1056;
+  const ORPHAN_Z = 120;  // px from page bottom where a divider is considered stranded
+
+  document.querySelectorAll('.remedy-divider').forEach(el => {
+    const posOnPage = el.getBoundingClientRect().bottom % PAGE_H;
+    if (posOnPage > PAGE_H - ORPHAN_Z) {
+      el.style.breakBefore     = 'page';
+      el.style.pageBreakBefore = 'always';
+    }
+  });
+});
+
 console.log('Generating PDF…');
 await page.pdf({
   path: outPath,
@@ -70,3 +89,28 @@ await page.pdf({
 
 await browser.close();
 console.log('Done:', outPath);
+
+// Post-PDF QC: scan each page's text. Pages with very low char counts MAY be a blank page
+// (the recurring failure mode is a navy-filled page with no content). Low counts also occur
+// naturally at the tail of a multi-page card — visually verify each flagged page in the PDF.
+console.log('\nRunning blank-page QC…');
+const pdfBuffer = await readFile(outPath);
+const parser = new PDFParse({ data: pdfBuffer });
+const { pages } = await parser.getText();
+const flagged = pages
+  .map((p, i) => ({ page: i + 1, chars: (typeof p === 'string' ? p : p.text || '').length }))
+  .filter(p => p.chars < 80);
+flagged.forEach(p => console.log(`⚠ Page ${p.page}: only ${p.chars} chars of text — verify visually.`));
+console.log(`Pages scanned: ${pages.length}. Pages flagged: ${flagged.length}.`);
+await parser.destroy();
+
+// QC: open the finished PDF for visual review. Page-break layout only exists in the PDF
+// renderer — screen-layout screenshots don't reflect it, so the PDF itself is the only
+// reliable QC artifact.
+console.log('\nOpening PDF for visual QC review…');
+if (process.platform === 'win32') {
+  exec(`start "" "${outPath}"`);
+} else {
+  exec(`xdg-open "${outPath}"`);
+}
+console.log('Review the PDF, then close it. Run archiving steps when satisfied.');
