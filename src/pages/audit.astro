@@ -5,18 +5,26 @@ import { CONTACT_EMAIL } from '../config/site';
 const serviceSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Service',
+  '@id': 'https://sequelwebstudio.com/audit#service',
   name: 'Pro Diagnosis + Remedy Package',
-  description: 'A 28-point deep technical diagnosis of a business homepage delivered as a branded report with ready-to-use code fixes for every issue found.',
+  description: 'Sequel Web Studio\'s flagship service. A 28-point technical audit of a business homepage covering eight categories: AI search discoverability (ChatGPT, Perplexity, Gemini, voice search), SEO fundamentals, social sharing & Open Graph, performance & page speed, schema & structured data, analytics & tracking integrity, security & crawlability, and accessibility. Run by a real AI agent in a live browser, not an automated scanner. Delivered within 24 hours as a branded PDF Remedy Package containing ready-to-paste code for every fixable issue, prioritized to-do checklist, and platform-specific installation steps. No developer required to implement. One-time fee, no retainer.',
+  url: 'https://sequelwebstudio.com/audit',
+  serviceType: 'Website Technical Audit',
+  category: 'Website Audit',
   provider: {
-    '@type': 'LocalBusiness',
+    '@type': 'ProfessionalService',
+    '@id': 'https://sequelwebstudio.com/#organization',
     name: 'Sequel Web Studio',
     url: 'https://sequelwebstudio.com',
   },
+  areaServed: { '@type': 'Country', name: 'United States' },
   offers: {
     '@type': 'Offer',
     price: '350',
     priceCurrency: 'USD',
     availability: 'https://schema.org/InStock',
+    url: 'https://sequelwebstudio.com/audit#order',
+    priceValidUntil: '2027-12-31',
   },
 });
 

@@ -11,19 +11,27 @@ const offerSchema = JSON.stringify({
   url:        SITE_URL,
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name:    'Web Design Services',
+    name:    'Pro Diagnosis Audits and Custom Website Builds',
     itemListElement: [
       {
         '@type':       'Offer',
-        name:          'Create New Site',
-        description:   'Complete website built from scratch — design, build, launch, and 30 days of post-launch support.',
+        name:          'Pro Diagnosis + Remedy Package',
+        description:   'Flagship service. A 28-point technical audit of a business homepage delivered within 24 hours as a branded PDF with ready-to-paste code fixes for every issue found across eight categories: AI search discoverability, SEO, social/Open Graph, performance, schema, analytics, security, and accessibility. No developer required to implement.',
+        price:         '350',
+        priceCurrency: 'USD',
+        seller:        { '@type': 'ProfessionalService', name: SITE_NAME },
+      },
+      {
+        '@type':       'Offer',
+        name:          'Create New Site (secondary offering)',
+        description:   'Complete website built from scratch: design, build, launch, and 30 days of post-launch support.',
         price:         '1000',
         priceCurrency: 'USD',
         seller:        { '@type': 'ProfessionalService', name: SITE_NAME },
       },
       {
         '@type':       'Offer',
-        name:          'Modernize Existing Site',
+        name:          'Modernize Existing Site (secondary offering)',
         description:   'Full audit and rebuild of your existing website on a modern eight-layer technical foundation.',
         price:         '1000',
         priceCurrency: 'USD',
