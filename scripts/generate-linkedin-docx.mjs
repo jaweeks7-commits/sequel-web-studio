@@ -117,6 +117,89 @@ function mdToHtml(md) {
   return out.join('\n');
 }
 
+function mdToLinkedInText(md) {
+  const lines = md.replace(/\r\n/g, '\n').split('\n');
+  const out = [];
+  let i = 0;
+
+  const stripInline = (text) => text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1$2')
+    .replace(/`([^`]+)`/g, '$1');
+
+  const pushBlank = () => { if (out.length > 0 && out[out.length - 1] !== '') out.push(''); };
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.trim() === '') { i++; continue; }
+
+    if (/^(-{3,}|_{3,}|\*{3,})\s*$/.test(line.trim())) {
+      pushBlank();
+      i++;
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,6})\s+(.*)$/);
+    if (heading) {
+      pushBlank();
+      out.push(stripInline(heading[2].trim()));
+      out.push('');
+      i++;
+      continue;
+    }
+
+    if (/^>\s?/.test(line)) {
+      const quote = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) {
+        quote.push(lines[i].replace(/^>\s?/, ''));
+        i++;
+      }
+      out.push(stripInline(quote.join(' ').trim()));
+      out.push('');
+      continue;
+    }
+
+    if (/^\s*[-*+]\s+/.test(line)) {
+      while (i < lines.length && /^\s*[-*+]\s+/.test(lines[i])) {
+        out.push('→ ' + stripInline(lines[i].replace(/^\s*[-*+]\s+/, '').trim()));
+        i++;
+      }
+      out.push('');
+      continue;
+    }
+
+    if (/^\s*\d+\.\s+/.test(line)) {
+      let num = 1;
+      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+        out.push(`${num++}. ` + stripInline(lines[i].replace(/^\s*\d+\.\s+/, '').trim()));
+        i++;
+      }
+      out.push('');
+      continue;
+    }
+
+    const para = [];
+    while (
+      i < lines.length &&
+      lines[i].trim() !== '' &&
+      !/^(#{1,6})\s+/.test(lines[i]) &&
+      !/^\s*[-*+]\s+/.test(lines[i]) &&
+      !/^\s*\d+\.\s+/.test(lines[i]) &&
+      !/^>\s?/.test(lines[i]) &&
+      !/^(-{3,}|_{3,}|\*{3,})\s*$/.test(lines[i].trim())
+    ) {
+      para.push(lines[i]);
+      i++;
+    }
+    out.push(stripInline(para.join(' ').trim()));
+    out.push('');
+  }
+
+  while (out.length > 0 && out[out.length - 1] === '') out.pop();
+  return out.join('\n');
+}
+
 async function convertFile(mdPath, docxPath, label) {
   const mdSource = readFileSync(mdPath, 'utf8');
   const bodyContent = stripFrontmatter(mdSource);
@@ -182,8 +265,12 @@ for (const mdFile of contentFiles) {
   const mdPath   = join(CONTENT_DIR, mdFile);
   const docxName = basename(mdFile, '.md') + '.docx';
   const docxPath = join(LINKEDIN_DIR, docxName);
+  const txtName  = basename(mdFile, '.md') + '.txt';
+  const txtPath  = join(LINKEDIN_DIR, txtName);
   try {
     await convertFile(mdPath, docxPath, `${mdFile}  -->  ${docxName}`);
+    const mdSource = readFileSync(mdPath, 'utf8');
+    writeFileSync(txtPath, mdToLinkedInText(stripFrontmatter(mdSource)), 'utf8');
     generated++;
   } catch (err) {
     console.error(`  FAILED  ${mdFile}: ${err.message}`);
@@ -210,8 +297,12 @@ if (linkedinOnlyFiles.length > 0) {
     const mdPath   = join(LINKEDIN_DIR, mdFile);
     const docxName = basename(mdFile, '.md') + '.docx';
     const docxPath = join(LINKEDIN_DIR, docxName);
+    const txtName  = basename(mdFile, '.md') + '.txt';
+    const txtPath  = join(LINKEDIN_DIR, txtName);
     try {
       await convertFile(mdPath, docxPath, `${mdFile}  -->  ${docxName}`);
+      const mdSource = readFileSync(mdPath, 'utf8');
+      writeFileSync(txtPath, mdToLinkedInText(stripFrontmatter(mdSource)), 'utf8');
       generated++;
     } catch (err) {
       console.error(`  FAILED  ${mdFile}: ${err.message}`);
