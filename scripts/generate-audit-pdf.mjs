@@ -1,7 +1,8 @@
 import puppeteer from 'puppeteer-core';
 import { PDFParse } from 'pdf-parse';
-import { existsSync } from 'fs';
+import { existsSync, mkdtempSync } from 'fs';
 import { readFile } from 'fs/promises';
+import { tmpdir } from 'os';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join, resolve, basename } from 'path';
 import { exec } from 'child_process';
@@ -52,8 +53,21 @@ const outName = dateSlug
 const htmlPath = resolve(inputArg);
 const outPath  = join(dirname(htmlPath), outName);
 
-console.log(`Launching ${process.platform === 'win32' ? 'Edge' : 'Chromium'}…`);
-const browser = await puppeteer.launch({ executablePath, headless: true });
+// Use an isolated temp profile so a launch cannot be blocked by other Edge instances
+// the user already has open (the Singleton lock on a shared user-data-dir is the root
+// cause of the "Failed to launch the browser process: Code: 0" error seen in May 2026).
+const userDataDir = mkdtempSync(join(tmpdir(), 'audit-pdf-'));
+console.log(`Launching ${process.platform === 'win32' ? 'Edge' : 'Chromium'} (profile: ${userDataDir})…`);
+const browser = await puppeteer.launch({
+  executablePath,
+  headless: true,
+  userDataDir,
+  args: [
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--disable-extensions',
+  ],
+});
 const page    = await browser.newPage();
 
 // 816×1056 px = US Letter at 96 dpi → 100vh = one page height (matches cover min-height)
@@ -90,18 +104,42 @@ await page.pdf({
 await browser.close();
 console.log('Done:', outPath);
 
-// Post-PDF QC: scan each page's text. Pages with very low char counts MAY be a blank page
-// (the recurring failure mode is a navy-filled page with no content). Low counts also occur
-// naturally at the tail of a multi-page card — visually verify each flagged page in the PDF.
-console.log('\nRunning blank-page QC…');
+// Post-PDF QC: two checks. (1) Blank-page detection (very low char count) catches the
+// recurring failure mode of a navy-filled page with no content. (2) Clipping detection
+// flags adjacent page pairs where page N ends without a sentence terminator AND page N+1
+// begins mid-sentence, which is the signature of a remedy card overflow that escaped the
+// pre-flight pagination check.
+console.log('\nRunning post-PDF QC…');
 const pdfBuffer = await readFile(outPath);
 const parser = new PDFParse({ data: pdfBuffer });
 const { pages } = await parser.getText();
-const flagged = pages
-  .map((p, i) => ({ page: i + 1, chars: (typeof p === 'string' ? p : p.text || '').length }))
+const pageText = (p) => (typeof p === 'string' ? p : p.text || '').trim();
+
+const blankFlagged = pages
+  .map((p, i) => ({ page: i + 1, chars: pageText(p).length }))
   .filter(p => p.chars < 80);
-flagged.forEach(p => console.log(`⚠ Page ${p.page}: only ${p.chars} chars of text — verify visually.`));
-console.log(`Pages scanned: ${pages.length}. Pages flagged: ${flagged.length}.`);
+blankFlagged.forEach(p => console.log(`⚠ Page ${p.page}: only ${p.chars} chars of text — verify visually.`));
+
+// Clipping heuristic. Terminator chars include normal sentence punctuation plus closing
+// braces/quotes/brackets (code blocks legitimately end on those). A page that ends with
+// any of those and is followed by a page beginning with a capital or quote is "clean".
+// A page ending without a terminator followed by a lowercase or digit start is suspicious.
+const TERMINATORS = /[.!?:"')\]}>…]\s*$/;
+const MID_SENTENCE_START = /^[\p{Ll}\d,;]/u;
+const clipFlagged = [];
+for (let i = 0; i < pages.length - 1; i++) {
+  const a = pageText(pages[i]);
+  const b = pageText(pages[i + 1]);
+  if (a.length < 80 || b.length < 80) continue;
+  const tail = a.slice(-80);
+  const head = b.slice(0, 60);
+  if (!TERMINATORS.test(tail) && MID_SENTENCE_START.test(head)) {
+    clipFlagged.push({ pair: `${i + 1}→${i + 2}`, tail: tail.slice(-40), head: head.slice(0, 40) });
+  }
+}
+clipFlagged.forEach(c => console.log(`⚠ Possible clipping ${c.pair}: "...${c.tail}" → "${c.head}..."`));
+
+console.log(`Pages scanned: ${pages.length}. Blank-page flags: ${blankFlagged.length}. Clipping flags: ${clipFlagged.length}.`);
 await parser.destroy();
 
 // QC: open the finished PDF for visual review. Page-break layout only exists in the PDF

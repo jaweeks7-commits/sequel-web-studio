@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join, basename } from 'path';
+import { checkPagination, report as reportPagination } from './check-pagination.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -112,14 +113,26 @@ for (const bc of data.bChecks) {
 }
 
 // ── Remedy items with auto-inserted Critical / High Value dividers ─────────
+//
+// Items may opt into Part A / Part B sibling layout (CLAUDE.md §14) by setting
+// `partOf: "previous"` on the second card. When set, that card reuses the
+// previous card's logical item number, suffixes the displayed label with
+// " (Part B)", and suppresses the covers-note (which already showed on Part A).
+// The auto-numbering of subsequent items continues from the shared number, so
+// priorityItems and the remedyItem references in auditChecks/bChecks remain in
+// sync without bookkeeping.
 function buildRemedyItems(items) {
   let out = '';
   let criticalDividerDone = false;
   let highDividerDone = false;
+  let logicalNum = 0;       // The "Item N" number shown to the reader
+  let prevLogicalNum = 0;   // Track for partOf: "previous"
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    const num = i + 1;
+    const isPartB = item.partOf === 'previous';
+    const num = isPartB ? prevLogicalNum : ++logicalNum;
+    prevLogicalNum = num;
 
     if (!criticalDividerDone && item.badge === 'critical') {
       out += '\n  <div class="remedy-divider">Critical Items — Fix These First</div>\n';
@@ -131,25 +144,47 @@ function buildRemedyItems(items) {
     }
 
     const badgeLabel = item.badge === 'critical' ? 'Critical' : 'High Value';
+    const itemLabel  = isPartB ? `Item ${num} (Part B)` : `Item ${num}`;
     const stepsHtml = item.steps.map(s =>
       `        <div class="remedy-step">${esc(s)}</div>`
     ).join('\n');
+
+    // Standalone code is rendered with each source line in its own .code-line block
+    // (CLAUDE.md §14). Each line is an atomic unit with break-inside: avoid, so page
+    // breaks fall only between full source lines — no mid-line clipping.
+    // item.standalone.code is already HTML-escaped in the JSON and must NOT be
+    // re-escaped here; we split on \n only.
+    const codeLinesHtml = item.standalone
+      ? item.standalone.code.split('\n')
+          .map(line => `<div class="code-line">${line.length ? line : '&nbsp;'}</div>`)
+          .join('')
+      : '';
     const standaloneHtml = item.standalone
-      ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre>${item.standalone.code}</pre>`
+      ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre class="standalone-code">${codeLinesHtml}</pre>`
       : '';
 
-    const coveredChecks = remedyToChecks[num] || [];
+    // Cards containing a large standalone code block get the `has-standalone` modifier
+    // so the print CSS lets the code flow across page boundaries. check-pagination.mjs
+    // exempts these from the hard 1056 px page-height fail.
+    const itemClass = item.standalone ? 'remedy-item has-standalone' : 'remedy-item';
+
+    // covers-note only on Part A (or non-split items). Part B card omits it.
+    const coveredChecks = isPartB ? [] : (remedyToChecks[num] || []);
     const coversNoteHtml = coveredChecks.length > 1
-      ? `\n    <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
+      ? `\n      <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
       : '';
 
+    // .remedy-item-head bundles tag + title + optional covers-note + Audit Findings
+    // so the card identity never appears alone at the bottom of a page (CLAUDE.md §14).
     out += `
-  <div class="remedy-item">
-    <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">Item ${num}</span></div>
-    <div class="remedy-item-title">${item.title}</div>${coversNoteHtml}
-    <div class="remedy-sub">
-      <div class="remedy-sub-label">Audit Findings</div>
-      <div class="remedy-finding">${esc(item.findings)}</div>
+  <div class="${itemClass}">
+    <div class="remedy-item-head">
+      <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">${itemLabel}</span></div>
+      <div class="remedy-item-title">${item.title}</div>${coversNoteHtml}
+      <div class="remedy-sub">
+        <div class="remedy-sub-label">Audit Findings</div>
+        <div class="remedy-finding">${esc(item.findings)}</div>
+      </div>
     </div>
     <div class="remedy-sub">
       <div class="remedy-sub-label">Remedy — Step by Step</div>
@@ -252,4 +287,23 @@ html = html.replace('{{B_CHECKS}}', bChecksHtml);
 // ── Write output ───────────────────────────────────────────────────────────
 writeFileSync(outPath, html, 'utf8');
 console.log('Done:', outPath);
-console.log(`Next: node scripts/generate-audit-pdf.mjs "${outPath}"`);
+
+// ── Pre-flight pagination check ────────────────────────────────────────────
+// Renders the HTML in print mode and measures every .remedy-item / .check-card /
+// .score-grid. Hard-fails the build if any block exceeds 1056 px (one page),
+// because such a block will clip in the PDF (see CLAUDE.md §14). Soft warnings
+// for blocks over the 640/1000 budgets are surfaced but do not fail the build.
+// Set env SKIP_PAGINATION_CHECK=1 to bypass (not recommended).
+if (process.env.SKIP_PAGINATION_CHECK === '1') {
+  console.log('\nSKIP_PAGINATION_CHECK=1 set; skipping pre-flight pagination check.');
+} else {
+  console.log('\nRunning pre-flight pagination check…');
+  const result = await checkPagination(outPath);
+  reportPagination(result);
+  if (result.hardFailures.length > 0) {
+    console.error('\nPagination check failed. Fix the JSON and re-run fill-template before generating the PDF.');
+    process.exit(1);
+  }
+}
+
+console.log(`\nNext: node scripts/generate-audit-pdf.mjs "${outPath}"`);

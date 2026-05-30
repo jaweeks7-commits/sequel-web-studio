@@ -47,8 +47,8 @@
   .included-card-num { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E75B6; margin-bottom: 8px; }
   .included-card-title { font-size: 17px; font-weight: 700; color: #0F1F3D; margin-bottom: 6px; }
   .included-card-desc { font-size: 13px; color: #595959; line-height: 1.6; margin-bottom: 12px; }
-  .deliverable-item { font-size: 12px; color: #595959; padding: 7px 0; border-top: 1px solid #E4EAF5; display: flex; gap: 10px; align-items: flex-start; }
-  .deliverable-badge { background: #DBEAFE; color: #1E40AF; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .deliverable-item { font-size: 12px; color: #595959; padding: 10px 0 7px; border-top: 1px solid #E4EAF5; display: block; }
+  .deliverable-badge { display: inline-block; background: #DBEAFE; color: #1E40AF; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap; margin-bottom: 6px; }
 
   /* PRIORITY ACTION LIST */
   .priority-section { background: white; padding: 56px 72px; page-break-before: always; }
@@ -202,6 +202,52 @@
 
     /* Force color printing for all key elements */
     .cover, .remedy-section, .page-bg, .page-border-top, .page-border-bottom { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Pagination safety (CLAUDE.md §14): tighter section padding, divider stays glued to its first card,
+       and the first card after a divider gets compressed spacing so it fits on the section page. */
+    .remedy-section { padding: 36px 72px 56px; }
+    .section-sub    { margin-bottom: 20px; break-inside: avoid; page-break-inside: avoid; }
+    .remedy-divider { margin: 18px 0 14px; break-after: avoid; page-break-after: avoid; break-before: avoid; page-break-before: avoid; }
+    .remedy-divider + .remedy-item              { padding: 22px 32px 28px; }
+    .remedy-divider + .remedy-item .remedy-step { line-height: 1.55; }
+    .remedy-divider + .remedy-item .remedy-sub  { padding-top: 14px; margin-top: 14px; }
+
+    /* Cards with a large standalone <pre> code block (e.g. JSON-LD schema deliverable) are
+       allowed to flow across page boundaries. Each source line of code is its own
+       .code-line block (see .standalone-code below), so page breaks fall only between
+       complete source lines — no mid-line clipping. After a flowing card we force a
+       clean page break so whatever follows (next divider, next item) starts on a fresh
+       page — without this, Edge greedily squeezes the next non-flow card into the
+       remaining space and ignores its break-inside: avoid, causing mid-paragraph
+       clipping. check-pagination.mjs exempts these cards from the hard-fail page-height
+       check. */
+    .remedy-item.has-standalone           { break-inside: auto; page-break-inside: auto; break-after: page; page-break-after: always; }
+    .remedy-item.has-standalone pre       { break-inside: auto; page-break-inside: auto; }
+    .remedy-item.has-standalone .standalone-callout { break-before: avoid; page-break-before: avoid; break-after: avoid; page-break-after: avoid; }
+
+    /* Atomic code lines (CLAUDE.md §14): each source line of a standalone code block is
+       its own unsplittable block. Long source lines still soft-wrap visually via
+       pre-wrap, but the soft-wrapped result stays together; page breaks fall only
+       between complete source lines. min-height keeps empty lines visible. */
+    .standalone-code { padding: 0; }
+    .standalone-code .code-line {
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      min-height: 1em;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    /* Atomic card-header wrap (CLAUDE.md §14): the tag + title + optional covers-note +
+       Audit Findings paragraph stay together. A card never starts with just the badge
+       and item-num alone at the bottom of a page. On flowing (has-standalone) cards,
+       the head also stays attached to the steps that follow. */
+    .remedy-item-head { break-inside: avoid; page-break-inside: avoid; }
+    .remedy-item.has-standalone .remedy-item-head { break-after: avoid; page-break-after: avoid; }
   }
 </style>
 </head>

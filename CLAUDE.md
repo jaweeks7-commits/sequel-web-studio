@@ -275,24 +275,25 @@ To make this work, follow these budgets (all in print-layout pixels on a US Lett
 
 If the first topic in a section needs more than 640 px of content, split it into Part A (the short first card) and Part B (continues on the next page). For Squarespace audits, that means: Audit Findings paragraph ≤4 sentences, 1-2 steps maximum in Part A, with the rest in Part B.
 
-The required template CSS to keep the first card on the section start page:
-```css
-.remedy-section { padding: 36px 72px 56px; }  /* top 36px (was 56px) to free space */
-.section-sub    { margin-bottom: 20px; break-inside: avoid; page-break-inside: avoid; }
-.remedy-divider { margin: 18px 0 14px; break-after: avoid; page-break-after: avoid; break-before: avoid; page-break-before: avoid; }
+The required template CSS lives in `templates/audit-report-template.html` inside the `@media print` block (landed May 2026). It sets tighter section padding, `break-after: avoid` on `.remedy-divider`, and compressed spacing for the first card after each divider so it shares the section-header page.
 
-/* The first card after ANY divider (Critical Items, High Value, etc.) shares the page
-   with the section header. Tighter padding and step line-height shave the ~40px needed
-   to make it fit. Subsequent cards keep the original spacing. */
-.remedy-divider + .remedy-item                 { padding: 22px 32px 28px; }
-.remedy-divider + .remedy-item .remedy-step    { line-height: 1.55; }
-.remedy-divider + .remedy-item .remedy-sub     { padding-top: 14px; margin-top: 14px; }
+**Part A / Part B siblings (CLAUDE.md §14 convention).** When a card's natural content exceeds the 1000 px budget, split it in the JSON `remedyItems` array into two sibling entries. The second entry must set `"partOf": "previous"` so `fill-template.mjs` shares the logical item number across both cards and appends `(Part B)` to the displayed label. The covers-note (which lists the audit checks this remedy addresses) renders only on Part A.
 
-@media print {
-  .section-sub { page-break-inside: avoid; }
-}
-```
+**Standalone code deliverables.** Cards that include a large `standalone.code` block (e.g. a JSON-LD entity graph or a complete llms.txt file) are automatically given the `has-standalone` CSS class by `fill-template.mjs`. In print mode, these cards drop `break-inside: avoid` on themselves and on their `<pre>`, allowing the code to flow across page boundaries between source lines. `<pre>` content breaks safely between lines, so no character-level clipping occurs. The pre-flight pagination check exempts these cards from the hard page-height limit; their height is reported only as a soft warning.
 
-**Post-PDF QC.** `scripts/generate-audit-pdf.mjs` parses the generated PDF with `pdf-parse` and flags any page with fewer than 80 characters of text. The script logs `⚠ Page N: only X chars of text — possible blank page.` Investigate any flagged page before delivering the report.
+**Pre-flight pagination check (auto-runs from `fill-template.mjs`).** `scripts/check-pagination.mjs` renders the freshly-generated HTML in Edge headless print mode, measures every `.remedy-item`, `.check-card`, and `.score-grid`, and enforces three rules:
+- First `.remedy-item` after a `.remedy-divider`: soft budget 640 px.
+- Subsequent `.remedy-item` or `.check-card`: soft budget 1000 px.
+- Any block (except `has-standalone`): hard limit 1056 px (one US Letter page at 96 dpi).
+
+Soft-budget violations print a warning but do not block the build. Hard-limit violations exit `fill-template.mjs` with code 1 and refuse to hand off to `generate-audit-pdf.mjs`. To bypass during testing only: set `SKIP_PAGINATION_CHECK=1`.
+
+**Post-PDF QC.** `scripts/generate-audit-pdf.mjs` parses the generated PDF with `pdf-parse` and runs two checks: (1) any page with fewer than 80 characters of text is flagged as a possible blank page; (2) adjacent page pairs where page N ends without a sentence terminator AND page N+1 begins with a lowercase letter or digit are flagged as possible clipping. Both checks log warnings to console; visually verify any flagged page before delivering the report.
+
+**Edge launch hardening.** `generate-audit-pdf.mjs` launches Edge with `userDataDir` pointing at a fresh `mkdtempSync` temp directory plus `--no-first-run --no-default-browser-check --disable-extensions`. This isolates the puppeteer-controlled Edge from any normal Edge windows the user has open and prevents the "Failed to launch the browser process: Code: 0" singleton-lock failure mode. Note that the pipeline must be invoked from PowerShell, not Git Bash: Git Bash's process inheritance interferes with Edge's headless mode.
+
+**Atomic code lines.** Standalone code blocks (the `standalone.code` field in remedy items) are rendered as `<pre class="standalone-code">` with each `\n`-separated source line wrapped in its own `<div class="code-line">`. Each line carries `break-inside: avoid` so page breaks fall only between complete source lines. Long source lines still soft-wrap visually via `white-space: pre-wrap`, but the wrapped result stays together. This eliminates mid-line clipping inside JSON-LD or other long code deliverables. `check-pagination.mjs` measures each `.code-line` height and soft-warns on any line over 80 px (heuristic for "soft-wrapped to 3+ visual lines"), suggesting the author break the source line at a comma.
+
+**Atomic card-header wrap.** Each `.remedy-item` opens with a `<div class="remedy-item-head">` that bundles the tag (`CRITICAL`/`HIGH VALUE` badge + item number), the title, the optional covers-note, and the Audit Findings paragraph. `.remedy-item-head { break-inside: avoid }` guarantees those four pieces never split, and on `has-standalone` cards `.remedy-item-head { break-after: avoid }` keeps the head attached to the steps that follow. The visible failure mode this prevents: a card whose only content on a page is the badge and item-num at the very bottom, with the title and body on the next page. `check-pagination.mjs` soft-warns on any `.remedy-item-head` whose bottom edge sits in the last 100 px of a page (`card-head-near-page-bottom`).
 
 This rule exists because split cards look unprofessional in the delivered PDF and undermine client confidence in the report.
