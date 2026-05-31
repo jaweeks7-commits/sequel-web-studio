@@ -121,6 +121,81 @@ for (const bc of data.bChecks) {
 // The auto-numbering of subsequent items continues from the shared number, so
 // priorityItems and the remedyItem references in auditChecks/bChecks remain in
 // sync without bookkeeping.
+// Render one remedy card. When codeOnly is true (synthesized Part B from auto-split),
+// the card omits Audit Findings + Remedy steps and renders only the standalone code
+// block. The header still shows the badge, item number ("Item N (Part B)"), and title
+// so the reader knows which remedy this code is for.
+function renderCardHtml(item, num, isPartB, codeOnly) {
+  const badgeLabel = item.badge === 'critical' ? 'Critical' : 'High Value';
+  const itemLabel  = isPartB ? `Item ${num} (Part B)` : `Item ${num}`;
+
+  // Standalone code is rendered with each source line in its own .code-line block
+  // (CLAUDE.md §14). Each line is an atomic unit with break-inside: avoid, so page
+  // breaks fall only between full source lines — no mid-line clipping.
+  // item.standalone.code is already HTML-escaped in the JSON and must NOT be
+  // re-escaped here; we split on \n only.
+  const codeLinesHtml = item.standalone
+    ? item.standalone.code.split('\n')
+        .map(line => `<div class="code-line">${line.length ? line : '&nbsp;'}</div>`)
+        .join('')
+    : '';
+  const standaloneHtml = item.standalone
+    ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre class="standalone-code">${codeLinesHtml}</pre>`
+    : '';
+
+  // Cards containing a large standalone code block get the `has-standalone` modifier
+  // so the print CSS lets the code flow across page boundaries. check-pagination.mjs
+  // exempts these from the hard 1056 px page-height fail.
+  // Part B cards get `is-part-b` so the print CSS can force them to start on a fresh page.
+  const baseClass = item.standalone ? 'remedy-item has-standalone' : 'remedy-item';
+  const itemClass = isPartB ? `${baseClass} is-part-b` : baseClass;
+
+  // Code-only synthesized Part B (auto-split from a standalone-having item): minimal
+  // card with header + standalone block, no findings/steps. The findings and steps
+  // live on Part A so they never flow across a page boundary.
+  if (codeOnly) {
+    return `
+  <div class="${itemClass}">
+    <div class="remedy-item-head">
+      <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">${itemLabel}</span></div>
+      <div class="remedy-item-title">${item.title}</div>
+    </div>
+    <div class="remedy-sub">${standaloneHtml}
+    </div>
+  </div>`;
+  }
+
+  const stepsHtml = item.steps.map(s =>
+    `        <div class="remedy-step">${esc(s)}</div>`
+  ).join('\n');
+
+  // covers-note only on Part A (or non-split items). Part B card omits it.
+  const coveredChecks = isPartB ? [] : (remedyToChecks[num] || []);
+  const coversNoteHtml = coveredChecks.length > 1
+    ? `\n      <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
+    : '';
+
+  // .remedy-item-head bundles tag + title + optional covers-note + Audit Findings
+  // so the card identity never appears alone at the bottom of a page (CLAUDE.md §14).
+  return `
+  <div class="${itemClass}">
+    <div class="remedy-item-head">
+      <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">${itemLabel}</span></div>
+      <div class="remedy-item-title">${item.title}</div>${coversNoteHtml}
+      <div class="remedy-sub">
+        <div class="remedy-sub-label">Audit Findings</div>
+        <div class="remedy-finding">${esc(item.findings)}</div>
+      </div>
+    </div>
+    <div class="remedy-sub">
+      <div class="remedy-sub-label">Remedy — Step by Step</div>
+      <div class="remedy-steps">
+${stepsHtml}
+      </div>${standaloneHtml}
+    </div>
+  </div>`;
+}
+
 function buildRemedyItems(items) {
   let out = '';
   let criticalDividerDone = false;
@@ -143,56 +218,21 @@ function buildRemedyItems(items) {
       highDividerDone = true;
     }
 
-    const badgeLabel = item.badge === 'critical' ? 'Critical' : 'High Value';
-    const itemLabel  = isPartB ? `Item ${num} (Part B)` : `Item ${num}`;
-    const stepsHtml = item.steps.map(s =>
-      `        <div class="remedy-step">${esc(s)}</div>`
-    ).join('\n');
-
-    // Standalone code is rendered with each source line in its own .code-line block
-    // (CLAUDE.md §14). Each line is an atomic unit with break-inside: avoid, so page
-    // breaks fall only between full source lines — no mid-line clipping.
-    // item.standalone.code is already HTML-escaped in the JSON and must NOT be
-    // re-escaped here; we split on \n only.
-    const codeLinesHtml = item.standalone
-      ? item.standalone.code.split('\n')
-          .map(line => `<div class="code-line">${line.length ? line : '&nbsp;'}</div>`)
-          .join('')
-      : '';
-    const standaloneHtml = item.standalone
-      ? `\n      <div class="standalone-callout">${esc(item.standalone.label)}</div>\n      <pre class="standalone-code">${codeLinesHtml}</pre>`
-      : '';
-
-    // Cards containing a large standalone code block get the `has-standalone` modifier
-    // so the print CSS lets the code flow across page boundaries. check-pagination.mjs
-    // exempts these from the hard 1056 px page-height fail.
-    const itemClass = item.standalone ? 'remedy-item has-standalone' : 'remedy-item';
-
-    // covers-note only on Part A (or non-split items). Part B card omits it.
-    const coveredChecks = isPartB ? [] : (remedyToChecks[num] || []);
-    const coversNoteHtml = coveredChecks.length > 1
-      ? `\n      <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
-      : '';
-
-    // .remedy-item-head bundles tag + title + optional covers-note + Audit Findings
-    // so the card identity never appears alone at the bottom of a page (CLAUDE.md §14).
-    out += `
-  <div class="${itemClass}">
-    <div class="remedy-item-head">
-      <div class="remedy-item-tag"><span class="remedy-label ${item.badge}">${badgeLabel}</span><span class="remedy-item-num">${itemLabel}</span></div>
-      <div class="remedy-item-title">${item.title}</div>${coversNoteHtml}
-      <div class="remedy-sub">
-        <div class="remedy-sub-label">Audit Findings</div>
-        <div class="remedy-finding">${esc(item.findings)}</div>
-      </div>
-    </div>
-    <div class="remedy-sub">
-      <div class="remedy-sub-label">Remedy — Step by Step</div>
-      <div class="remedy-steps">
-${stepsHtml}
-      </div>${standaloneHtml}
-    </div>
-  </div>`;
+    // Auto-split: any item with a standalone code block renders as TWO cards.
+    // Card A: badge + title + findings + steps (NO standalone). break-inside: avoid
+    //   keeps it atomic — no clipping at page boundaries.
+    // Card B: synthesized code-only Part B with just the standalone block. Flows
+    //   across pages as needed (has-standalone), but contains no prose that could
+    //   be clipped — only the code, which breaks safely between source lines.
+    // This eliminates the visible clipping on flowing cards (Item 3 llms.txt,
+    // Item 9 schema entity graph) without requiring any JSON authoring changes.
+    if (item.standalone && !isPartB) {
+      const cardAItem = { ...item, standalone: null };
+      out += renderCardHtml(cardAItem, num, false, false);
+      out += renderCardHtml(item,     num, true,  true);
+    } else {
+      out += renderCardHtml(item, num, isPartB, false);
+    }
   }
   return out;
 }

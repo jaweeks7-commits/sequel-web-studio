@@ -147,7 +147,12 @@
     /* Full-page dark background repeats on every page */
     .page-bg { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0F1F3D; z-index: -1; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-    /* Fixed top/bottom 16px bands ensure dark border on every page — z-index 2 overrides any section background */
+    /* Fixed top/bottom 16px navy bands frame every page. z-index 2 puts them above the
+       lighter card backgrounds so the dark frame is visually distinct from the card area.
+       Caveat: content that flows to within 16px of the page edge sits under these bars.
+       For non-flowing cards this is invisible (break-inside: avoid keeps them off the edge).
+       For has-standalone cards that flow across pages, the Phase 2 Paged.js layer provides
+       proper per-page content padding so flowing text never lands under the bars. */
     .page-border-top    { display: block; position: fixed; top: 0;    left: 0; right: 0; height: 16px; background: #0F1F3D; z-index: 2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .page-border-bottom { display: block; position: fixed; bottom: 0; left: 0; right: 0; height: 16px; background: #0F1F3D; z-index: 2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -225,6 +230,12 @@
     .remedy-item.has-standalone pre       { break-inside: auto; page-break-inside: auto; }
     .remedy-item.has-standalone .standalone-callout { break-before: avoid; page-break-before: avoid; break-after: avoid; page-break-after: avoid; }
 
+    /* Part B cards always start on a fresh page (Phase 1 pagination fix). The JSON
+       partOf: "previous" convention pairs Part A + Part B, but without an explicit
+       break-before Edge sometimes packs both onto one page and then mis-paginates.
+       Forcing the break makes the layout deterministic. */
+    .remedy-item.is-part-b { break-before: page; page-break-before: always; }
+
     /* Atomic code lines (CLAUDE.md §14): each source line of a standalone code block is
        its own unsplittable block. Long source lines still soft-wrap visually via
        pre-wrap, but the soft-wrapped result stays together; page breaks fall only
@@ -245,9 +256,17 @@
     /* Atomic card-header wrap (CLAUDE.md §14): the tag + title + optional covers-note +
        Audit Findings paragraph stay together. A card never starts with just the badge
        and item-num alone at the bottom of a page. On flowing (has-standalone) cards,
-       the head also stays attached to the steps that follow. */
-    .remedy-item-head { break-inside: avoid; page-break-inside: avoid; }
+       the head also stays attached to the steps that follow. orphans/widows belt-and-
+       suspenders for Edge's native engine — sometimes honors them when it ignores
+       break-inside (Paged.js in Phase 2 honors break-inside spec-compliantly). */
+    .remedy-item-head { break-inside: avoid; page-break-inside: avoid; orphans: 6; widows: 6; }
     .remedy-item.has-standalone .remedy-item-head { break-after: avoid; page-break-after: avoid; }
+
+    /* Atomic step (Phase 1 pagination fix). Within flowing has-standalone cards, an
+       individual remedy step must never split mid-text across a page boundary —
+       otherwise the first line of the step lands at the top of the next page and
+       was being clipped by the fixed page-border bars (now removed). */
+    .remedy-step { break-inside: avoid; page-break-inside: avoid; }
   }
 </style>
 </head>
@@ -415,6 +434,7 @@
   <div style="font-size:12px;color:rgba(255,255,255,0.3);">Pro Diagnosis + Remedy Package prepared by <strong style="color:rgba(255,255,255,0.5);">Sequel Web Studio</strong> · sequelwebstudio.com · joe@sequelwebstudio.com · {{AUDIT_DATE}}</div>
   <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.2);">Audited via live Playwright browser session. {{TOTAL_CHECKS}} checks across {{CATEGORY_COUNT}} categories ({{STANDARD_CHECKS}} standard + {{BONUS_CHECKS}} additional). Platform: {{PLATFORM}}.</div>
 </div>
+
 
 </body>
 </html>
