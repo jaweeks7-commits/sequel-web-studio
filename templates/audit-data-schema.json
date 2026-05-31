@@ -58,10 +58,11 @@
 
   "remedyItems": [
     {
-      "_note": "Must be in the same order as priorityItems. One entry per priority item. When a remedy item covers multiple checks (i.e., two or more audit checks share the same remedyItem number), fill-template.mjs automatically renders a 'This remedy addresses N audit findings' disclosure note below the item title — no extra field needed. Write the findings text to describe all covered checks.",
+      "_note": "Must be in the same order as priorityItems. One entry per priority item. When a remedy item covers multiple checks (i.e., two or more audit checks share the same remedyItem number), fill-template.mjs automatically renders a 'This remedy addresses N audit findings' disclosure note below the item title — no extra field needed. Write the findings text to describe all covered checks. The whyThisMatters field is required on every authored remedy item going forward — one or two plain-language sentences naming the concrete business consequence.",
       "badge": "critical",
       "title": "Full remedy item title (can be slightly longer than the priority list entry)",
       "findings": "One to three sentences describing exactly what was found on this client's site — specific and factual. No remedy steps here.",
+      "whyThisMatters": "One or two plain-language sentences explaining why the finding matters to the business — e.g. 'Without a page title, Google has no way to display a strong search-result entry for your homepage, which means fewer clicks from people searching for your services.'",
       "steps": [
         "Step 1: Exact platform path and action, written so a non-technical person can follow it.",
         "Step 2: Continue as needed.",
@@ -73,6 +74,7 @@
       "badge": "critical",
       "title": "Second remedy item title",
       "findings": "What was found for this check.",
+      "whyThisMatters": "Why this finding matters in business terms — one or two sentences.",
       "steps": [
         "Step 1: ...",
         "Step 2: ..."
@@ -84,6 +86,7 @@
       "badge": "high",
       "title": "Add Complete Schema Entity Graph",
       "findings": "No structured data markup was found on the homepage. Google, ChatGPT, and Perplexity cannot confirm your business name, address, phone number, or service area from machine-readable data. Without this, AI assistants cannot reliably recommend or describe your business when users ask about services in your area.",
+      "whyThisMatters": "When AI tools can't confirm your business details from machine-readable data, they either skip recommending you or describe you inaccurately. That's lost leads from the fastest-growing channel for local discovery — voice search, ChatGPT, and Google's AI Overviews.",
       "steps": [
         "Step 1: In Squarespace, go to Settings → Advanced → Code Injection.",
         "Step 2: Paste the complete JSON-LD block below into the Header field.",
@@ -101,6 +104,7 @@
       "badge": "critical",
       "title": "Publish an llms.txt File So AI Tools Know Who You Are",
       "findings": "No llms.txt file was found at acmeplumbing.com/llms.txt. AI assistants (ChatGPT, Perplexity, Siri) have no structured guidance on how to represent this business — they rely on general page content, which produces incomplete or inaccurate descriptions when users ask about local plumbers.",
+      "whyThisMatters": "More homeowners now ask AI assistants 'who's the best plumber in Fort Worth?' than ever before. Without an llms.txt file, those tools guess about your services and service area — and they often guess wrong, sending the lead to a competitor.",
       "steps": [
         "Step 1: Copy the complete file text from the Standalone Deliverable below.",
         "Step 2: In Squarespace, go to Pages → Not Linked → Add Blank Page. Title it 'llms' and set the URL slug to exactly 'llms.txt'.",
@@ -117,6 +121,7 @@
       "badge": "high",
       "title": "Add FAQPage Schema So AI Assistants Can Quote Your Answers Directly",
       "findings": "The site has a Frequently Asked Questions section, but no FAQPage structured data markup. Google AI Overviews, ChatGPT, and Perplexity can surface FAQ answers directly in search results and AI responses — but only when those Q&A pairs are in FAQPage schema format.",
+      "whyThisMatters": "Without FAQPage schema, your answers stay hidden inside the page and never show up directly in search results or AI Overviews. Adding it turns each Q&A into a chance to win the click before competitors even appear on the results page.",
       "steps": [
         "Step 1: In Squarespace, go to Settings → Advanced → Code Injection.",
         "Step 2: Paste the FAQPage JSON-LD block below into the Header field, after the entity graph schema already added.",

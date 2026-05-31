@@ -230,7 +230,7 @@ These are found during the live audit session — not all will apply to every cl
   - Rationale: Critical/High Value cards represent *actions* (one per priority item, since several findings may share a single remedy); Pass/Nice cards represent *checks* (one per finding in the detailed table).
 - [ ] Priority Action List: ordered Critical first then High Value; item count matches the score grid (validated automatically)
 - [ ] Remedy Package: every Priority Action has a matching Remedy item, in the same order
-- [ ] Each Remedy item has: badge, item number, title, Audit Findings, and Remedy steps
+- [ ] Each Remedy item has: badge, item number, title, Audit Findings, Why This Matters (one or two plain-language sentences naming the business consequence), and Remedy steps. On Part A / Part B siblings, each card carries its own independent `whyThisMatters` value.
 - [ ] Audit Results: all 28 standard checks plus every B-check present in the data file are rendered
 - [ ] Cross-references: every check with a non-null `remedyItem` shows "See Remedy Package — Item X" in Audit Results
 - [ ] Standalone Deliverables: flagged in What's Included and with callout boxes in the document

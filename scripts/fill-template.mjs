@@ -216,8 +216,18 @@ function renderCardHtml(item, num, isPartB, codeOnly) {
     ? `\n      <div class="remedy-covers-note">This remedy addresses <strong>${coveredChecks.length} audit findings</strong>: ${coveredChecks.map(checkDisplayName).join(' · ')} — see the Audit Results section for individual findings.</div>`
     : '';
 
+  // Optional "Why This Matters" block. Skipped silently when the field is absent
+  // or empty so older archived JSON files still render cleanly (CLAUDE.md §14).
+  const whyHtml = (typeof item.whyThisMatters === 'string' && item.whyThisMatters.trim())
+    ? `\n      <div class="remedy-sub">
+        <div class="remedy-sub-label">Why This Matters</div>
+        <div class="remedy-why-matters">${esc(item.whyThisMatters)}</div>
+      </div>`
+    : '';
+
   // .remedy-item-head bundles tag + title + optional covers-note + Audit Findings
-  // so the card identity never appears alone at the bottom of a page (CLAUDE.md §14).
+  // + optional Why This Matters so the card identity never appears alone at the
+  // bottom of a page (CLAUDE.md §14).
   return `
   <div class="${itemClass}">
     <div class="remedy-item-head">
@@ -226,7 +236,7 @@ function renderCardHtml(item, num, isPartB, codeOnly) {
       <div class="remedy-sub">
         <div class="remedy-sub-label">Audit Findings</div>
         <div class="remedy-finding">${esc(item.findings)}</div>
-      </div>
+      </div>${whyHtml}
     </div>
     <div class="remedy-sub">
       <div class="remedy-sub-label">Remedy — Step by Step</div>
