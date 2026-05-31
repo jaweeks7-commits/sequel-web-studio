@@ -243,7 +243,14 @@
       </li>
       <li>
         <input type="checkbox" id="c5">
-        <span><label for="c5">Every Remedy item has: badge, item number, title, Audit Findings block, and Remedy steps</label></span>
+        <span><label for="c5">Every Remedy item has: badge, item number, title, Audit Findings block with substantive text, and Remedy steps — including any manually-authored Part B continuation cards</label></span>
+      </li>
+      <li>
+        <input type="checkbox" id="c5b">
+        <span>
+          <label for="c5b">No remedy card has a blank or empty "Audit Findings" section — scroll every card and confirm: wherever the "Audit Findings" label appears, it has a populated paragraph beneath it</label>
+          <div class="note">⚠ The most common defect is a manually-authored Part B card with <code>"findings": null</code> in the JSON — that renders as a visible "Audit Findings" label with no content. Fix by writing a brief restatement of the core observed issue in the JSON findings field. <strong>Exception:</strong> auto-synthesized code-only Part B cards (created by <code>fill-template.mjs</code> when an item has a <code>standalone</code> block) intentionally have no "Audit Findings" section at all — only a header and the code block. If there's no "Audit Findings" label on the card, there's nothing to populate.</div>
+        </span>
       </li>
       <li>
         <input type="checkbox" id="c6">
