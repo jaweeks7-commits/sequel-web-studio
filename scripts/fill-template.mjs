@@ -19,6 +19,46 @@ function esc(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+// Hard-fail if the score grid (Executive Summary) disagrees with the data that
+// would render alongside it. Critical / HighValue are action counts and must
+// match the Priority Action List. Pass / NiceToHave are check counts and must
+// match the audit findings table (auditChecks + bChecks tallies).
+function validateScores(data) {
+  const labelOf = c => (c?.badgeLabel || '').trim();
+  const auditCheckValues = Object.entries(data.auditChecks)
+    .filter(([k]) => !k.startsWith('_'))
+    .map(([, v]) => v);
+  const allChecks = [...auditCheckValues, ...data.bChecks];
+
+  const priorityCritical = data.priorityItems.filter(p => p.badge === 'critical').length;
+  const priorityHigh     = data.priorityItems.filter(p => p.badge === 'high').length;
+  const passCount        = allChecks.filter(c => labelOf(c) === 'Pass').length;
+  const niceCount        = allChecks.filter(c => labelOf(c) === 'Nice to Have').length;
+
+  const errors = [];
+  if (data.scores.critical !== priorityCritical) {
+    errors.push(`scores.critical = ${data.scores.critical}, but priorityItems with badge="critical" = ${priorityCritical}`);
+  }
+  if (data.scores.highValue !== priorityHigh) {
+    errors.push(`scores.highValue = ${data.scores.highValue}, but priorityItems with badge="high" = ${priorityHigh}`);
+  }
+  if (data.scores.pass !== passCount) {
+    errors.push(`scores.pass = ${data.scores.pass}, but Pass entries in auditChecks + bChecks = ${passCount}`);
+  }
+  if (data.scores.niceToHave !== niceCount) {
+    errors.push(`scores.niceToHave = ${data.scores.niceToHave}, but Nice to Have entries in auditChecks + bChecks = ${niceCount}`);
+  }
+
+  if (errors.length > 0) {
+    console.error('\nScore reconciliation FAILED:');
+    errors.forEach(e => console.error('  - ' + e));
+    console.error('\nThe Critical and High Value totals in the score grid must match the Priority Action List counts.');
+    console.error('The Pass and Nice to Have totals must match the actual tallies in auditChecks + bChecks.');
+    console.error('Fix the data file and re-run.\n');
+    process.exit(1);
+  }
+}
+
 const inputArg = process.argv[2];
 if (!inputArg) {
   console.error('Usage: node scripts/fill-template.mjs <client>-audit-data-<month>-<year>.json');
@@ -49,6 +89,7 @@ mkdirSync(outputDir, { recursive: true });
 copyFileSync(dataPath, join(outputDir, basename(inputArg)));
 
 const data = JSON.parse(readFileSync(dataPath, 'utf8'));
+validateScores(data);
 let html = readFileSync(join(ROOT, 'templates/audit-report-template.html'), 'utf8');
 
 // Derived scalars

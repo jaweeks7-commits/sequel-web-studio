@@ -222,12 +222,17 @@ These are found during the live audit session — not all will apply to every cl
 
 **Content completeness:**
 - [ ] Cover page: correct client name, site URL, date, platform
-- [ ] Executive Summary score grid: Critical / High Value / Pass / Nice to Have counts are correct
-- [ ] Priority Action List: exactly 10 items, ordered Critical first then High Value
-- [ ] Remedy Package: exactly 10 items matching the Priority Action List, in the same order
+- [ ] Executive Summary score grid reconciles with the rest of the document — `fill-template.mjs` now enforces this automatically and exits with code 1 on any mismatch:
+  - `scores.critical` must equal the count of `priorityItems` with `badge: "critical"`
+  - `scores.highValue` must equal the count of `priorityItems` with `badge: "high"`
+  - `scores.pass` must equal the count of Pass entries in `auditChecks` + `bChecks`
+  - `scores.niceToHave` must equal the count of Nice to Have entries in `auditChecks` + `bChecks`
+  - Rationale: Critical/High Value cards represent *actions* (one per priority item, since several findings may share a single remedy); Pass/Nice cards represent *checks* (one per finding in the detailed table).
+- [ ] Priority Action List: ordered Critical first then High Value; item count matches the score grid (validated automatically)
+- [ ] Remedy Package: every Priority Action has a matching Remedy item, in the same order
 - [ ] Each Remedy item has: badge, item number, title, Audit Findings, and Remedy steps
-- [ ] Audit Results: all 50 checks present and accounted for
-- [ ] Cross-references: every check in the Remedy Package shows "See Remedy Package — Item X" in Audit Results
+- [ ] Audit Results: all 28 standard checks plus every B-check present in the data file are rendered
+- [ ] Cross-references: every check with a non-null `remedyItem` shows "See Remedy Package — Item X" in Audit Results
 - [ ] Standalone Deliverables: flagged in What's Included and with callout boxes in the document
 - [ ] Footer: correct date, Sequel Web Studio branding
 

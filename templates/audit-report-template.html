@@ -135,7 +135,7 @@
   @media print {
     html { background: #0F1F3D; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     body { background: #0F1F3D; }
-    .cover { min-height: 100vh; height: 100vh; }
+    .cover { min-height: 100vh; height: 100vh; z-index: 3; }
     .priority-section { page-break-before: always; }
     .remedy-section { page-break-before: always; }
     .audit-results-header { page-break-before: always; }
@@ -149,6 +149,9 @@
 
     /* Fixed top/bottom 16px navy bands frame every page. z-index 2 puts them above the
        lighter card backgrounds so the dark frame is visually distinct from the card area.
+       The .cover (page 1) sets z-index: 3 to stack above these bands so the gradient
+       cover background fills edge-to-edge without the bars cutting in. From page 2
+       onward the bars render normally and frame every content page.
        Caveat: content that flows to within 16px of the page edge sits under these bars.
        For non-flowing cards this is invisible (break-inside: avoid keeps them off the edge).
        For has-standalone cards that flow across pages, the Phase 2 Paged.js layer provides
