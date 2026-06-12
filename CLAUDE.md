@@ -206,7 +206,15 @@ Once you've read this file and the PRD:
 
 ## 13. Audit Deliverables Archive — do this at the end of every audit
 
-After generating the PDF for any Pro Diagnosis + Remedy Package audit, **always** copy the deliverables to the archive folder on the C drive before closing the session.
+After the PDF for any Pro Diagnosis + Remedy Package audit is approved, **always** run the archive script before closing the session:
+
+```
+node scripts/archive-audit.mjs {client-slug}-audit-data-{month}-{year}.json
+```
+
+The build pipeline (`fill-template.mjs` / `generate-audit-pdf.mjs`) already writes the HTML, PDF, and a JSON copy directly into the archive folder. The script sweeps everything else — the repo-root JSON/HTML/PDF copies, the `audit-tool/{client-slug}-intake-progress.md` file, and any stray client files — into the archive, lists recent `.playwright-mcp/` screenshots that may need renaming, and prints a ✓/✗ verification summary. **Confirm every line of the summary shows ✓ before closing the session.** It exits with an error if the PDF or JSON is missing from the archive. Use `--dry-run` to preview.
+
+One step stays manual because it needs judgment: rename session screenshots to `{client-slug}-screenshot-{description}.png` and move them into the archive folder (the script lists the candidates).
 
 **Archive root:** `C:\Sequel Audit Deliverables\`
 
@@ -217,33 +225,20 @@ C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\
 - `{YYYY-MM}` = year and month of audit delivery (e.g., `2026-05`)
 - `{client-slug}` = lowercase hyphenated client name (e.g., `fort-worth-report`, `straight-edge-lawns`)
 
-**Files to copy into the client folder:**
-1. The **Remedy Package PDF** — e.g., `Fort-Worth-Report-Remedy-Package-May-2026.pdf`
-2. Any **audit data JSON** — e.g., `fort-worth-report-audit-data-may-2026.json` (if produced via fill-template pipeline) or the network/data log JSON if the audit was done directly
-3. Any **screenshots** taken during the Playwright session — rename them to `{client-slug}-screenshot-{description}.png`
-
-**PowerShell commands to use (run in sequence after PDF is confirmed good):**
-```powershell
-New-Item -ItemType Directory -Force "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}"
-Copy-Item "audit-tool\{PDF-filename}.pdf" "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
-Copy-Item "audit-tool\{data}.json"        "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\{client-slug}-audit-data-{mon-yyyy}.json" -Force
-# Repeat Copy-Item for each screenshot PNG
-```
-
 **Why:** This archive is the single source of truth for all delivered audits. Joe uses it to reference past work, track client history, and retrieve files for follow-up. Never skip this step.
 
-**Step: Clean up `audit-tool/` after archiving.** After all files are confirmed in the archive, **move** (not delete) every client-specific file out of `audit-tool/` and into its archive folder. Files that belong in `audit-tool/` permanently: `audit.js`, `README.md`, `audits/`, `Example Images/`, `_for-deletion-review/`. Everything else — HTML reports, PDFs, JSON data files, and all screenshots — is a session artifact and must not remain in `audit-tool/` after the session ends.
+**What "clean" means:** after archiving, `audit-tool/` contains only its permanent files (`audit.js`, `README.md`, `audits/`, `Example Images/`, `_for-deletion-review/`) and the repo root contains no client-specific JSON/HTML/PDF files. The script verifies both.
 
+**Manual fallback (only if the script is unavailable):**
 ```powershell
-# Move source HTML and remaining screenshots/JSON after archiving
-Move-Item "audit-tool\{client-slug}-*.png"  "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
-Move-Item "audit-tool\{ClientName}-*.html"  "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
-Move-Item "audit-tool\{client-slug}-*.json" "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
-# If a PDF was written to audit-tool first, move it too
-Move-Item "audit-tool\{ClientName}-*.pdf"   "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+New-Item -ItemType Directory -Force "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}"
+# The PDF/HTML/JSON normally already live in the archive (the build writes them there).
+# Sweep the leftovers — root JSON copy, intake progress file, screenshots:
+Move-Item "{client-slug}-audit-data-*.json"          "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+Move-Item "audit-tool\{client-slug}-*"               "C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\" -Force
+# Rename + move each session screenshot PNG to {client-slug}-screenshot-{description}.png
 ```
-
-Verify `audit-tool/` is clean before closing the session — only the permanent files listed above should remain.
+Then verify `audit-tool/` and the repo root are clean as defined above.
 
 ---
 

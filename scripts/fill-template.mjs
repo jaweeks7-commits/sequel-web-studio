@@ -59,10 +59,13 @@ function validateScores(data) {
   }
 }
 
-const inputArg = process.argv[2];
+const cliArgs = process.argv.slice(2);
+const wantPdf = cliArgs.includes('--pdf');
+const inputArg = cliArgs.find(a => !a.startsWith('--'));
 if (!inputArg) {
-  console.error('Usage: node scripts/fill-template.mjs <client>-audit-data-<month>-<year>.json');
-  console.error('Example: node scripts/fill-template.mjs acme-plumbing-audit-data-may-2026.json');
+  console.error('Usage: node scripts/fill-template.mjs <client>-audit-data-<month>-<year>.json [--pdf]');
+  console.error('Example: node scripts/fill-template.mjs acme-plumbing-audit-data-may-2026.json --pdf');
+  console.error('  --pdf  After the pagination check passes, chain straight to generate-audit-pdf.mjs');
   process.exit(1);
 }
 
@@ -397,4 +400,13 @@ if (process.env.SKIP_PAGINATION_CHECK === '1') {
   }
 }
 
-console.log(`\nNext: node scripts/generate-audit-pdf.mjs "${outPath}"`);
+// The chain only runs after the pagination gate above — a hard failure has
+// already exited, so --pdf can never produce a PDF from a failing layout.
+if (wantPdf) {
+  console.log('\nChaining to PDF generation…');
+  const { spawnSync } = await import('child_process');
+  const r = spawnSync(process.execPath, [join(ROOT, 'scripts/generate-audit-pdf.mjs'), outPath], { stdio: 'inherit' });
+  process.exit(r.status ?? 1);
+} else {
+  console.log(`\nNext: node scripts/generate-audit-pdf.mjs "${outPath}"`);
+}

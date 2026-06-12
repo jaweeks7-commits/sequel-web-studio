@@ -117,8 +117,17 @@ function archiveLocally() {
   if (process.platform !== 'win32') return;
   const slugMatch  = pdfFilename.match(/^(.+?)-Remedy-Package/i);
   const clientSlug = (slugMatch ? slugMatch[1] : basename(pdfFilename, '.pdf')).toLowerCase();
-  const now        = new Date();
-  const yyyyMM     = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  // Archive under the audit month from the PDF filename (...-Remedy-Package-May-2026.pdf),
+  // not today's date — a delivery sent in early June for a May audit belongs in 2026-05.
+  const MONTH_NUMS = {
+    january:'01', february:'02', march:'03', april:'04', may:'05', june:'06',
+    july:'07', august:'08', september:'09', october:'10', november:'11', december:'12'
+  };
+  const dateMatch = pdfFilename.match(/-Remedy-Package-([A-Za-z]+)-(\d{4})\.pdf$/i);
+  const now       = new Date();
+  const yyyyMM    = dateMatch && MONTH_NUMS[dateMatch[1].toLowerCase()]
+    ? `${dateMatch[2]}-${MONTH_NUMS[dateMatch[1].toLowerCase()]}`
+    : `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   const archiveDir = `C:\\Sequel Audit Deliverables\\${yyyyMM}\\${clientSlug}`;
   mkdirSync(archiveDir, { recursive: true });
   const dest = join(archiveDir, pdfFilename);

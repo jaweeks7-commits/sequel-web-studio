@@ -13,7 +13,9 @@
     "optimize-images": "node scripts/optimize-images.mjs",
     "generate-audit-docx": "node scripts/generate-audit-docx.mjs",
     "fill-audit-template": "node scripts/fill-template.mjs",
+    "build-audit": "node scripts/fill-template.mjs",
     "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs",
+    "archive-audit": "node scripts/archive-audit.mjs",
     "send-delivery": "node scripts/send-delivery.mjs",
     "generate-linkedin-docx": "node scripts/generate-linkedin-docx.mjs",
     "generate-linkedin-images": "node scripts/generate-linkedin-images.mjs"
