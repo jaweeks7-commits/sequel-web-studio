@@ -366,7 +366,7 @@
 
   "bChecks": [
     {
-      "_note": "One entry per additional diagnostic found during the live session. id follows B01, B02 convention. Empty array if no B-checks.",
+      "_note": "One entry per additional diagnostic: from the B-check reference table (B01-B22), the AI checks (B_AI1, B_AI2), the accessibility checks (B_A11Y1-B_A11Y4), or the mandatory Exploration Pass (B23 and up). Arbitrary ids are fine — the pipeline renders whatever is here and totalChecks counts them automatically. Empty array only if the session genuinely produced no B findings.",
       "id": "B01",
       "name": "Mobile Viewport Meta Tag",
       "badgeClass": "badge-pass",

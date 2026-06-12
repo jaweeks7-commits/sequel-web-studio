@@ -257,6 +257,13 @@
         <span><label for="c6">Audit Results section accounts for all checks run (standard 28 + any B-checks)</label></span>
       </li>
       <li>
+        <input type="checkbox" id="c6b">
+        <span>
+          <label for="c6b">Exploration Pass ran — at least 4–5 pages browsed at desktop and 375px widths; findings present as B-checks (B23+) or explicitly recorded as "no additional findings" in the intake progress file</label>
+          <div class="note">The Exploration Pass is mandatory on every audit even when all 28 standard checks pass. A silent skip is a production error — there must be either exploration B-entries or an explicit empty result.</div>
+        </span>
+      </li>
+      <li>
         <input type="checkbox" id="c7">
         <span><label for="c7">Every check included in the Remedy Package shows a "See Remedy Package — Item X" cross-reference in Audit Results</label></span>
       </li>
@@ -407,7 +414,7 @@
         <input type="checkbox" id="q1">
         <span>
           <label for="q1">Client folder created at correct archive path</label>
-          <div class="note">Format: <code>C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\</code></div>
+          <div class="note">Format: <code>C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\</code><br>Preferred: run <code>node scripts/archive-audit.mjs {client-slug}-audit-data-{mon-yyyy}.json</code> — it sweeps session artifacts into the archive and prints a ✓/✗ verification summary covering items q1–q5 below. Confirm every line shows ✓.</div>
         </span>
       </li>
       <li>

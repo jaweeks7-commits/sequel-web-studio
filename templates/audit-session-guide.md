@@ -1,7 +1,7 @@
 # Live Audit Session Guide
 ## Pro Diagnosis + Remedy Package — Sequel Web Studio
 
-> **How to use this:** Claude reads this file at the start of every autonomous audit session. Each check specifies the exact Playwright MCP action to run, the pass/fail criteria, the badge to assign, and the JSON key path for recording the finding. Execute checks in order. Record every finding immediately — do not batch.
+> **How to use this:** Claude reads this file at the start of every autonomous audit session. Each check specifies the exact Playwright MCP action to run, the pass/fail criteria, the badge to assign, and the JSON key path for recording the finding. Execute checks in order. Record every finding immediately — do not batch. The session is not only the fixed checklist: after the 28 standard checks comes a **mandatory Exploration Pass** (browse the site like a customer and record everything noteworthy), then the B-check sweep. Insight quality is the product — it is never traded away for speed.
 
 ---
 
@@ -42,6 +42,12 @@ This externalizes findings from context to disk. Playwright snapshot payloads ar
 **Use targeted evaluations over full snapshots whenever possible.**
 
 `playwright_evaluate` with a specific query returns only the data needed — a few tokens. `playwright_snapshot` returns the full DOM accessibility tree — thousands of tokens. Reserve full snapshots for checks that genuinely require reading page structure (heading hierarchy, visual layout, navigation). Use targeted `evaluate` calls for everything extractable by a specific query (title, canonical, meta tags, schema blocks, script src attributes, etc.).
+
+> **Borderline badge calls.** When a metric sits between two badge thresholds or the evidence is ambiguous, decide by current business impact for THIS client:
+> - If the issue is costing leads, visibility, or trust **today** → take the higher-severity badge.
+> - If the impact is hypothetical or future-only → take the lower-severity badge and say so honestly in the impact copy.
+>
+> Never inflate a badge to pad the Critical/High Value counts, and never round down to make the report look cleaner. State the borderline reasoning in the `found` text (e.g., "162 chars — just past Google's ~155-char truncation point") so Joe can see the call that was made.
 
 ---
 
@@ -836,9 +842,35 @@ This check is informational — it is a summary of findings from C04_1, C04_2, C
 
 ---
 
+## Exploration Pass — Browse Like a Customer (MANDATORY)
+
+This phase is required on every audit, even when all 28 standard checks pass. The fixed checklist finds technical defects; this pass finds everything else. It is where the audit earns its price.
+
+**What to do:**
+
+1. Browse the site the way a prospective customer would: homepage, every top-nav page, the contact page, and at least 1–2 service/product inner pages — minimum 4–5 pages total.
+2. Do the pass twice: once at desktop width, once at mobile width (`browser_resize` to 375×812). Take a homepage screenshot at both widths.
+3. **Be curious about EVERYTHING. You are not limited to any list.** Note anything a paying customer — or a competitor's marketer — would notice. Examples (not limits):
+   - **Copy:** typos, dated content ("Christmas specials" in June), stale blog/news, placeholder text, weak or generic headlines
+   - **CTAs:** missing, vague ("Submit"), buried below the fold, or competing calls to action
+   - **Trust signals:** reviews, licenses, certifications, team photos, guarantees, years in business — present, absent, or stale
+   - **Broken things:** dead links, missing images, layout overlap or horizontal scroll at 375px, console errors
+   - **Images:** low resolution, stretched, obviously stock, slow-loading hero media
+   - **UX:** confusing navigation, form friction (too many required fields), hard-to-find phone number or hours
+4. Record EVERY noteworthy observation as a new B-check: take the next free number (B23, B24, …), give it a short name, a badge, and found/impact copy — the same JSON shape as any other B-check. A genuine strength worth telling the client about may be recorded as a Pass entry.
+
+**Recording rule: there is no "too small."** If you noticed it, the client's customers notice it. The cost of recording one more B-check is one JSON entry. The cost of missing it is that the client paid for a professional diagnosis and a competitor's free tool catches what we didn't.
+
+---
+
+> **Checkpoint — write Exploration Pass findings to intake progress file before continuing to B-Checks.**
+> One line per new B-number (B23+), same compact format as every other check. If the pass genuinely produced nothing noteworthy, write `Exploration Pass | complete | no additional findings` — an explicit empty result, never a silent skip.
+
+---
+
 ## B-Checks — Additional Diagnostics
 
-Run these after the 28 standard checks. Not all apply to every site. Only run the ones that are relevant given what you've already found.
+Run these after the 28 standard checks and the Exploration Pass. **This table is a floor, not a ceiling.** Run every B-check below unless it is structurally inapplicable to the site (e.g., B22 hreflang on a single-language local business) — and when you skip one, write a one-line note in the progress file saying why. Most B-checks are a single `playwright_evaluate` call; the cost of running one is trivial, the cost of a missed finding is not. Anything observed during the Exploration Pass that isn't covered below gets a new B-number (B23+). Never suppress a finding because it doesn't fit an existing label.
 
 | B# | Check | Playwright action |
 |----|-------|-------------------|
@@ -858,11 +890,18 @@ Run these after the 28 standard checks. Not all apply to every site. Only run th
 | **B14** | Web form on Contact | Navigate to Contact page — `document.querySelector('form')` |
 | **B15** | Inner page title quality | Navigate to 3 inner pages, run Check 1 on each |
 | **B16** | Missing page-specific schema | FAQ page without FAQPage schema, Services page without Service schema |
+| **B17** | Mixed content (HTTP on HTTPS page) | `[...document.querySelectorAll('img[src^="http://"],script[src^="http://"],link[href^="http://"],iframe[src^="http://"]')].map(e => e.src \|\| e.href)` |
 | **B18** | Developer artifacts | `document.documentElement.innerHTML.match(/TODO|console\.log|staging\.|\.local/gi)` |
 | **B19** | Favicon formats | `[...document.querySelectorAll('link[rel*="icon"]')].map(l => ({rel: l.rel, href: l.href}))` |
 | **B20** | Copyright year in footer | `document.querySelector('footer')?.innerText?.match(/©\s*(\d{4})/)` |
+| **B21** | Video content presence | `({ videos: document.querySelectorAll('video').length, embeds: [...document.querySelectorAll('iframe')].filter(f => /youtube\|vimeo\|wistia/i.test(f.src)).length })` |
+| **B22** | hreflang tags (international/multilingual) | `[...document.querySelectorAll('link[rel="alternate"][hreflang]')].map(l => ({lang: l.hreflang, href: l.href}))` |
 | **B_AI1** | sameAs authority links | Extract `sameAs` from all LD+JSON blocks (see Check 16 script); verify each URL loads the correct business listing |
 | **B_AI2** | FAQPage schema from site FAQ content | Scan for FAQ-like content (`document.querySelectorAll('[class*="faq"],[id*="faq"],details,summary')`); check whether FAQPage schema exists |
+| **B_A11Y1** | Form input labels | See detailed section below — run on the contact page |
+| **B_A11Y2** | Keyboard focus visibility | See detailed section below |
+| **B_A11Y3** | Color contrast spot-check | See detailed section below |
+| **B_A11Y4** | Link text quality | See detailed section below |
 
 ---
 
@@ -951,6 +990,123 @@ Include all FAQ questions found on the site (no minimum or maximum). Deliver as 
 
 ---
 
+### B_A11Y1 — Form Input Labels
+
+Run on the contact page (or wherever the primary form lives — found during B14).
+
+```js
+// playwright_evaluate — check every visible form control for an accessible label:
+[...document.querySelectorAll('input:not([type=hidden]),select,textarea')].map(el => ({
+  type: el.type || el.tagName.toLowerCase(),
+  name: el.name || el.id || '(unnamed)',
+  labelled: !!(el.labels?.length || el.getAttribute('aria-label') || el.getAttribute('aria-labelledby')),
+  placeholderOnly: !el.labels?.length && !el.getAttribute('aria-label') && !el.getAttribute('aria-labelledby') && !!el.placeholder,
+}))
+```
+
+**Badge assignment:**
+- **Pass:** Every control has a real label (`<label>`, `aria-label`, or `aria-labelledby`)
+- **Nice to Have:** Controls rely on placeholder text only (placeholder disappears once the visitor starts typing)
+- **High Value:** One or more controls have no label of any kind
+
+**Impact copy for High Value:** "Form fields without labels are invisible to screen readers, which means some visitors physically cannot fill out your contact form. They also make the form harder to use for everyone: autofill breaks, and on mobile a mislabeled field is a common reason people abandon a form instead of submitting it. Every abandoned form is a lead that never reaches you."
+
+---
+
+### B_A11Y2 — Keyboard Focus Visibility
+
+```js
+// playwright_evaluate — check whether the stylesheet suppresses focus outlines:
+(() => {
+  let kills = [], custom = [];
+  for (const sheet of document.styleSheets) {
+    try {
+      for (const r of sheet.cssRules) {
+        if (!r.selectorText) continue;
+        if (/:focus/.test(r.selectorText)) {
+          if (/outline\s*:\s*(none|0)/.test(r.cssText) && !/box-shadow|border|background/.test(r.cssText)) kills.push(r.selectorText);
+          else custom.push(r.selectorText);
+        }
+      }
+    } catch { /* cross-origin sheet — skip */ }
+  }
+  return { focusKillRules: kills.slice(0, 5), customFocusRules: custom.slice(0, 5) };
+})()
+```
+
+**Badge assignment:**
+- **Pass:** No outline-killing rules, OR every kill rule is paired with a visible replacement (`box-shadow`, border, or background change on focus)
+- **High Value:** `outline: none`/`outline: 0` on `:focus` with no visible replacement anywhere
+
+**Impact copy for High Value:** "Visitors who navigate with a keyboard instead of a mouse (including many people with motor or vision impairments) rely on a visible outline to know where they are on the page. Your stylesheet removes that outline without replacing it, which makes the site unusable by keyboard. This is one of the most commonly cited issues in ADA website complaints against small businesses, and the fix is a few lines of CSS."
+
+---
+
+### B_A11Y3 — Color Contrast Spot-Check
+
+This is a spot-check of the two highest-impact text elements, not a full WCAG audit. Frame it that way in the findings.
+
+```js
+// playwright_evaluate — contrast ratio for body text and the primary CTA:
+(() => {
+  const lum = (c) => {
+    const m = c.match(/\d+(\.\d+)?/g)?.map(Number) ?? [0,0,0];
+    const [r,g,b] = m.slice(0,3).map(v => { v /= 255; return v <= 0.03928 ? v/12.92 : ((v+0.055)/1.055) ** 2.4; });
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  };
+  const bgOf = (el) => { // walk up until a non-transparent background is found
+    while (el) {
+      const bg = getComputedStyle(el).backgroundColor;
+      if (bg && !/rgba?\(0, 0, 0, 0\)|transparent/.test(bg)) return bg;
+      el = el.parentElement;
+    }
+    return 'rgb(255, 255, 255)';
+  };
+  const ratio = (el) => {
+    const s = getComputedStyle(el);
+    const l1 = lum(s.color), l2 = lum(bgOf(el));
+    return ((Math.max(l1,l2) + 0.05) / (Math.min(l1,l2) + 0.05)).toFixed(2);
+  };
+  const body = document.querySelector('main p, p');
+  const cta = [...document.querySelectorAll('a,button')].find(e => /quote|contact|call|book|schedule|get started|buy|order/i.test(e.innerText));
+  return {
+    bodyText: body ? { sample: body.innerText.slice(0, 50), ratio: ratio(body) } : null,
+    primaryCta: cta ? { text: cta.innerText.trim().slice(0, 40), ratio: ratio(cta) } : null,
+  };
+})()
+```
+
+**Badge assignment:**
+- **Pass:** Body text ≥ 4.5:1 and CTA ≥ 3:1 (WCAG AA thresholds)
+- **Nice to Have:** Marginal (body 4.0–4.5:1, or CTA 2.5–3:1)
+- **High Value:** Body text below 4.0:1 or CTA below 2.5:1
+
+**Impact copy for High Value:** "Low-contrast text is hard to read for anyone over 40, anyone on a phone in sunlight, and anyone with reduced vision. When your main text or your call-to-action button fails the standard contrast threshold, a portion of every visit ends with the visitor squinting at your page and leaving instead of reading why they should hire you."
+
+---
+
+### B_A11Y4 — Link Text Quality
+
+```js
+// playwright_evaluate — count generic link text:
+(() => {
+  const generic = ['click here','read more','learn more','here','more','this page','link'];
+  const hits = [...document.querySelectorAll('a')]
+    .map(a => a.innerText.trim().toLowerCase())
+    .filter(t => generic.includes(t));
+  return { count: hits.length, samples: [...new Set(hits)] };
+})()
+```
+
+**Badge assignment:**
+- **Pass:** 0 generic links
+- **Nice to Have:** 1–2 generic links
+- **High Value:** 3 or more generic links
+
+**Impact copy for High Value:** "Links that just say 'click here' or 'learn more' waste two audiences at once. Screen reader users often jump through a page link by link, and a list of identical 'learn more' links tells them nothing. Google also uses link text to understand what the destination page is about, so descriptive links ('See our lawn care pricing') help the pages they point to rank for those words."
+
+---
+
 > **Checkpoint — write all B-check findings to intake progress file before wrapping up.**
 > Use B-numbers consistently (B01, B05, B_AI1, etc.). Include the badge and any specific value found.
 > This is the final checkpoint. The progress file should now contain every check's badge and key finding.
@@ -996,7 +1152,7 @@ Use these when writing remedy steps. Platform-specific paths matter — a vague 
 
 After all checks are complete:
 
-1. **Review B-check findings** — assign B-numbers to any additional issues found
+1. **Review B-check and Exploration Pass findings** — confirm every observation has a B-number (table checks keep their numbers; exploration discoveries are B23+), and confirm the progress file has an explicit Exploration Pass line (findings or "no additional findings")
 2. **Score tally** — count by badge type: Critical / High Value / Pass / Nice to Have
 3. **Priority selection** — include ALL Critical findings and ALL High Value findings. There is no cap. If you found 4 Criticals and 14 High Values, all 18 go in the list. All Criticals first, then all High Values. Two checks may share one entry only when their fix steps are literally identical (e.g., C04_1 and C04_2 sharing one entity graph remedy).
 4. **Write executive summary** — 2–3 sentences covering the overall state and the most urgent theme
@@ -1014,14 +1170,17 @@ Then generate the JSON data file per `templates/audit-data-schema.json` and run 
 Playwright audit → findings recorded
         ↓
 Generate: [client-slug]-audit-data-[month]-[year].json
-        ↓  node scripts/fill-template.mjs [data-file]
+        ↓  node scripts/fill-template.mjs [data-file] --pdf
 Generate: [client-slug]-pro-diagnosis-[month]-[year].html
-        ↓  node scripts/generate-audit-pdf.mjs [html-file]
-Generate: [Client-Slug]-Remedy-Package-[Month]-[Year].pdf
+   then automatically: [Client-Slug]-Remedy-Package-[Month]-[Year].pdf
         ↓  present to Joe for review
         ↓  on approval: node --env-file=.env scripts/send-delivery.mjs --to [email] --name "[name]" --pdf "[pdf-file]"
 Delivered to client
+        ↓  node scripts/archive-audit.mjs [data-file]
+Session artifacts archived, audit-tool/ and repo root verified clean
 ```
+
+(The two-step form still works: omit `--pdf` and fill-template prints the `generate-audit-pdf.mjs` command to run next.)
 
 ---
 

@@ -269,12 +269,29 @@
 
 ---
 
+### EXPLORATION PASS (mandatory — complete before the B-check table)
+
+Browse the site like a prospective customer: homepage, every top-nav page, the contact page, and 1–2 service/product inner pages — once at desktop width, once at 375px mobile. Record every noteworthy observation (copy, CTAs, trust signals, broken things, images, UX — anything) as a new B-check entry below, numbered B23 and up. Genuine strengths may be recorded as Pass entries.
+
+| Page visited | Desktop ✓ | 375px ✓ |
+|---|---|---|
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+
+- [ ] Homepage screenshot taken at both widths
+- [ ] Every observation recorded as a B-entry below — or "nothing noteworthy" explicitly noted here: \_\_\_\_\_\_\_\_\_\_
+
+---
+
 ### ADDITIONAL DIAGNOSTICS (B-Checks)
 
-Add a B-check entry for each issue found outside the standard 28. Number them B01, B02, etc. Not all will apply — skip ones that don't. Add new entries for issues that don't fit any existing label.
+Add a B-check entry for each issue found outside the standard 28. **The reference list is a floor, not a ceiling:** run every listed check unless it is structurally inapplicable to the site, and note why when one is skipped. Add new entries (B23+) for anything — from the Exploration Pass or otherwise — that doesn't fit an existing label.
 
-*Reference list (check what applies, skip what doesn't):*
-B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · B14 · Contact Page — No Web Form · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content**
+*Reference list:*
+B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · B14 · Contact Page — No Web Form · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content** · **B_A11Y1 · Form Input Labels** · **B_A11Y2 · Keyboard Focus Visibility** · **B_A11Y3 · Color Contrast Spot-Check** · **B_A11Y4 · Link Text Quality**
 
 ---
 
@@ -454,7 +471,8 @@ B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→
 > Check off before handing to Claude for HTML build.
 
 - [ ] All 28 standard checks filled (badge + found + impact minimum)
-- [ ] All B-checks captured and numbered
+- [ ] Exploration Pass completed — pages browsed at desktop + 375px, findings recorded as B-checks (or "nothing noteworthy" explicitly noted)
+- [ ] All B-checks captured and numbered (every reference-list check run or skip reason noted)
 - [ ] Section 2 priority table complete — items ranked, all Criticals first
 - [ ] Every priority item has a matching remedy entry in Section 3
 - [ ] Score tally adds up to total checks run

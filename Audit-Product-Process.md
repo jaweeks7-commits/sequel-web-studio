@@ -13,31 +13,26 @@
 
 A paid deliverable ($350 — may be repriced) that gives a small-business website owner:
 
-1. A scored audit of their website across 50 checks (28 standard + 22 additional diagnostics)
-2. A Priority Action List of the 10 highest-impact problems
+1. A scored audit of their website: 28 standard checks + all applicable B-check diagnostics (typically 22 or more, including whatever the Exploration Pass surfaces)
+2. A Priority Action List containing **every** Critical and High Value finding (no cap — see the non-negotiable rule above)
 3. Step-by-step fix instructions for every Priority Action item (the "Remedy Package"), including ready-to-copy code blocks where applicable
-4. A complete record of all 50 findings for reference
+4. A complete record of all findings for reference
 
-Delivered as a single PDF. Produced by running one terminal command against a pre-built HTML source file.
+Delivered as a single PDF. Produced by running one terminal command against the audit data JSON.
 
 ---
 
-## Current State (as of May 1, 2026)
+## Current State (as of June 2026)
 
-### What is complete
-- **BSR Bike Shop audit report** — fully built HTML source and generated PDF
-  - HTML source: `bsr-bikeshop-pro-diagnosis-april-2026.html` (project root)
-  - PDF output: `BSR-Bike-Shop-Remedy-Package-April-2026.pdf` (project root)
-  - PDF generation script: `scripts/generate-audit-pdf.mjs`
-  - To regenerate: `npm run generate-audit-pdf`
-- **Document structure locked** — the BSR report defines the standard structure for all future reports (see Section 4 below)
-- **PDF generator working** — uses Puppeteer + system Edge, preserves all CSS formatting, all text is selectable/copyable including code blocks
+The full pipeline is built and in production — see Section 6 for the completion log. The reusable template, intake sheet, session guide, QA checklist, data schema, pagination pre-flight check, and post-PDF QC all exist:
 
-### What is NOT yet built (next priorities — see Section 6)
-- Reusable HTML template (blank, client data replaced with placeholders)
-- Data collection worksheet / intake sheet
-- Script that accepts a client filename argument (currently hardcoded to BSR)
-- Formal QA checklist
+- Session guide: `templates/audit-session-guide.md` (Claude reads this at the start of every audit session)
+- Intake sheet: `templates/audit-intake-sheet-template.md`
+- Data schema: `templates/audit-data-schema.json`
+- HTML template: `templates/audit-report-template.html`
+- Build: `node scripts/fill-template.mjs <data>.json --pdf` (fills template, runs pagination pre-flight, chains to PDF generation)
+- QA checklist: `templates/audit-qa-checklist.html`
+- Archive/cleanup: `node scripts/archive-audit.mjs <data>.json`
 
 ---
 
@@ -52,7 +47,7 @@ Every report must follow this exact order. Do not deviate without updating this 
 | 3 | What's Included | Four cards: Priority Action List, Remedy Package, Audit Results, Standalone Deliverables |
 | 4 | Priority Action List | All Critical + High Value items ranked by impact, on its own page |
 | 5 | Remedy Package | One remedy per Critical and High Value item, Criticals first then High Values. Each item: badge + title → Audit Findings → Remedy Steps |
-| 6 | Audit Results | All 50 checks across 9 categories. Items covered in Remedy Package show a cross-reference note |
+| 6 | Audit Results | All checks (28 standard across 8 categories + the B-check diagnostics section). Items covered in Remedy Package show a cross-reference note |
 | 7 | Footer | "Pro Diagnosis + Remedy Package prepared by Sequel Web Studio · sequelwebstudio.com" + date |
 
 ### Remedy Package item structure (repeat for each item)
@@ -121,8 +116,8 @@ REMEDY — STEP BY STEP
 27. Website Builder / Platform identification
 28. AI-Powered Search readiness
 
-### Additional Diagnostics (B01–B22)
-These are found during the live audit session — not all will apply to every client.
+### Additional Diagnostics (B-checks)
+Found during the live audit session: the reference table (B01–B22), the AI checks (B_AI1–B_AI2), the accessibility checks (B_A11Y1–B_A11Y4), and Exploration Pass discoveries (B23+).
 
 - B01 · Mobile Viewport Meta Tag
 - B02 · Mobile Layout issues (e.g. widget overlap)
@@ -146,8 +141,14 @@ These are found during the live audit session — not all will apply to every cl
 - B20 · Copyright Notice in Footer
 - B21 · Video Content presence
 - B22 · hreflang Tags (international/multilingual)
+- B_AI1 · sameAs Authority Links (verified directory listings)
+- B_AI2 · FAQPage Schema from site FAQ content
+- B_A11Y1 · Form Input Labels
+- B_A11Y2 · Keyboard Focus Visibility
+- B_A11Y3 · Color Contrast spot-check
+- B_A11Y4 · Link Text Quality
 
-> **Note:** The B-checks are a discovery list, not a fixed checklist. Add new B-numbers for issues found that don't fit the standard 28. The BSR report went to B22. Each new client may surface different additional issues.
+> **Note:** This list is a floor, not a ceiling. Run every listed B-check unless it is structurally inapplicable to the site (and note why when skipping). The mandatory **Exploration Pass** (see `templates/audit-session-guide.md`) is the source of new B-numbers: every noteworthy observation from browsing the site like a customer gets the next free number (B23+). Each new client may surface different additional issues.
 
 ---
 
@@ -160,7 +161,8 @@ These are found during the live audit session — not all will apply to every cl
 **How to run the audit:**
 - Use a real browser session (not an automated tool) — Playwright MCP or manual browser
 - Check each of the 28 standard items in category order
-- Add B-numbered checks for anything found outside the standard 28
+- Run the **mandatory Exploration Pass**: browse 4–5 key pages like a prospective customer, at desktop and 375px mobile widths, and record every noteworthy observation (copy, CTAs, trust signals, broken things, images, UX) as a new B-check — see `templates/audit-session-guide.md` for the full instruction
+- Run the B-check diagnostics table (floor, not ceiling — skip only what is structurally inapplicable, and note why)
 - For each check, record: (a) Pass / Fail / Warning / Nice to Have, (b) Exactly what was found, (c) Why it matters in plain English
 
 **Tools used in BSR audit:**
@@ -169,7 +171,7 @@ These are found during the live audit session — not all will apply to every cl
 - Google Rich Results Test for schema validation
 - Manual source view for GA4 tag inspection, canonical tags, robots meta
 
-**STATUS:** Process works but is not yet documented as a step-by-step checklist. Using BSR as the reference model.
+**STATUS:** Fully documented — `templates/audit-session-guide.md` is the step-by-step checklist Claude reads at the start of every audit session.
 
 ---
 
@@ -196,11 +198,12 @@ These are found during the live audit session — not all will apply to every cl
 **Current process (data-driven pipeline):**
 1. Review the completed intake sheet — confirm priority/remedy items are correct
 2. Claude produces `[client]-audit-data-[month]-[year].json` from the intake sheet findings
-3. Run `node scripts/fill-template.mjs [client]-audit-data-[month]-[year].json`
-   → outputs `[client]-pro-diagnosis-[month]-[year].html` automatically
-4. Run `node scripts/generate-audit-pdf.mjs [client]-pro-diagnosis-[month]-[year].html`
+3. Run `node scripts/fill-template.mjs [client]-audit-data-[month]-[year].json --pdf`
+   → outputs `[client]-pro-diagnosis-[month]-[year].html`, runs the pagination pre-flight check, then chains automatically to `generate-audit-pdf.mjs`
    → outputs `[Client]-Remedy-Package-[Month]-[Year].pdf`
-5. Open the PDF and visually verify formatting (see Phase 4 QA checklist)
+   (Omit `--pdf` to stop after the HTML; fill-template prints the PDF command to run next. The pagination check still gates the chain — a hard failure aborts before any PDF is produced.)
+4. Open the PDF and visually verify formatting (see Phase 4 QA checklist)
+5. After delivery: run `node scripts/archive-audit.mjs [client]-audit-data-[month]-[year].json` to sweep session artifacts into the archive and verify `audit-tool/` and the repo root are clean
 
 **Why this is efficient:** Claude only outputs structured JSON (~2,000–4,000 tokens). The script handles all HTML assembly at zero token cost. Priority and remedy item counts are variable — the script loops over however many items are in the JSON arrays.
 
@@ -267,12 +270,13 @@ These are found during the live audit session — not all will apply to every cl
 | `templates/audit-intake-sheet-template.md` | **Fill during the live audit session.** Structured record of all findings; hand to Claude to produce the JSON data file. |
 | `templates/audit-data-schema.json` | **JSON format reference.** Documents exactly what Claude must produce at the end of an audit session. Save client output as `[client]-audit-data-[month]-[year].json`. |
 | `templates/audit-report-template.html` | **HTML skeleton — do not edit manually.** Contains CSS + structure + block markers. The fill-template script populates it. 302 lines (down from 835). |
-| `scripts/fill-template.mjs` | **Step 2 in the pipeline.** Reads client JSON → fills HTML template → outputs `[client]-pro-diagnosis-[month]-[year].html`. Usage: `node scripts/fill-template.mjs [client]-audit-data-[month]-[year].json` |
-| `scripts/generate-audit-pdf.mjs` | **Step 3 in the pipeline.** Reads HTML → generates PDF. Usage: `node scripts/generate-audit-pdf.mjs [client]-pro-diagnosis-[month]-[year].html` |
+| `scripts/fill-template.mjs` | **Step 2 in the pipeline.** Reads client JSON → fills HTML template → outputs `[client]-pro-diagnosis-[month]-[year].html`. With `--pdf` it chains straight to PDF generation after the pagination check passes. Usage: `node scripts/fill-template.mjs [client]-audit-data-[month]-[year].json --pdf` |
+| `scripts/generate-audit-pdf.mjs` | **Step 3 in the pipeline** (run automatically by `--pdf`, or manually). Reads HTML → generates PDF. Usage: `node scripts/generate-audit-pdf.mjs [client]-pro-diagnosis-[month]-[year].html` |
+| `scripts/archive-audit.mjs` | **Post-delivery cleanup.** Sweeps session artifacts (root JSON/HTML/PDF copies, intake progress file, screenshots) into `C:\Sequel Audit Deliverables\{YYYY-MM}\{client-slug}\` and verifies `audit-tool/` and the repo root are clean. Usage: `node scripts/archive-audit.mjs [client]-audit-data-[month]-[year].json [--dry-run]` |
 | `bsr-bikeshop-pro-diagnosis-april-2026.html` | BSR Bike Shop audit report — completed reference copy (built before data pipeline existed). |
 | `BSR-Bike-Shop-Remedy-Package-April-2026.pdf` | Generated client deliverable for BSR. |
 | `scripts/generate-audit-docx.mjs` | Older DOCX script — superseded, kept for reference. |
-| `package.json` | `npm run fill-audit-template` and `npm run generate-audit-pdf` npm aliases. |
+| `package.json` | npm aliases: `build-audit` (fill + chained PDF), `archive-audit`, `fill-audit-template`, `generate-audit-pdf`. |
 
 ### How the PDF Generator Works
 - Uses `puppeteer-core` npm package + system Microsoft Edge (no extra browser download needed)
