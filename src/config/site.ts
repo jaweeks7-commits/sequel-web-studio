@@ -65,6 +65,11 @@ export const LOCAL_BUSINESS_SCHEMA = {
   '@type':     'ProfessionalService',
   '@id':       'https://sequelwebstudio.com/#organization',
   name:        SITE_NAME,
+  alternateName: 'Sequel Web',
+  // Sets this entity apart from the similarly named NYC agency "Sequel Studio"
+  // (sequelstudio.com) that otherwise dominates ambiguous "Sequel" queries.
+  disambiguatingDescription:
+    'A Fort Worth, Texas web studio building AI-ready websites and running technical SEO audits for small businesses across the US. Distinct from any similarly named branding or design agency.',
   url:         SITE_URL,
   address: {
     '@type':         'PostalAddress',
@@ -79,11 +84,21 @@ export const LOCAL_BUSINESS_SCHEMA = {
   description: 'AI-search-readiness diagnostics for small businesses across the US. Our flagship service is the $350 Pro Diagnosis + Remedy Package: a 28-point technical website audit run by a real AI agent in a live browser, delivered within 24 hours as a branded PDF report with ready-to-paste code fixes for every issue found across eight categories (AI discoverability, SEO, social/Open Graph, performance, schema, analytics, security, accessibility). Custom-coded website builds also available from $1,000.',
   priceRange:  '$350',
   image:       `${SITE_URL}/images/joe-headshot.png`,
-  founder: {
-    '@type': 'Person',
-    '@id':   'https://sequelwebstudio.com/#founder',
-    name:    'Joe Weeks',
-  },
+  // Both founders at the org level so the entity reads as one consistent
+  // husband-and-wife business everywhere, not just on /about. The @id values
+  // match the richer Person nodes on /about so Google merges them into one graph.
+  founder: [
+    {
+      '@type': 'Person',
+      '@id':   'https://sequelwebstudio.com/#founder',
+      name:    'Joe Weeks',
+    },
+    {
+      '@type': 'Person',
+      '@id':   'https://sequelwebstudio.com/#cofounder',
+      name:    'Christina Weeks',
+    },
+  ],
   areaServed: {
     '@type': 'Country',
     name:    'United States',
