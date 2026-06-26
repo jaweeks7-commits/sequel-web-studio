@@ -202,20 +202,27 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
         },
       });
 
-      const contactEmail = process.env.GMAIL_USER;
+      // Gmail account that authenticates and physically sends the mail.
+      const senderUser   = process.env.GMAIL_USER;
+      // Public-facing address shown to customers and used for replies.
+      const contactEmail = process.env.PUBLIC_CONTACT_EMAIL || 'joe@sequelwebstudio.com';
+      // New-order notifications go to both Joe's inboxes (deduped if identical).
+      const orderNotifyTo = [...new Set([senderUser, contactEmail].filter(Boolean))].join(', ');
 
       await Promise.all([
         // Receipt to customer
         transporter.sendMail({
-          from:    `"Sequel Web Studio" <${contactEmail}>`,
+          from:    `"Sequel Web Studio" <${senderUser}>`,
+          replyTo: contactEmail,
           to:      email,
           subject: 'Payment Receipt — Pro Diagnosis + Remedy Package',
           html:    receiptHtml({ clientName, businessName, siteUrl, paidAt, contactEmail }),
         }),
-        // Briefing to Joe
+        // Briefing to Joe (both inboxes)
         transporter.sendMail({
-          from:    `"Sequel Web Studio" <${contactEmail}>`,
-          to:      contactEmail,
+          from:    `"Sequel Web Studio" <${senderUser}>`,
+          replyTo: contactEmail,
+          to:      orderNotifyTo,
           subject: `New Pro Diagnosis Order — ${businessName}`,
           html:    briefingHtml({ clientName, businessName, siteUrl, email, notes, paymentId, paidAt }),
         }),
