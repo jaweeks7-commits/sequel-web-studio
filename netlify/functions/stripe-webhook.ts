@@ -170,6 +170,14 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     const session = webhookEvent.data.object as Stripe.Checkout.Session;
     const meta    = session.metadata ?? {};
 
+    // Only Pro Diagnosis audit purchases get the receipt + briefing emails.
+    // Other checkouts (e.g. hosting subscriptions) fire the same event but must
+    // be ignored here — Stripe's native payment notifications cover those.
+    if (meta.product !== 'pro-diagnosis') {
+      console.log(`[stripe-webhook] Ignoring non-audit checkout (${session.id}).`);
+      return { statusCode: 200, body: 'OK' };
+    }
+
     const { clientName = '', businessName = '', siteUrl = '', email = '', notes = '' } = meta;
     const paidAt    = new Date(session.created * 1000).toISOString();
     const paymentId = typeof session.payment_intent === 'string' ? session.payment_intent : '';

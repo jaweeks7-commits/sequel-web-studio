@@ -50,6 +50,9 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
       line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
       customer_email: email,
       metadata: {
+        // Identifies this as a Pro Diagnosis purchase so the webhook can
+        // distinguish it from other Stripe checkouts (e.g. hosting subscriptions).
+        product:      'pro-diagnosis',
         clientName:   name,
         businessName: business,
         siteUrl:      url,
