@@ -12,7 +12,6 @@
     "generate-favicons": "node scripts/generate-favicons.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "generate-audit-docx": "node scripts/generate-audit-docx.mjs",
-    "fill-audit-template": "node scripts/fill-template.mjs",
     "build-audit": "node scripts/fill-template.mjs",
     "generate-audit-pdf": "node scripts/generate-audit-pdf.mjs",
     "archive-audit": "node scripts/archive-audit.mjs",

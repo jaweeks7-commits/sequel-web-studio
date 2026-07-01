@@ -276,7 +276,7 @@ Found during the live audit session: the reference table (B01–B22), the AI che
 | `bsr-bikeshop-pro-diagnosis-april-2026.html` | BSR Bike Shop audit report — completed reference copy (built before data pipeline existed). |
 | `BSR-Bike-Shop-Remedy-Package-April-2026.pdf` | Generated client deliverable for BSR. |
 | `scripts/generate-audit-docx.mjs` | Older DOCX script — superseded, kept for reference. |
-| `package.json` | npm aliases: `build-audit` (fill + chained PDF), `archive-audit`, `fill-audit-template`, `generate-audit-pdf`. |
+| `package.json` | npm aliases: `build-audit` (fill + chained PDF), `archive-audit`, `generate-audit-pdf`. |
 
 ### How the PDF Generator Works
 - Uses `puppeteer-core` npm package + system Microsoft Edge (no extra browser download needed)
