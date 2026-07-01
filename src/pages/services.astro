@@ -7,6 +7,9 @@ import { PORTFOLIO } from '../data/portfolio';
 const offerSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type':    'ProfessionalService',
+  // Match the canonical org node so search engines/AI merge this into one entity
+  // instead of reading a second, separate business.
+  '@id':      'https://sequelwebstudio.com/#organization',
   name:       SITE_NAME,
   url:        SITE_URL,
   hasOfferCatalog: {

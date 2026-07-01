@@ -57,10 +57,10 @@ const articleSchema = JSON.stringify({
   image:             `${SITE_URL}/images/og-insights.png`,
   mainEntityOfPage:  { '@type': 'WebPage', '@id': articleUrl },
   author: {
-    '@type': 'Organization',
-    '@id':   'https://sequelwebstudio.com/#organization',
-    name:    SITE_NAME,
-    url:     SITE_URL,
+    '@type': 'Person',
+    '@id':   'https://sequelwebstudio.com/#founder',
+    name:    'Joe Weeks',
+    url:     `${SITE_URL}/about`,
   },
   publisher: {
     '@type': 'Organization',
@@ -101,7 +101,7 @@ const related = allArticles
   <script type="application/ld+json" set:html={articleSchema}    slot="head" />
   <script type="application/ld+json" set:html={breadcrumbSchema} slot="head" />
   <meta property="article:published_time" content={publishDate.toISOString()} slot="head" />
-  <meta property="article:author"         content={SITE_URL}                  slot="head" />
+  <meta property="article:author"         content={`${SITE_URL}/about`}        slot="head" />
   <meta property="article:section"        content={categoryLabel[category]}   slot="head" />
 
   <!-- ── READING PROGRESS BAR ── -->
