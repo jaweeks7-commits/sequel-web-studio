@@ -11,7 +11,25 @@ type Submission = {
   submittedAt: string;
 };
 
-export const handler = async (): Promise<LambdaResponse> => {
+// Visitor-submitted URLs are rendered into the digest email body, so escape
+// them to prevent HTML/attribute injection into the message.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export const handler = async (event?: { httpMethod?: string }): Promise<LambdaResponse> => {
+  // This is a scheduled function. Netlify's scheduler invokes it with no
+  // httpMethod; a public request routed through /api/* would carry one. Reject
+  // those so nobody can trigger the send (and the store-clearing below) on demand.
+  if (event?.httpMethod) {
+    return { statusCode: 404, body: 'Not found.' };
+  }
+
   const store = getStore('audit-leads');
   const { blobs } = await store.list();
 
@@ -44,7 +62,7 @@ export const handler = async (): Promise<LambdaResponse> => {
       });
       return `
         <tr>
-          <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:14px;">${s.url}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:14px;">${escapeHtml(s.url)}</td>
           <td style="padding:10px 14px;border-bottom:1px solid #e4eaf5;font-size:14px;color:#595959;white-space:nowrap;">${time} CT</td>
         </tr>`;
     })

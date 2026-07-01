@@ -14,6 +14,26 @@ type LambdaResponse = {
   body: string;
 };
 
+// ── Escaping helpers ─────────────────────────────────────────────────────────
+// Order metadata originates from the untrusted checkout form, so every value
+// must be HTML-escaped before it lands in an email body. URLs used in an href
+// also need a scheme check — escaping alone does not stop a `javascript:` link.
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Returns the URL only if it is a plain http(s) link; otherwise an empty string
+// so a crafted `javascript:`/`data:` value cannot become a live href.
+function safeHref(url: string): string {
+  return /^https?:\/\//i.test(url.trim()) ? url.trim() : '';
+}
+
 // ── Email templates ──────────────────────────────────────────────────────────
 
 function receiptHtml(params: {
@@ -23,7 +43,11 @@ function receiptHtml(params: {
   paidAt: string;
   contactEmail: string;
 }): string {
-  const { clientName, businessName, siteUrl, paidAt, contactEmail } = params;
+  const clientName   = escapeHtml(params.clientName);
+  const businessName = escapeHtml(params.businessName);
+  const siteUrl      = escapeHtml(params.siteUrl);
+  const contactEmail = escapeHtml(params.contactEmail);
+  const paidAt       = params.paidAt;
   const date = new Date(paidAt).toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Chicago',
   });
@@ -98,12 +122,19 @@ function briefingHtml(params: {
   paymentId: string;
   paidAt: string;
 }): string {
-  const { clientName, businessName, siteUrl, email, notes, paymentId, paidAt } = params;
+  const clientName   = escapeHtml(params.clientName);
+  const businessName = escapeHtml(params.businessName);
+  const siteUrl      = escapeHtml(params.siteUrl);        // safe as visible text
+  const siteUrlHref  = escapeHtml(safeHref(params.siteUrl)); // safe inside href
+  const email        = escapeHtml(params.email);
+  const notes        = escapeHtml(params.notes);
+  const paymentId    = escapeHtml(params.paymentId);
+  const paidAt       = params.paidAt;
   const date = new Date(paidAt).toLocaleString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
     hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago',
   });
-  const clientSlug = businessName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const clientSlug = params.businessName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const monthYear  = new Date(paidAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'America/Chicago' }).toLowerCase().replace(' ', '-');
 
   return `
@@ -120,7 +151,7 @@ function briefingHtml(params: {
           ${[
             ['Client',    clientName],
             ['Business',  businessName],
-            ['Website',   `<a href="${siteUrl}" style="color:#2E75B6;">${siteUrl}</a>`],
+            ['Website',   `<a href="${siteUrlHref}" style="color:#2E75B6;">${siteUrl}</a>`],
             ['Email',     `<a href="mailto:${email}" style="color:#2E75B6;">${email}</a>`],
             notes ? ['Notes', notes] : null,
             ['Stripe ID', `<span style="font-family:monospace;font-size:12px;color:#595959;">${paymentId}</span>`],
@@ -136,7 +167,7 @@ function briefingHtml(params: {
           <ol style="margin:0;padding-left:18px;font-size:13px;color:#595959;line-height:1.9;">
             <li>Copy <code>templates/audit-intake-sheet-template.md</code> → <code>${clientSlug}-audit-intake-${monthYear}.md</code></li>
             <li>Open the session guide: <code>templates/audit-session-guide.md</code></li>
-            <li>Run the live audit on <a href="${siteUrl}" style="color:#2E75B6;">${siteUrl}</a></li>
+            <li>Run the live audit on <a href="${siteUrlHref}" style="color:#2E75B6;">${siteUrl}</a></li>
             <li>Hand intake sheet to Claude → generate JSON → run pipeline → deliver PDF to <a href="mailto:${email}" style="color:#2E75B6;">${email}</a></li>
           </ol>
         </div>
