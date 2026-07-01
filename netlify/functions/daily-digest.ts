@@ -1,5 +1,8 @@
 import { getStore } from '@netlify/blobs';
 import nodemailer from 'nodemailer';
+// Visitor-submitted URLs are rendered into the digest email body, so escape
+// them to prevent HTML/attribute injection into the message.
+import { escapeHtml } from '../lib/escape';
 
 type LambdaResponse = {
   statusCode: number;
@@ -10,17 +13,6 @@ type Submission = {
   url: string;
   submittedAt: string;
 };
-
-// Visitor-submitted URLs are rendered into the digest email body, so escape
-// them to prevent HTML/attribute injection into the message.
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
 
 export const handler = async (event?: { httpMethod?: string }): Promise<LambdaResponse> => {
   // This is a scheduled function. Netlify's scheduler invokes it with no

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { getStore } from '@netlify/blobs';
 import nodemailer from 'nodemailer';
+import { escapeHtml, safeHref } from '../lib/escape';
 
 type LambdaEvent = {
   httpMethod: string;
@@ -14,27 +15,10 @@ type LambdaResponse = {
   body: string;
 };
 
-// ── Escaping helpers ─────────────────────────────────────────────────────────
-// Order metadata originates from the untrusted checkout form, so every value
-// must be HTML-escaped before it lands in an email body. URLs used in an href
-// also need a scheme check — escaping alone does not stop a `javascript:` link.
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-// Returns the URL only if it is a plain http(s) link; otherwise an empty string
-// so a crafted `javascript:`/`data:` value cannot become a live href.
-function safeHref(url: string): string {
-  return /^https?:\/\//i.test(url.trim()) ? url.trim() : '';
-}
-
 // ── Email templates ──────────────────────────────────────────────────────────
+// Order metadata originates from the untrusted checkout form, so every value is
+// HTML-escaped (and URLs scheme-checked via safeHref) before it lands in an
+// email body — see ../lib/escape.
 
 function receiptHtml(params: {
   clientName: string;
