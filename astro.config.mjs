@@ -7,7 +7,9 @@ import sitemap from '@astrojs/sitemap';
 // when the audit tool needs server-side rendering. The netlify.toml handles
 // build config and Netlify Functions routing independently.
 export default defineConfig({
-  site: 'https://sequelwebstudio.com',
+  // Single source of truth is PUBLIC_SITE_URL (same var src/config/site.ts reads);
+  // fall back to the production URL so a bare `astro build` still works.
+  site: process.env.PUBLIC_SITE_URL || 'https://sequelwebstudio.com',
   output: 'static',
   integrations: [
     tailwind({ applyBaseStyles: false }),

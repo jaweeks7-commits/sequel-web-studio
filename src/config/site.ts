@@ -5,6 +5,14 @@ export const SITE_NAME    = 'Sequel Web Studio';
 export const SITE_URL     = import.meta.env.PUBLIC_SITE_URL    ?? 'https://sequelwebstudio.com';
 export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'joe@sequelwebstudio.com';
 export const SERVICE_AREA = 'United States';
+// D13: Joe's personal cell, public. Centralized so the future Google Voice swap
+// is a one-line change (revisit when spam/after-hours calls become a problem).
+export const PHONE        = '+18177439806';
+
+// Canonical prices (numbers), so copy and schema draw from one source. The audit
+// is the flagship $350 Pro Diagnosis; the Starter build is the entry web-design tier.
+export const AUDIT_PRICE   = 350;
+export const STARTER_PRICE = 1000;
 
 export const SOCIAL_LINKS = {
   linkedin: 'https://www.linkedin.com/company/sequel-web-studio/',
@@ -79,10 +87,10 @@ export const LOCAL_BUSINESS_SCHEMA = {
     postalCode:      '76244',
     addressCountry:  'US',
   },
-  telephone:   '+18177439806',
+  telephone:   PHONE,
   email:       CONTACT_EMAIL,
   description: 'AI-search-readiness diagnostics for small businesses across the US. Our flagship service is the $350 Pro Diagnosis + Remedy Package: a 28-point technical website audit run by a real AI agent in a live browser, delivered within 24 hours as a branded PDF report with ready-to-paste code fixes for every issue found across eight categories (AI discoverability, SEO, social/Open Graph, performance, schema, analytics, security, accessibility). Custom-coded website builds also available from $1,000.',
-  priceRange:  '$350',
+  priceRange:  `$${AUDIT_PRICE}`,
   image:       `${SITE_URL}/images/joe-headshot.png`,
   // Both founders at the org level so the entity reads as one consistent
   // husband-and-wife business everywhere, not just on /about. The @id values
@@ -109,7 +117,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
       '@type':        'Offer',
       name:           'Pro Diagnosis + Remedy Package',
       description:    'Flagship service. A 28-point technical audit of a business homepage covering eight categories: AI search discoverability (ChatGPT, Perplexity, Gemini, voice search), SEO fundamentals, social sharing & Open Graph, performance & page speed, schema & structured data, analytics & tracking integrity, security & crawlability, and accessibility. Run by a real AI agent in a live browser, not an automated scanner. Delivered within 24 hours as a branded PDF Remedy Package containing ready-to-paste code for every fixable issue, prioritized to-do checklist, and platform-specific installation steps. No developer required to implement. One-time fee, no retainer.',
-      price:          '350',
+      price:          String(AUDIT_PRICE),
       priceCurrency:  'USD',
       availability:   'https://schema.org/InStock',
       url:            `${SITE_URL}/audit`,
@@ -120,7 +128,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
       '@type':       'Offer',
       name:          'Create New Site (secondary offering)',
       description:   'Custom-coded website built from scratch with the full technical foundation. 30 days of post-launch support. Most clients start with a Pro Diagnosis first.',
-      price:         '1000',
+      price:         String(STARTER_PRICE),
       priceCurrency: 'USD',
       availability:  'https://schema.org/InStock',
       url:           `${SITE_URL}/services`,
@@ -130,16 +138,13 @@ export const LOCAL_BUSINESS_SCHEMA = {
       '@type':       'Offer',
       name:          'Modernize Existing Site (secondary offering)',
       description:   'Audit and rebuild of an existing site on a modern technical foundation. Existing content preserved and restructured. Launched on your existing domain with no lost SEO. 30 days of post-launch support.',
-      price:         '1000',
+      price:         String(STARTER_PRICE),
       priceCurrency: 'USD',
       availability:  'https://schema.org/InStock',
       url:           `${SITE_URL}/services`,
       category:      'Web Design',
     },
   ],
-  sameAs: [
-    'https://share.google/oOa5qcJgSMqjwMKYd',
-    'https://www.linkedin.com/company/sequel-web-studio/',
-    'https://clutch.co/profile/sequel-web-studio',
-  ],
+  // Draw from SOCIAL_LINKS so the profile URLs live in exactly one place.
+  sameAs: [SOCIAL_LINKS.gbp, SOCIAL_LINKS.linkedin, SOCIAL_LINKS.clutch],
 };
