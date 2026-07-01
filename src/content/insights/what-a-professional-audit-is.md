@@ -1,6 +1,6 @@
 ---
 title: "What a Professional Website Audit Actually Is"
-description: "A professional audit is a person working through your live site against a structured 50-item checklist — not a robot spitting out a score."
+description: "A professional audit is a person working through your live site against a structured 28-point checklist, not a robot spitting out a score."
 category: methodology
 length: medium
 publishOrder: 1
