@@ -2,6 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CONTACT_EMAIL } from '../config/site';
 
+// Cloudflare Turnstile — the widget renders only when the site key is configured,
+// mirroring the server's "no secret = skip" gating so the order form never breaks
+// when Turnstile is off. See netlify/functions/create-checkout-session.ts.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
 const serviceSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Service',
@@ -665,6 +670,14 @@ const auditCategories = [
               rows="3"
               style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none; resize: vertical;"
             ></textarea>
+            {turnstileSiteKey && (
+              <div
+                class="cf-turnstile"
+                data-sitekey={turnstileSiteKey}
+                data-theme="dark"
+                style="min-height: 65px;"
+              ></div>
+            )}
             <button
               id="order-submit-btn"
               type="submit"
@@ -679,6 +692,10 @@ const auditCategories = [
       </div>
     </div>
   </section>
+
+  {turnstileSiteKey && (
+    <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+  )}
 
   <!-- Deliverable lightbox overlay -->
   <div
@@ -911,6 +928,15 @@ const auditCategories = [
 
     const submitBtn = document.getElementById('order-submit-btn') as HTMLButtonElement | null;
     const errorEl   = document.getElementById('order-form-error') as HTMLParagraphElement | null;
+
+    // Cloudflare Turnstile — the widget injects a hidden cf-turnstile-response field.
+    // Only enforced when the site key is configured (matches the server-side gating).
+    const turnstileToken = (orderForm.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value ?? '');
+    if (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
+      if (errorEl) { errorEl.textContent = 'Please complete the human-verification check below, then try again.'; errorEl.style.display = 'block'; }
+      return;
+    }
+
     if (submitBtn) { submitBtn.textContent = 'Redirecting to payment…'; submitBtn.disabled = true; }
     if (errorEl)   { errorEl.style.display = 'none'; }
 
@@ -920,6 +946,10 @@ const auditCategories = [
       url:      (() => { let v = (orderForm.querySelector<HTMLInputElement>('[name="url"]')?.value ?? '').trim(); if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v; return v; })(),
       email:    (orderForm.querySelector<HTMLInputElement>('[name="email"]')?.value     ?? '').trim(),
       notes:    (orderForm.querySelector<HTMLTextAreaElement>('[name="notes"]')?.value  ?? '').trim(),
+      // Forward the honeypot so the server can reject bots that bypass this script.
+      botField: (botField?.value ?? ''),
+      // Forward the Turnstile token for server-side verification.
+      turnstileToken,
     };
 
     try {
@@ -938,6 +968,8 @@ const auditCategories = [
       if (submitBtn) { submitBtn.textContent = 'Go To Payment Details →'; submitBtn.disabled = false; }
       const msg = (err instanceof Error && err.message && err.message !== 'Unknown error') ? err.message : 'Something went wrong, please try again or email us directly.';
       if (errorEl)   { errorEl.textContent = msg; errorEl.style.display = 'block'; }
+      // Turnstile tokens are single-use — reset so the visitor can get a fresh one.
+      (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
     }
   });
 </script>
