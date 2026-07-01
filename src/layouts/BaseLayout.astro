@@ -84,6 +84,8 @@ const loaderId    = ga4Id || adsId;
 
     {cookieYesId && (
       <script
+        is:inline
+        defer
         id="cookieyes"
         type="text/javascript"
         src={`https://cdn-cookieyes.com/client_data/${cookieYesId}/script.js`}

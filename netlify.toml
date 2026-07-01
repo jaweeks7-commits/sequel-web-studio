@@ -21,6 +21,27 @@
     # cover anything legitimate, then promote this to "Content-Security-Policy".
     Content-Security-Policy-Report-Only = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn-cookieyes.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://cdn-cookieyes.com https://challenges.cloudflare.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://log.cookieyes.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com https://www.googletagmanager.com https://td.doubleclick.net"
 
+# Astro emits content-hashed filenames under /_astro/ (e.g. BaseLayout.DSwhIezg.css),
+# so the URL changes whenever the content changes. That makes them safe to cache
+# forever — a new deploy ships new URLs rather than invalidating old ones.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Static assets in /images and /fonts use stable (unhashed) filenames, so cache them
+# for a week rather than a year. To force an early refresh, rename the file (which is
+# also why the optimized images above use new filenames rather than reusing old ones).
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
 # Run daily digest at 8 AM Central Time (14:00 UTC covers CST; shifts to 9 AM in CDT)
 [functions."daily-digest"]
   schedule = "0 14 * * *"

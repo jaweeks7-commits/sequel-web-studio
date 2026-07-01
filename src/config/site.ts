@@ -91,7 +91,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
   email:       CONTACT_EMAIL,
   description: 'AI-search-readiness diagnostics for small businesses across the US. Our flagship service is the $350 Pro Diagnosis + Remedy Package: a 28-point technical website audit run by a real AI agent in a live browser, delivered within 24 hours as a branded PDF report with ready-to-paste code fixes for every issue found across eight categories (AI discoverability, SEO, social/Open Graph, performance, schema, analytics, security, accessibility). Custom-coded website builds also available from $1,000.',
   priceRange:  `$${AUDIT_PRICE}`,
-  image:       `${SITE_URL}/images/joe-headshot.png`,
+  image:       `${SITE_URL}/images/joe-headshot.webp`,
   // Both founders at the org level so the entity reads as one consistent
   // husband-and-wife business everywhere, not just on /about. The @id values
   // match the richer Person nodes on /about so Google merges them into one graph.
