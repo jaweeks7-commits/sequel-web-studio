@@ -2,22 +2,13 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from
 import { fileURLToPath } from 'url';
 import { dirname, join, basename } from 'path';
 import { checkPagination, report as reportPagination } from './check-pagination.mjs';
+import { MONTH_NUMS } from './lib/months.mjs';
+// esc() escapes HTML in text fields so code references in step instructions
+// (e.g. "<script type='application/ld+json'>") render as visible text. See the
+// helper for why standalone.code fields must not be double-escaped.
+import { escapeHtml as esc } from './lib/escape.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-const MONTH_NUMS = {
-  january:'01', february:'02', march:'03', april:'04', may:'05', june:'06',
-  july:'07', august:'08', september:'09', october:'10', november:'11', december:'12'
-};
-
-// Escape HTML special characters in text fields so that references to HTML code in
-// step instructions (e.g. "<script type='application/ld+json'>") are rendered as
-// visible text rather than parsed as DOM elements. The standalone.code fields are
-// pre-escaped in the JSON and must NOT be double-escaped here.
-function esc(str) {
-  if (str == null) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
 
 // Hard-fail if the score grid (Executive Summary) disagrees with the data that
 // would render alongside it. Critical / HighValue are action counts and must

@@ -1,16 +1,11 @@
 import puppeteer from 'puppeteer-core';
-import { existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { resolveEdgePath } from './lib/browser-path.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const edgePaths = [
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-const executablePath = edgePaths.find(p => existsSync(p));
-if (!executablePath) throw new Error('Microsoft Edge not found.');
+const executablePath = resolveEdgePath();
 
 const SIZE = 1024;
 

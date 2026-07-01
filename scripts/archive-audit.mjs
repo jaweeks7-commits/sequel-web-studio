@@ -12,14 +12,9 @@
 import { existsSync, mkdirSync, readdirSync, statSync, renameSync, copyFileSync, unlinkSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join, basename } from 'path';
+import { MONTH_NUMS } from './lib/months.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-// Same month map and filename convention as fill-template.mjs — keep in sync.
-const MONTH_NUMS = {
-  january:'01', february:'02', march:'03', april:'04', may:'05', june:'06',
-  july:'07', august:'08', september:'09', october:'10', november:'11', december:'12'
-};
 
 // ── Parse arguments ──────────────────────────────────────────────────────────
 const args = process.argv.slice(2);

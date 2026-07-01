@@ -11,6 +11,7 @@
 import { Resend } from 'resend';
 import { readFileSync, existsSync, mkdirSync, copyFileSync } from 'fs';
 import { resolve, basename, join } from 'path';
+import { MONTH_NUMS } from './lib/months.mjs';
 
 // Load .env if present (local dev); Codespaces injects secrets directly into process.env
 try { process.loadEnvFile('.env'); } catch {}
@@ -119,10 +120,6 @@ function archiveLocally() {
   const clientSlug = (slugMatch ? slugMatch[1] : basename(pdfFilename, '.pdf')).toLowerCase();
   // Archive under the audit month from the PDF filename (...-Remedy-Package-May-2026.pdf),
   // not today's date — a delivery sent in early June for a May audit belongs in 2026-05.
-  const MONTH_NUMS = {
-    january:'01', february:'02', march:'03', april:'04', may:'05', june:'06',
-    july:'07', august:'08', september:'09', october:'10', november:'11', december:'12'
-  };
   const dateMatch = pdfFilename.match(/-Remedy-Package-([A-Za-z]+)-(\d{4})\.pdf$/i);
   const now       = new Date();
   const yyyyMM    = dateMatch && MONTH_NUMS[dateMatch[1].toLowerCase()]

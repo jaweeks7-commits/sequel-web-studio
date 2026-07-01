@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 
 import { join, basename, extname, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import HTMLtoDOCX from 'html-to-docx';
+import { escapeHtml } from './lib/escape.mjs';
 
 // Canonical article source: src/content/insights/ (website is single source of truth)
 // Output: C:\Sequel LinkedIn Articles\ (.docx for LinkedIn posting)
@@ -16,12 +17,6 @@ if (!existsSync(LINKEDIN_DIR)) {
   console.log(`Created folder: ${LINKEDIN_DIR}`);
 }
 
-function escapeHtml(s) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
 
 // Strip YAML frontmatter (---...---) from the top of a markdown string
 function stripFrontmatter(md) {

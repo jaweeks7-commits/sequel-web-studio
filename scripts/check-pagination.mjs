@@ -22,29 +22,11 @@ import { existsSync, mkdtempSync } from 'fs';
 import { tmpdir } from 'os';
 import { pathToFileURL } from 'url';
 import { resolve, join } from 'path';
+import { resolveEdgePath } from './lib/browser-path.mjs';
 
 const PAGE_H = 1056;           // US Letter at 96 dpi
 const BUDGET_FIRST_CARD = 640; // first .remedy-item after a .remedy-divider
 const BUDGET_OTHER_CARD = 1000;// subsequent .remedy-item and .check-card
-
-function resolveEdgePath() {
-  if (process.platform === 'win32') {
-    const edgePaths = [
-      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-    ];
-    const found = edgePaths.find(p => existsSync(p));
-    if (!found) throw new Error('Microsoft Edge not found.');
-    return found;
-  }
-  const chromiumPaths = [
-    '/usr/bin/chromium', '/usr/bin/chromium-browser', '/snap/bin/chromium',
-    '/usr/bin/google-chrome-stable', '/usr/bin/google-chrome',
-  ];
-  const found = chromiumPaths.find(p => existsSync(p));
-  if (!found) throw new Error('Chromium not found. Run: sudo apt-get install -y chromium');
-  return found;
-}
 
 export async function checkPagination(htmlPath) {
   const executablePath = resolveEdgePath();
