@@ -93,14 +93,14 @@ const contactSchema = JSON.stringify({
               <input type="text" id="business" name="business" autocomplete="organization" placeholder="Jane's Flower Shop" class="form-input" />
             </div>
             <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
-              <label for="site-url" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Current Website <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <label for="site-url" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">Current Website <span style="font-size: 12px; font-weight: 400; color: #6B7280;">(optional)</span></label>
               <input type="text" id="site-url" name="current-website" placeholder="yoursite.com" class="form-input" />
             </div>
           </div>
 
           <div style="display: flex; gap: 16px; flex-wrap: wrap;">
             <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
-              <label for="platform" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">What platform is your website on? <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <label for="platform" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">What platform is your website on? <span style="font-size: 12px; font-weight: 400; color: #6B7280;">(optional)</span></label>
               <select id="platform" name="platform" class="form-input">
                 <option value="" disabled selected>Select a platform…</option>
                 <option>Wix</option>
@@ -113,7 +113,7 @@ const contactSchema = JSON.stringify({
               </select>
             </div>
             <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px;">
-              <label for="site-age" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">How old is your website? <span style="font-size: 12px; font-weight: 400; color: #999;">(optional)</span></label>
+              <label for="site-age" style="font-size: 13px; font-weight: 600; color: #0F1F3D;">How old is your website? <span style="font-size: 12px; font-weight: 400; color: #6B7280;">(optional)</span></label>
               <select id="site-age" name="site-age" class="form-input">
                 <option value="" disabled selected>Select an age…</option>
                 <option>Less than 1 year</option>
@@ -133,7 +133,7 @@ const contactSchema = JSON.stringify({
           <button type="submit" style="background: linear-gradient(135deg, #1F3864, #2E75B6); color: white; border: none; cursor: pointer; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; box-shadow: 0 8px 24px rgba(46,117,182,0.3);">
             Send Message →
           </button>
-          <p style="font-size: 12px; color: #999; text-align: center; margin-top: -8px;">
+          <p style="font-size: 12px; color: #6B7280; text-align: center; margin-top: -8px;">
             No spam. We'll reply by email within one business day.
           </p>
         </form>
@@ -150,7 +150,7 @@ const contactSchema = JSON.stringify({
           <span style="font-size: 14px; color: #595959;">Within one business day, usually faster.</span>
         </div>
         <div style="background: #0F1F3D; border-radius: 14px; padding: 20px;">
-          <div class="info-card-label" style="color: rgba(255,255,255,0.4);">Not ready yet?</div>
+          <div class="info-card-label" style="color: rgba(255,255,255,0.6);">Not ready yet?</div>
           <div style="font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 14px;">Start with a free audit of your current site and see exactly what needs fixing.</div>
           <a href="/contact" style="display: inline-block; background: linear-gradient(135deg,#2E75B6,#8E44AD); color: white; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;">
             Tell us about your site
@@ -184,7 +184,7 @@ const contactSchema = JSON.stringify({
     appearance: auto;
     color: #595959;
   }
-  select.form-input option[value=""] { color: #8892A0; }
+  select.form-input option[value=""] { color: #6B7280; }
   .info-card {
     background: white;
     border-radius: 14px;
@@ -195,7 +195,7 @@ const contactSchema = JSON.stringify({
   .info-card-label {
     font-size: 10px;
     font-weight: 700;
-    color: #999;
+    color: #6B7280;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     margin-bottom: 8px;

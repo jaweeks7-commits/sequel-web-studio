@@ -184,11 +184,11 @@
 .acc-sub {
   display: block;
   font-size: 13px;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.6);
   margin-top: 2px;
   transition: color 0.3s;
 }
-.acc-item.is-open .acc-sub { color: #8892A0; }
+.acc-item.is-open .acc-sub { color: #6B7280; }
 
 .acc-icon {
   flex-shrink: 0;
