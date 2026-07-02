@@ -8,6 +8,11 @@ function initAccordions(): void {
       const body = item.querySelector<HTMLElement>('[data-acc-body]')!;
       if (!btn || !body) return;
 
+      // Start collapsed: hide the panel from assistive tech so screen readers
+      // don't announce content that's visually collapsed. Set here (not in the
+      // markup) so no-JS users still get the full content in the a11y tree.
+      body.setAttribute('aria-hidden', 'true');
+
       btn.addEventListener('click', () => {
         const isOpen = item.classList.contains('is-open');
 
@@ -16,7 +21,7 @@ function initAccordions(): void {
           i.classList.remove('is-open');
           const b = i.querySelector<HTMLElement>('[data-acc-body]');
           const h = i.querySelector<HTMLButtonElement>('[data-acc-btn]');
-          if (b) b.style.maxHeight = '0';
+          if (b) { b.style.maxHeight = '0'; b.setAttribute('aria-hidden', 'true'); }
           if (h) h.setAttribute('aria-expanded', 'false');
         });
 
@@ -24,6 +29,7 @@ function initAccordions(): void {
         if (!isOpen) {
           item.classList.add('is-open');
           body.style.maxHeight = body.scrollHeight + 'px';
+          body.setAttribute('aria-hidden', 'false');
           btn.setAttribute('aria-expanded', 'true');
         }
       });

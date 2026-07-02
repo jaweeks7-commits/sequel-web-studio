@@ -136,5 +136,18 @@ const { pathname } = Astro.url;
       toggle!.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
     });
 
+    // Escape closes the open mobile menu and returns focus to the toggle,
+    // so keyboard users aren't stranded inside an open menu (WCAG 2.1.2).
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu!.classList.contains('hidden')) {
+        menu!.classList.add('hidden');
+        iconOpen!.classList.remove('hidden');
+        iconClose!.classList.add('hidden');
+        toggle!.setAttribute('aria-expanded', 'false');
+        toggle!.setAttribute('aria-label', 'Open navigation menu');
+        (toggle as HTMLButtonElement).focus();
+      }
+    });
+
   })();
 </script>

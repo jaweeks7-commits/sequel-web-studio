@@ -21,8 +21,10 @@
     @apply text-brand-blue;
   }
 
+  /* `outline` sets outline-style: solid — without it Tailwind emits width/color
+     but no style, so browsers paint nothing and the focus ring disappears. */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand-blue;
+    @apply outline outline-2 outline-offset-2 outline-brand-blue;
   }
 }
 
@@ -30,13 +32,13 @@
   .btn-primary {
     @apply bg-gradient-to-r from-brand-navy to-brand-blue text-white px-6 py-3 rounded-lg font-semibold
            shadow-md hover:from-brand-blue hover:to-brand-blue hover:shadow-lg transition-all duration-200
-           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
   }
 
   .btn-secondary {
     @apply border-2 border-brand-navy text-brand-navy px-6 py-3 rounded-lg font-semibold
            hover:bg-brand-navy hover:text-white transition-colors
-           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
   }
 
   .section-divider {

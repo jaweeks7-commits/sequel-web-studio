@@ -86,7 +86,7 @@ const faqSchema = JSON.stringify({
                 <div style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); font-size: 13px; font-family: 'Space Mono', monospace; color: white; min-height: 40px; display: flex; align-items: center; overflow: hidden; min-width: 0;">
                   <span id="hd-typed"></span><span id="hd-cursor"></span>
                 </div>
-                <button id="hd-btn" type="button" style="flex-shrink: 0; padding: 10px 16px; border-radius: 8px; border: none; cursor: default; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 13px; font-weight: 700; font-family: inherit; white-space: nowrap; box-shadow: 0 4px 14px rgba(46,117,182,0.35); transition: transform 0.12s, box-shadow 0.12s; pointer-events: none;">
+                <button id="hd-btn" type="button" tabindex="-1" aria-hidden="true" style="flex-shrink: 0; padding: 10px 16px; border-radius: 8px; border: none; cursor: default; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-size: 13px; font-weight: 700; font-family: inherit; white-space: nowrap; box-shadow: 0 4px 14px rgba(46,117,182,0.35); transition: transform 0.12s, box-shadow 0.12s; pointer-events: none;">
                   Diagnose
                 </button>
               </div>
@@ -723,8 +723,16 @@ const faqSchema = JSON.stringify({
     const captionTitle  = document.getElementById('lightbox-caption-title');
     if (!lightbox || !img || !closeBtn) return;
 
+    // Remember the trigger so focus returns there when the modal closes.
+    let lastFocused: HTMLElement | null = null;
+
     document.querySelectorAll<HTMLElement>('[data-lightbox-trigger]').forEach(el => {
-      el.addEventListener('click', () => {
+      // The trigger is a <div>; make it a real keyboard control (WCAG 2.1.1).
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('aria-label', `Enlarge sample: ${el.dataset.label ?? 'deliverable'}`);
+      const open = () => {
+        lastFocused = el;
         const src   = el.dataset.img   ?? '';
         const label = el.dataset.label ?? '';
         img.src = src;
@@ -732,19 +740,26 @@ const faqSchema = JSON.stringify({
         if (captionTitle) captionTitle.textContent = label;
         lightbox.classList.add('open');
         document.body.style.overflow = 'hidden';
+        (closeBtn as HTMLElement).focus();
+      };
+      el.addEventListener('click', open);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
     });
 
     function closeLightbox() {
-      lightbox.classList.remove('open');
+      lightbox!.classList.remove('open');
       document.body.style.overflow = '';
       img.src = '';
       if (captionTitle) captionTitle.textContent = '';
+      lastFocused?.focus();
+      lastFocused = null;
     }
 
     closeBtn.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox!.classList.contains('open')) closeLightbox(); });
   })();
 
   // Gallery scroll arrows
