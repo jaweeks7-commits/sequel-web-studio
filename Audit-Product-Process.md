@@ -98,9 +98,9 @@ REMEDY — STEP BY STEP
 17. Rich Result Types available but missing
 
 **Category 05 — Analytics & Tracking Integrity (3 checks)**
-18. GA4 / Analytics present
-19. Duplicate Pixel Firing (same tag loaded twice)
-20. Third-Party Inventory (what scripts are running)
+18. Analytics & Measurement Coverage (vendor-agnostic: Google, Meta, Amazon, first-party scripts, platform-native dashboards — a client-side scan only; never conclude "no analytics" from it)
+19. Duplicate / over-firing tag (same tag fired more than once)
+20. Tracking Inventory (third-party hosts + first-party analytics scripts)
 
 **Category 06 — Security & Crawlability (4 checks)**
 21. Robots.txt (what's blocked)
@@ -167,9 +167,10 @@ Found during the live audit session: the reference table (B01–B22), the AI che
 
 **Tools used in BSR audit:**
 - Playwright MCP browser (live session) for visual + source inspection
+- Playwright network-request capture (`browser_network_requests`) for the analytics check — sees which tracking beacons actually fire, catching vendors a source scan misses
 - Google PageSpeed Insights for performance data
 - Google Rich Results Test for schema validation
-- Manual source view for GA4 tag inspection, canonical tags, robots meta
+- Manual source view for analytics tags (vendor-agnostic: Google, Meta, Amazon, first-party, platform-native), canonical tags, robots meta
 
 **STATUS:** Fully documented — `templates/audit-session-guide.md` is the step-by-step checklist Claude reads at the start of every audit session.
 
@@ -334,6 +335,20 @@ Output PDF name is derived automatically from the input filename (client slug + 
 
 ### ✅ Priority 5 — Document the audit collection process — DONE (May 2026)
 **File:** `templates/audit-session-guide.md` — full session guide covering: pre-session setup, tool list, all 28 standard checks in order (with exact source search strings), B-check reference table, platform-specific notes for Squarespace / WordPress / Wix / Webflow, and a session wrap-up checklist. Ends with the pipeline quick-reference.
+
+### ✅ Priority 6 — Make the analytics check vendor-agnostic — DONE (July 2026)
+**Trigger:** The Aethon Books audit (July 2026) flagged "no analytics — add GA4" as Critical. The client pushed back: they run first-party and platform-native (ModFarm) tracking and intentionally avoid Google. They were right. Our old Check 18 only looked for Google (GA4/GTM/`window.gtag`), so it was blind to everything else and produced a false negative.
+
+**What changed:**
+- `templates/audit-session-guide.md` — Category 05 rewritten. Check 18 renamed "Analytics & Measurement Coverage" with a three-layer method: (1) capture live network beacons via `browser_network_requests` and match against a vendor signature list (Google, Meta, Amazon, TikTok, LinkedIn, Segment, Plausible/Fathom/Matomo, Hotjar/Clarity/etc.); (2) broadened global-object detection; (3) host inventory + first-party analytics-script detection by filename. Added platform-native awareness and a mandatory scope caveat. Badge rubric made conservative: "no analytics" is effectively no longer a Critical from a client-side scan; a real gap is High Value and offers GA4 **and** a privacy-respecting alternative side by side. Hard language rule added: never write "measures nothing" or "flying blind."
+- `templates/audit-intake-sheet-template.md` and `templates/audit-data-schema.json` — Category 05 field labels and example text updated to match (vendor-agnostic).
+- `Audit-Product-Process.md` — Section 2 Category 05 names + Section 3 tools list updated.
+
+**Regression test (July 2026):** Re-scanned aethonbooks.com with the new method. The network capture caught 13 first-party event beacons to `/wp-json/modfarm/v1/event` plus the `analytics-book-cards.js` / `mfc-events.js` scripts. The finding correctly flips from Critical "no analytics" to **Pass** (active first-party/platform-native measurement). Blind spot confirmed closed.
+
+**No code changes** — `fill-template.mjs`, the JSON schema structure, and the 28-check count / C05_x keys are unchanged. This was a methodology/guidance update only.
+
+**Note (open follow-up):** the published insight article `src/content/insights/why-28-standard-assessments.md` still cites check 18 as "GA4 / Analytics present" as an example. Public marketing copy — left as-is pending Joe's call on whether to reword it.
 
 ---
 

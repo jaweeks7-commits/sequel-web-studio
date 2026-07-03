@@ -541,67 +541,103 @@ Take a snapshot of the results.
 
 ## Category 05 — Analytics & Tracking Integrity
 
-### Check 18 — GA4 / Analytics Present
+> **Read this first — the analytics blind-spot rule.** These checks are **vendor-agnostic**. Google is one option among many, not the definition of "analytics." A site with no Google tag may still be fully instrumented with Meta, Amazon, a privacy-friendly tool, a first-party script, or a platform-native dashboard. A live browser scan only sees **client-side tracking on the pages you load**. It is blind to server-side tracking (Meta Conversions API, server-side GTM, Amazon Attribution server events), off-site dashboards (Amazon KDP/Ads, a platform's proprietary back-end like ModFarm/Squarespace/Shopify), and other properties/subdomains (e.g. a separate `shop.` store). **Never conclude "no analytics" or write "flying blind" / "measures nothing" from a client-side scan.** State what you checked and name what you cannot see. (This category was rewritten July 2026 after a Google-only check produced a false "no analytics" finding on a book publisher's site that was, in fact, running first-party and platform-native tracking.)
+
+### Check 18 — Analytics & Measurement Coverage
 **JSON key:** `auditChecks.C05_1`
 
-```js
-// playwright_evaluate:
-{
-  gtagIds: [...(document.documentElement.innerHTML.match(/G-[A-Z0-9]{6,12}/g) ?? [])],
-  gtmIds:  [...(document.documentElement.innerHTML.match(/GTM-[A-Z0-9]{5,8}/g) ?? [])],
-  hasGtag: typeof window.gtag === 'function',
-}
+Detect measurement in **three layers**, not just by looking for Google. Run all three before badging.
+
+**Layer 1 (primary) — capture what the page actually sends.** Navigate, let the page settle, then scroll and (if present) click a nav item or CTA to trigger event beacons. Then capture the network log and match request URLs against the vendor list below:
+
+```
+playwright_navigate: [CLIENT_URL]
+# scroll / interact to fire event beacons, then:
+mcp__playwright__browser_network_requests
 ```
 
-**Badge assignment:**
-- **Pass:** One GA4 ID (`G-XXXXXXXXXX`) or GTM container found, loaded once
-- **High Value:** Analytics present but GA4 not confirmed (Universal Analytics only, or GTM with unknown config)
-- **Critical:** No analytics whatsoever — owner is flying blind
+**Layer 2 (secondary) — global objects and tag IDs in the page.**
+```js
+// playwright_evaluate:
+({
+  google:   { gtag: typeof window.gtag === 'function', dataLayer: Array.isArray(window.dataLayer),
+              gtagIds: [...new Set(document.documentElement.innerHTML.match(/G-[A-Z0-9]{6,12}/g) ?? [])],
+              gtmIds:  [...new Set(document.documentElement.innerHTML.match(/GTM-[A-Z0-9]{5,8}/g) ?? [])] },
+  meta:     typeof window.fbq === 'function',
+  tiktok:   typeof window.ttq !== 'undefined',
+  linkedin: typeof window._linkedin_partner_id !== 'undefined',
+  plausible:typeof window.plausible === 'function',
+  matomo:   typeof window.Matomo !== 'undefined' || typeof window._paq !== 'undefined',
+})
+```
 
-**Record:** GA4 / GTM IDs found, badge
+**Layer 3 — host inventory + first-party analytics scripts.** Classify every script/img/iframe host by vendor, AND flag first-party analytics scripts by filename (this is what catches a self-hosted tracker like `analytics-book-cards.js`):
+```js
+// playwright_evaluate:
+({
+  hosts: [...new Set([...document.querySelectorAll('script[src],img[src],iframe[src]')].map(e => {
+    try { return new URL(e.src).hostname; } catch { return null; }
+  }).filter(Boolean))],
+  firstPartyAnalytics: [...document.querySelectorAll('script[src]')]
+    .map(s => s.src).filter(src => /analytics|tracking|telemetry|beacon|collect|metrics|\bstats\b/i.test(src)),
+})
+```
+
+**Vendor signature list** (match against network-request URLs and hosts):
+
+| Vendor / category | Signatures |
+|---|---|
+| Google | `google-analytics.com`, `googletagmanager.com`, `/g/collect`, `region*.google-analytics.com` |
+| Meta | `connect.facebook.net`, `facebook.com/tr` |
+| Amazon | `amazon-adsystem.com`, `fls-na.amazon.com` (Attribution), `assoc-amazon` |
+| TikTok / Pinterest / LinkedIn | `analytics.tiktok.com`, `ct.pinterest.com`, `px.ads.linkedin.com` |
+| Segment | `cdn.segment.com`, `api.segment.io` |
+| Privacy-friendly | `plausible.io`, `usefathom.com`, Matomo/Piwik (`*.matomo.cloud`, `/matomo.php`, `/piwik.php`), Cloudflare Web Analytics (`cloudflareinsights.com`) |
+| Product / behavior | `hotjar`, `clarity.ms`, `mixpanel`, `heap`, `fullstory`, `mouseflow` |
+
+**Platform-native awareness.** Squarespace Analytics, Shopify Analytics, Wix Analytics, WordPress Jetpack Stats, and proprietary platforms (ModFarm, etc.) collect data server-side and **do not appear as a third-party tag**. If the platform (from Check 27) has native analytics, absence of a third-party tag is not a measurement gap — note it as covered by the platform dashboard.
+
+**Badge assignment (conservative — the whole point of this rewrite):**
+- **Pass:** Any credible measurement detected — a third-party analytics tag, a first-party analytics script, OR a platform with native analytics. Informational.
+- **Nice to Have:** Measurement is present but looks thin or single-source, OR you cannot confirm it captures traffic **source** and **conversions**. Phrase as "confirm your setup captures traffic sources and conversions," never "you have nothing."
+- **High Value:** A genuine likely gap on a site whose leads depend on the website (e.g. a small-business lead-gen site with no client-side tags, no native platform analytics, and no first-party script). Present **two paths side by side and let the client choose**: GA4 (free, powerful, widely supported) and a privacy-respecting alternative (Plausible, Fathom, or Matomo). Keep GA4 a first-class recommendation; do not lean on it as the only option.
+- **Critical:** Effectively unreachable from a browser scan alone — do **not** assign Critical for analytics on client-side evidence only. If instrumentation genuinely appears absent, use **High Value** and word the finding as "we could not detect any measurement on the pages we scanned; please confirm what you use," inviting correction.
+
+**Record:** every vendor/tag detected (network beacons + globals), any first-party analytics scripts, whether the platform has native analytics, the scope caveat, and badge. When in doubt between two badges, take the lower severity and say why.
 
 ---
 
-### Check 19 — Duplicate Pixel Firing
+### Check 19 — Duplicate / Over-Firing Tags
 **JSON key:** `auditChecks.C05_2`
 
-Use the IDs found in Check 18. Count occurrences:
-```js
-// playwright_evaluate — replace G-XXXXXXXXXX with actual ID:
-(document.documentElement.innerHTML.match(/G-XXXXXXXXXX/g) ?? []).length
-```
+Using the network log from Check 18 (Layer 1), count how many times each analytics collector endpoint is hit per page load. This is more reliable than counting IDs in `innerHTML`. A single GA4 or pixel ID that fires twice on one load = double-counting.
 
-Also check platform-specific sources:
-- **Squarespace:** GA4 ID in Settings → Analytics AND again in Code Injection = duplicate
-- **WordPress:** Multiple analytics plugins active simultaneously
+Also check platform-specific duplicate sources:
+- **Squarespace:** same GA4 ID in Settings → Analytics AND again in Code Injection
+- **WordPress:** two analytics plugins active at once (e.g. Site Kit + a manual gtag snippet)
 
 **Badge assignment:**
-- **Pass:** Each tag fires exactly once
-- **Critical:** Same tag loads twice — double-counts all traffic data
+- **Pass:** Each tag fires exactly once (or no tags to duplicate)
+- **Critical:** The same tag fires twice on a single load — double-counts all traffic data
 
-**Record:** occurrence count per ID, likely cause, badge
+**Record:** occurrence count per tag from the network log, likely cause, badge
 
 ---
 
-### Check 20 — Third-Party Script Inventory
+### Check 20 — Tracking Inventory (Third-Party + First-Party)
 **JSON key:** `auditChecks.C05_3`
 
-```js
-// playwright_evaluate:
-[...new Set([...document.querySelectorAll('script[src]')].map(s => {
-  try { return new URL(s.src).hostname; } catch { return null; }
-}).filter(Boolean))]
-```
+This is the informational roll-up of Check 18's Layer 3: the full list of third-party hosts plus any first-party analytics scripts found.
 
 **Badge assignment:**
-- Always **Pass** (informational) — this is a baseline inventory, not a pass/fail check
+- Always **Pass** (informational) — a baseline inventory, not a pass/fail check
 
-**Record:** list of all third-party domains found, badge = Pass
+**Record:** list of all third-party domains + first-party analytics scripts found, badge = Pass
 
 ---
 
 > **Checkpoint — write Category 05 findings to intake progress file before continuing.**
-> Include all tag IDs found (GA4 G-XXXXXXX, GTM container, ad pixels) — these are needed for remedy steps.
+> Record every vendor/tag detected (from network beacons and globals), any first-party analytics scripts (e.g. a self-hosted tracker), whether the platform has native analytics, and the explicit scope caveat (client-side only; server-side, off-site, and other subdomains not visible). Do not reduce this to "GA4/GTM IDs."
 
 ---
 

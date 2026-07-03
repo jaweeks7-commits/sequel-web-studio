@@ -276,15 +276,15 @@
     "C05_1": {
       "badgeClass": "badge-pass",
       "badgeLabel": "Pass",
-      "found": "GA4 property G-XXXXXXXXXX detected and firing correctly.",
-      "impact": "Analytics data is being collected. No action needed.",
+      "found": "Active measurement detected: first-party event beacons posting to the platform's analytics endpoint, plus a self-hosted tracking script. No third-party tag (Google/Meta) is present, which appears intentional. Client-side scan only — server-side and off-site tracking not visible.",
+      "impact": "The business is collecting behavior data through its platform dashboard. No action needed.",
       "technical": null,
       "remedyItem": null
     },
     "C05_2": {
       "badgeClass": "badge-pass",
       "badgeLabel": "Pass",
-      "found": "GA4 tag fires once per page load.",
+      "found": "Each analytics beacon fires once per page load (no duplicate/double-counting seen in the network log).",
       "impact": "No duplicate counting. Data is accurate.",
       "technical": null,
       "remedyItem": null

@@ -171,21 +171,22 @@
 
 ### CATEGORY 05 — Analytics & Tracking Integrity
 
-#### C05-18: GA4 / Analytics Present
+#### C05-18: Analytics & Measurement Coverage
+- **Badge:**
+- **Found:** *(vendor-agnostic — record ALL measurement detected: network beacons fired, third-party tags (Google/Meta/Amazon/etc.), first-party analytics scripts, and platform-native dashboards. Never write "no analytics" from a client-side scan.)*
+- **Business Impact:**
+- **Technical Detail:** *(optional — tag IDs, beacon endpoints, first-party script names)*
+- **Scope caveat noted?** [ ] Yes — client-side only; server-side, off-site, and other subdomains not visible
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### C05-19: Duplicate / Over-Firing Tags
 - **Badge:**
 - **Found:**
 - **Business Impact:**
-- **Technical Detail:** *(optional — include tag ID if found)*
+- **Technical Detail:** *(optional — occurrence count per tag from the network log)*
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
-#### C05-19: Duplicate Pixel Firing
-- **Badge:**
-- **Found:**
-- **Business Impact:**
-- **Technical Detail:** *(optional)*
-- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
-
-#### C05-20: Third-Party Inventory (What Scripts Are Running)
+#### C05-20: Tracking Inventory (Third-Party + First-Party)
 - **Badge:**
 - **Found:**
 - **Business Impact:**

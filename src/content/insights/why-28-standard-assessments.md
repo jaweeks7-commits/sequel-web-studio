@@ -18,7 +18,7 @@ The point of a checklist is that nothing gets skipped because it looked unimport
 
 If we picked which checks to run based on how the site looked, the audit would be only as good as the auditor's first impression. A homepage that "looks fine" might be passing twelve checks and failing sixteen. A homepage that "looks dated" might be passing twenty and failing eight. You cannot tell which is which without running the same checks against both.
 
-A fixed standard set also means we can hand you a finding and tell you exactly what it represents. "Your site failed check 18 (GA4 / Analytics present)" is a thing you can verify, reference, and compare against next year's audit. "We noticed your analytics seem off" is not.
+A fixed standard set also means we can hand you a finding and tell you exactly what it represents. "Your site failed check 1 (page title tag)" is a thing you can verify, reference, and compare against next year's audit. "We noticed your SEO seems off" is not.
 
 ## The 28 cover eight categories, in this order
 
