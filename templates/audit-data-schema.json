@@ -377,12 +377,13 @@
       "remedyItem": null
     },
     {
+      "_note": "Example B02 entry — mobile layout and CTA visibility check. Screenshot taken at 375px; assess both layout quality and whether a phone/CTA button is visible above the fold.",
       "id": "B02",
-      "name": "HTTP to HTTPS Redirect",
-      "badgeClass": "badge-pass",
-      "badgeLabel": "Pass",
-      "found": "http://acmeplumbing.com correctly redirects to https://www.acmeplumbing.com.",
-      "impact": "No insecure entry points. Redirect chain is clean.",
+      "name": "Mobile Layout and CTA Above the Fold",
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Mobile layout is clean at 375px — no horizontal scroll or broken elements. However, the first screen shows only the logo and a hero image. The phone number and 'Get a Quote' button are below the fold; a visitor must scroll before they see any way to contact the business.",
+      "impact": "On mobile, visitors who don't scroll in the first few seconds leave. Moving the phone number or a contact button into the header or above the hero image is a one-time layout change that converts more first-time visitors into callers.",
       "technical": null,
       "remedyItem": null
     },
@@ -439,6 +440,28 @@
       "found": "Canonical NAP from website: 'Acme Plumbing | 123 Main St, Fort Worth, TX 76102 | (817) 555-0100'. Discrepancy found on Yelp: listed as 'Acme Plumbing Services' (different business name) at '123 Main Street' (expanded abbreviation). Google Maps and Bing Places match the canonical NAP exactly.",
       "impact": "The Yelp business name discrepancy lowers Google's confidence that the website and Yelp listing refer to the same entity, which can suppress local pack ranking. Correcting the Yelp listing to match the canonical name is a one-time fix.",
       "technical": "Yelp listing URL: https://www.yelp.com/biz/acme-plumbing-fort-worth — update business name to 'Acme Plumbing' to match all other citations.",
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_TRUST1 entry — social proof and trust signals. Assessed visually during Exploration Pass plus JS detect.",
+      "id": "B_TRUST1",
+      "name": "Social Proof and Trust Signals",
+      "badgeClass": "badge-critical",
+      "badgeLabel": "Critical",
+      "found": "No trust signals of any kind found on the homepage or services page. No testimonials, no star ratings, no review widget, no trust badges, no portfolio, no mention of years in business. The business has 22 Google reviews (4.9 stars, found during B_GBP1) but none are displayed or referenced on the website.",
+      "impact": "Visitors are being asked to hire a business they've never heard of, with no evidence anyone else has. Embedding even a handful of testimonials or a Google review count widget would substantially increase the percentage of visitors who call.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_SVC1 entry — service and location page coverage. Assessed during Exploration Pass.",
+      "id": "B_SVC1",
+      "name": "Service and Location Page Coverage",
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "The business offers four distinct services (residential plumbing, water heater repair, drain cleaning, and fixture installation) and serves three cities (Fort Worth, Keller, and Southlake). The site has a single 'Services' page that lists all four in brief bullet form. No individual service pages and no location pages exist.",
+      "impact": "Each missing service page is a missing entry point from specific search queries customers are already running. 'Water heater repair Fort Worth' and 'drain cleaning Keller' are real searches with no dedicated page to rank for them.",
+      "technical": null,
       "remedyItem": null
     }
   ]

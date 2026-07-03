@@ -913,7 +913,7 @@ Run these after the 28 standard checks and the Exploration Pass. **This table is
 | B# | Check | Playwright action |
 |----|-------|-------------------|
 | **B01** | Mobile viewport meta | `document.querySelector('meta[name="viewport"]')?.getAttribute('content')` |
-| **B02** | Mobile layout issues | `playwright_screenshot` at 375px viewport width; assess visually |
+| **B02** | Mobile layout and CTA above the fold | `playwright_screenshot` at 375px viewport width; assess layout AND check whether a phone number or CTA button is visible above the fold without scrolling — see detailed section below |
 | **B03** | HTTP→HTTPS redirect | Navigate to `http://[domain]` (no www) — does it redirect to https? |
 | **B04** | Non-www→www redirect | Navigate to `http://[domain]` without www — does it resolve correctly? |
 | **B05** | 404 page quality | Navigate to `[url]/this-page-does-not-exist-404` — snapshot the result |
@@ -922,7 +922,7 @@ Run these after the 28 standard checks and the Exploration Pass. **This table is
 | **B08** | Cookie consent | Navigate in a fresh context — does a cookie banner appear? |
 | **B09** | Privacy policy linked | `document.querySelector('a[href*="privacy"]')?.href` |
 | **B10** | Physical address on homepage | Already checked in C08_2 NAP evaluation |
-| **B11** | Phone number format | `[...document.querySelectorAll('a[href^="tel:"]')].map(a => a.href)` |
+| **B11** | Phone number tap-to-call | `[...document.querySelectorAll('a[href^="tel:"]')].map(a => a.href)` — then verify the visually prominent header/hero phone is in a `<a href="tel:">` link, not just plain text — see detailed section below |
 | **B12** | Social media links | `[...document.querySelectorAll('a[href*="facebook"],a[href*="instagram"],a[href*="linkedin"],a[href*="twitter"],a[href*="x.com"]')].map(a => a.href)` |
 | **B13** | Embedded map on Contact | Navigate to Contact page — `document.querySelector('iframe[src*="google.com/maps"]')` |
 | **B14** | Contact form — existence and live submission | Navigate to Contact page — `document.querySelector('form')`; then fill and submit a test message; verify a success response appears — see detailed section below |
@@ -940,10 +940,85 @@ Run these after the 28 standard checks and the Exploration Pass. **This table is
 | **B_CWV2** | Interaction to Next Paint (INP) | Read INP from PageSpeed Insights mobile results (already open from Category 03) — shown as "Interaction to Next Paint" in the Core Web Vitals section |
 | **B_GBP1** | Google Business Profile quality | Open GBP listing from sameAs URL or Google search; manually score 5 signals — see detailed section below |
 | **B_GBP2** | NAP consistency across citations | Visit each sameAs URL + Yelp + Bing Places; record exact business Name, Address, Phone and compare — see detailed section below |
+| **B_TRUST1** | Social proof and trust signals | While on homepage/services during Exploration Pass: `document.querySelectorAll('[class*="testimonial" i],[class*="review" i],[class*="rating" i],[class*="quote" i],[class*="star" i],[class*="badge" i]').length` — also assess visually; see detailed section below |
+| **B_SVC1** | Service and location page coverage | During Exploration Pass: note whether individual pages exist per major service and whether location/city pages exist for multi-city businesses — see detailed section below |
 | **B_A11Y1** | Form input labels | See detailed section below — run on the contact page |
 | **B_A11Y2** | Keyboard focus visibility | See detailed section below |
 | **B_A11Y3** | Color contrast spot-check | See detailed section below |
 | **B_A11Y4** | Link text quality | See detailed section below |
+
+---
+
+### B02 — Mobile Layout and CTA Visibility
+
+Navigate to the homepage at 375px viewport width and take a screenshot.
+
+```
+browser_resize: 375 × 812
+playwright_navigate: [CLIENT_URL]
+browser_take_screenshot
+```
+
+**Assess two things from the screenshot:**
+
+**Part A — Layout quality at mobile width:** Does the layout break (horizontal scroll, text overflow, overlapping elements)? Are images properly sized and not distorted? Is navigation usable?
+
+**Part B — CTA visibility above the fold:** Look at only the visible first screen of the screenshot (the portion visible without scrolling). Is there a clear call to action — a tappable phone number, a "Call Us" or "Get a Quote" button, or a contact link — that gives a first-time visitor an obvious path to reach the business?
+
+```js
+// playwright_evaluate — supplemental check for phone/CTA in header/hero:
+({
+  phoneInHeader:  !!document.querySelector('header a[href^="tel:"], nav a[href^="tel:"]'),
+  ctaInHeader:    !!document.querySelector('header a[class*="btn" i], header button, nav a[class*="cta" i], [class*="hero" i] a, [class*="hero" i] button'),
+})
+```
+
+**Badge assignment:**
+- **Pass:** No layout breaks at 375px AND a visible CTA (tappable phone number or button) appears above the fold
+- **High Value:** Layout is fine but no phone number or contact button is visible without scrolling; OR layout has minor issues (small text, tight spacing) that hurt mobile usability
+- **Critical:** Layout is broken at mobile width (horizontal scroll, overlapping text, content cut off); OR there is no phone number or CTA anywhere on the page
+
+**Impact copy for High Value (CTA buried below fold):** "On mobile, most visitors decide within the first few seconds whether a site is worth their time. A homepage that hides the phone number or contact button below the fold makes that decision for them — many will tap the back button rather than scroll to find how to reach you. For a local service business, the number-one above-the-fold element is a tappable phone number."
+
+**Record:** screenshot taken (yes/no), layout status at 375px, whether a CTA or tappable phone is visible above the fold, badge
+
+---
+
+### B11 — Phone Number Tap-to-Call
+
+The B11 table check detects phone numbers wrapped in `<a href="tel:">` links. This section extends it: verify that the phone number **visually prominent on the page** — typically in the header or hero — is actually a tappable link, not plain text that looks clickable but isn't.
+
+```js
+// playwright_evaluate — locate tel: links and check header phone:
+({
+  telLinks: [...document.querySelectorAll('a[href^="tel:"]')].map(a => ({
+    text:     a.innerText.trim(),
+    location: a.closest('header, nav, [class*="hero" i], [id*="hero" i]')?.tagName ?? 'page-body',
+  })),
+  headerPhoneCheck: (() => {
+    const header = document.querySelector('header, nav, [class*="header" i]');
+    if (!header) return null;
+    const phonePattern = /\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}/;
+    return {
+      hasPhone:  phonePattern.test(header.innerText),
+      isLinked:  !!header.querySelector('a[href^="tel:"]'),
+    };
+  })(),
+})
+```
+
+**What to look for:**
+- `telLinks` shows every `tel:` link and whether it is in the header/nav/hero or just the body
+- `headerPhoneCheck.hasPhone` = true but `isLinked` = false → the header phone is plain text, not a tappable link
+
+**Badge assignment:**
+- **Pass:** The phone number visible in the header or hero is wrapped in a `<a href="tel:">` link
+- **High Value:** A phone number is visually present in the header or hero but is plain text — mobile visitors cannot tap to call
+- **Nice to Have:** No phone number in the header at all (only in footer or Contact page) — lower severity, but a missed mobile conversion opportunity
+
+**Impact copy for High Value:** "On mobile, a phone number that isn't a tappable link loses every caller who expected to tap it. Squarespace and Wix sites frequently display phone numbers as styled text rather than links — especially in headers built with custom text blocks. Making it tap-to-call takes under a minute and converts at a higher rate than a contact form for service businesses."
+
+**Record:** whether tel: links exist in the header/hero vs. only in the page body, whether the visible header phone is tappable, badge
 
 ---
 
@@ -1299,6 +1374,79 @@ Any field that differs from the canonical NAP — missing suite number, abbrevia
 **Record:** canonical NAP established from the website, each directory checked with exact Name/Address/Phone found, specific discrepancies flagged, badge
 
 > **If no sameAs links exist:** Run this check using Google, Yelp, and Bing regardless. The findings inform both the NAP remedy and the sameAs array in the schema deliverable.
+
+---
+
+### B_TRUST1 — Social Proof and Trust Signals
+
+> Social proof is one of the highest-leverage conversion elements for local service businesses. Visitors arrive skeptical — they don't know this business. Evidence that others have hired and trusted it (testimonials, ratings, review counts) substantially increases conversion. A business with 50 Google reviews that never shows them on its website is leaving significant conversion lift on the table.
+
+Complete this check during the Exploration Pass — while already browsing the homepage and services pages.
+
+```js
+// playwright_evaluate — detect common social proof patterns:
+({
+  testimonialBlocks: document.querySelectorAll('[class*="testimonial" i],[class*="review" i],[id*="testimonial" i],[id*="review" i],[class*="quote" i]').length,
+  ratingElements:    document.querySelectorAll('[class*="star" i],[class*="rating" i],[itemprop="ratingValue"],[class*="stars" i]').length,
+  trustBadges:       document.querySelectorAll('[class*="badge" i],[class*="award" i],[class*="accredit" i],[class*="certif" i]').length,
+  reviewWidgets:     document.querySelectorAll('[class*="elfsight" i],[class*="birdeye" i],[class*="grade" i],iframe[src*="elfsight"],iframe[src*="widget"]').length,
+})
+```
+
+**Also assess visually during the Exploration Pass:**
+- Are there client testimonials — quoted text from named clients?
+- Is a star rating or review count visible (e.g., "★★★★★ 48 Google Reviews")?
+- Are there trust badges (BBB Accredited, Licensed & Insured, industry association logos)?
+- Is there a portfolio, case studies, or before/after photos?
+- Are years in business or a client count mentioned?
+
+**Note on Google Reviews:** If B_GBP1 found significant reviews on the GBP listing, note that in the finding — the remedy is to embed a review widget or add testimonial quotes from those same reviews.
+
+**Badge assignment:**
+- **Pass:** At least two distinct trust signals are visible on the homepage (e.g., testimonials + a star rating; or a review count badge + a portfolio)
+- **High Value:** Only one trust signal present; OR trust signals exist only on inner pages, not the homepage
+- **Critical:** No trust signals of any kind — no testimonials, no ratings, no badges, no portfolio — anywhere on the homepage or service pages
+
+**Impact copy for High Value:** "Visitors to your site are considering giving you access to their home or business. Without visible evidence that others have trusted you — testimonials, star ratings, a review count — they have no way to reduce that uncertainty except to call several businesses and compare. Social proof short-circuits that comparison and converts skeptical visitors into callers."
+
+**Impact copy for Critical:** "Your site asks visitors to trust a business they've never heard of, with no testimonials, no reviews, and no visible evidence that anyone else has hired you. For a local service business, this is the single biggest missed conversion opportunity. You almost certainly have satisfied clients — the fix is showing their words (with permission) on the site."
+
+**Record:** which signals were found (testimonials, ratings, badges, widgets, portfolio), where on the site they appeared, any notable gaps (e.g., "business has 38 Google reviews but none shown on site"), badge
+
+---
+
+### B_SVC1 — Service and Location Page Coverage
+
+> For local service businesses, the relationship between pages and rankings is direct: no dedicated page = no ranking opportunity for that topic. A plumber with 8 service types and one generic "Services" page has nothing for Google to rank for "water heater repair Fort Worth" or "drain cleaning near me." This check identifies that structural gap.
+
+Complete this check during the Exploration Pass, after browsing the site's main pages.
+
+**Service page coverage — answer these two questions:**
+
+1. **Does the site have individual pages per major service?** Navigate the services section and count: how many distinct services does the business offer (from the homepage copy, nav menu, or a Services overview page), and how many have their own dedicated URL? A generic "Services" umbrella page with brief bullets does not substitute for individual service pages in search.
+
+2. **Does the site have location/city pages?** If the business serves multiple cities or areas (check the homepage hero, About page, or Contact page for service area language), do any location-specific pages exist?
+
+```js
+// playwright_evaluate — inventory nav links for clues about page depth:
+({
+  navLinks: [...document.querySelectorAll('nav a, header a')]
+    .map(a => ({ text: a.innerText.trim().substring(0, 50), href: a.href }))
+    .filter(a => a.text && a.href && !a.href.startsWith('javascript')),
+  serviceHints: document.querySelectorAll('[class*="service" i],[id*="service" i]').length,
+})
+```
+
+**Badge assignment:**
+- **Pass:** The business has individual dedicated pages for its major services (3+ services, each with its own URL); OR the business has a single primary service and a well-developed dedicated service page
+- **High Value:** The business offers multiple distinct services but has only a single generic "Services" umbrella page; OR the business serves multiple cities with no location-specific pages
+- **Critical:** The site has no service page or service section of any kind — visitors cannot tell what the business specifically does
+
+**Impact copy for High Value (no individual service pages):** "When someone searches 'water heater repair [city]' or 'drain cleaning near me,' Google returns a page specifically about that service — not a generic Services page that mentions it in passing. Your site currently covers all services on one page, which means you're invisible in service-specific searches. Each service page you add is a new entry point from a different search query your potential customers are already running."
+
+**Impact copy for High Value (no location pages):** "You serve multiple cities, but your site only mentions them in passing. Google consistently ranks location-specific pages above generic homepage mentions for city-based searches. A page built around '[service] in [city]' outranks a homepage that names the city once."
+
+**Record:** list of services identified from the site, whether each has a dedicated page, whether location pages exist, specific gaps (e.g., "4 services listed on one umbrella page with no individual URLs"), badge
 
 ---
 

@@ -294,7 +294,7 @@ Browse the site like a prospective customer: homepage, every top-nav page, the c
 Add a B-check entry for each issue found outside the standard 28. **The reference list is a floor, not a ceiling:** run every listed check unless it is structurally inapplicable to the site, and note why when one is skipped. Add new entries (B23+) for anything — from the Exploration Pass or otherwise — that doesn't fit an existing label.
 
 *Reference list:*
-B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · **B14 · Contact Form Live Submission Test** · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content** · **B_CWV1 · Cumulative Layout Shift (CLS)** · **B_CWV2 · Interaction to Next Paint (INP)** · **B_GBP1 · Google Business Profile Quality** · **B_GBP2 · NAP Consistency Across Citations** · **B_A11Y1 · Form Input Labels** · **B_A11Y2 · Keyboard Focus Visibility** · **B_A11Y3 · Color Contrast Spot-Check** · **B_A11Y4 · Link Text Quality**
+B01 · Mobile Viewport Meta Tag · **B02 · Mobile Layout and CTA Above the Fold** · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · **B11 · Phone Number Tap-to-Call** · B12 · Social Media Completeness · B13 · Contact Page — No Map · **B14 · Contact Form Live Submission Test** · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content** · **B_CWV1 · Cumulative Layout Shift (CLS)** · **B_CWV2 · Interaction to Next Paint (INP)** · **B_GBP1 · Google Business Profile Quality** · **B_GBP2 · NAP Consistency Across Citations** · **B_TRUST1 · Social Proof and Trust Signals** · **B_SVC1 · Service and Location Page Coverage** · **B_A11Y1 · Form Input Labels** · **B_A11Y2 · Keyboard Focus Visibility** · **B_A11Y3 · Color Contrast Spot-Check** · **B_A11Y4 · Link Text Quality**
 
 ---
 
@@ -406,6 +406,67 @@ B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→
 - **Badge:** *(Pass = all match; High Value = meaningful discrepancy in one or more directories; Critical = multiple contradictory entries or former address/disconnected phone)*
 - **Found:**
 - **Business Impact:**
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B02: Mobile Layout and CTA Above the Fold
+
+> Take a screenshot at 375px viewport width. Assess two things: (1) layout quality — does anything break, overflow, or overlap at mobile width? (2) CTA visibility — is a phone number or contact button visible in the first screen without scrolling?
+
+- **Layout status at 375px:** [ ] No issues  [ ] Minor issues *(note: \_\_\_\_\_\_\_\_\_\_)*  [ ] Broken layout
+- **CTA visible above the fold:** [ ] Tappable phone number  [ ] CTA button  [ ] Neither — buried below fold
+- **Badge:** *(Pass = clean layout + visible CTA above fold; High Value = clean layout but no CTA above fold, or minor layout issues; Critical = broken layout or no CTA anywhere)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note the first visible CTA element and its position)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B11: Phone Number Tap-to-Call
+
+> Run the tel: link query, then verify whether the phone number visually displayed in the header or hero is a tappable link or plain text.
+
+- **tel: links found:** [ ] Yes — count: \_\_\_  [ ] None
+- **Header/hero phone is a tap-to-call link:** [ ] Yes  [ ] No — plain text only  [ ] No phone visible in header
+- **Badge:** *(Pass = header phone is a tel: link; High Value = phone visible but plain text in header; Nice to Have = phone only in footer/Contact, not header)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_TRUST1: Social Proof and Trust Signals
+
+> Check homepage and any services page during the Exploration Pass. Record every trust signal found.
+
+- **Trust signals found (check all that apply):**
+  - [ ] Client testimonials or quotes from named clients
+  - [ ] Star rating or review count displayed (e.g., "★★★★★ 48 Google Reviews")
+  - [ ] Google / Yelp / other review widget embedded
+  - [ ] Trust badges (BBB, licensed & insured, certifications, industry awards)
+  - [ ] Portfolio, case studies, or before/after photos
+  - [ ] Years in business or client count mentioned
+- **Location of trust signals:** [ ] Homepage above fold  [ ] Homepage below fold  [ ] Inner pages only  [ ] None found
+- **Google reviews available but not shown on site:** [ ] Yes *(from B_GBP1: \_\_\_ reviews)*  [ ] No
+- **Badge:** *(Pass = 2+ distinct signals on homepage; High Value = 1 signal or signals only on inner pages; Critical = no trust signals anywhere)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note specific elements found or absent)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_SVC1: Service and Location Page Coverage
+
+> Complete during the Exploration Pass. Navigate the services section and note how many distinct services the business offers vs. how many have individual dedicated pages.
+
+- **Services identified from the site:**
+  - \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  - \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  - \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  - *(add more as needed)*
+- **Individual service pages exist:** [ ] Yes — count: \_\_\_  [ ] No — single umbrella "Services" page only
+- **Business serves multiple cities/areas:** [ ] Yes  [ ] No
+- **Location/city-specific pages exist:** [ ] Yes  [ ] No  [ ] N/A (single-city business)
+- **Badge:** *(Pass = individual pages per major service, or single-service business with a well-developed page; High Value = multiple services with no individual pages, or multi-city with no location pages; Critical = no service content at all)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — list specific service topics that lack dedicated pages)*
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
 ---
