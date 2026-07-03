@@ -141,6 +141,8 @@
 - **Technical Detail:** *(optional)*
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
+> **While PageSpeed Insights is still open:** Capture CLS and INP now — you will record them as B_CWV1 and B_CWV2 in the B-Checks section below. Both appear in the "Core Web Vitals" section of the mobile PageSpeed results.
+
 ---
 
 ### CATEGORY 04 — Schema & Structured Data
@@ -292,7 +294,7 @@ Browse the site like a prospective customer: homepage, every top-nav page, the c
 Add a B-check entry for each issue found outside the standard 28. **The reference list is a floor, not a ceiling:** run every listed check unless it is structurally inapplicable to the site, and note why when one is skipped. Add new entries (B23+) for anything — from the Exploration Pass or otherwise — that doesn't fit an existing label.
 
 *Reference list:*
-B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · B14 · Contact Page — No Web Form · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content** · **B_A11Y1 · Form Input Labels** · **B_A11Y2 · Keyboard Focus Visibility** · **B_A11Y3 · Color Contrast Spot-Check** · **B_A11Y4 · Link Text Quality**
+B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→HTTPS Redirect · B04 · Non-www to www Redirect · B05 · 404 Error Page Quality · B06 · Sitemap Accuracy · B07 · Duplicate/Draft Pages in Sitemap · B08 · Cookie Consent/GDPR · B09 · Privacy Policy Not Linked · B10 · Physical Address on Homepage · B11 · Phone Number Format · B12 · Social Media Completeness · B13 · Contact Page — No Map · **B14 · Contact Form Live Submission Test** · B15 · Inner Page Title Quality · B16 · Missing Page-Specific Schema · B17 · Mixed Content · B18 · Developer Artifacts · B19 · Favicon Formats · B20 · Copyright Notice · B21 · Video Content · B22 · hreflang Tags · **B_AI1 · sameAs Authority Links (AI identity verification)** · **B_AI2 · FAQPage Schema from Site FAQ Content** · **B_CWV1 · Cumulative Layout Shift (CLS)** · **B_CWV2 · Interaction to Next Paint (INP)** · **B_GBP1 · Google Business Profile Quality** · **B_GBP2 · NAP Consistency Across Citations** · **B_A11Y1 · Form Input Labels** · **B_A11Y2 · Keyboard Focus Visibility** · **B_A11Y3 · Color Contrast Spot-Check** · **B_A11Y4 · Link Text Quality**
 
 ---
 
@@ -328,6 +330,82 @@ B01 · Mobile Viewport Meta Tag · B02 · Mobile Layout Issues · B03 · HTTP→
 - **Business Impact:**
 - **Technical Detail:** *(note how many Q&A pairs found and on which pages)*
 - **Code Block Deliverable:** [ ] Yes — FAQPage JSON-LD block  [ ] No
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B14: Contact Form Live Submission Test
+
+> Navigate to the Contact page. Step 1: confirm form exists and note spam protection. Step 2: fill with test data (Name: "Website Audit Test", Email: joe@sequelwebstudio.com, Message: "Test from website audit — please disregard") and submit. Step 3: record the on-page response.
+
+- **Form found on Contact page:** [ ] Yes  [ ] No
+- **Spam protection detected (honeypot / captcha):** [ ] Yes  [ ] No
+- **Submission result:** [ ] Clear success message  [ ] Redirect to thank-you page  [ ] Silent failure (no feedback)  [ ] Server error  [ ] Submit button non-functional
+- **Badge:** *(Pass = exists + success response; High Value = exists but vague/no success message, or no spam protection; Critical = no form, silent failure, or broken submit)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note the on-page response text verbatim)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_CWV1: Cumulative Layout Shift (CLS)
+
+*(Capture from PageSpeed Insights mobile results while still open during Category 03.)*
+
+- **CLS value:** \_\_\_\_\_\_\_ *(or "N/A — not reported")*
+- **Badge:** *(Pass < 0.1; High Value 0.1–0.25; Critical > 0.25)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note which elements are shifting, from PageSpeed diagnostics)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_CWV2: Interaction to Next Paint (INP)
+
+*(Capture from PageSpeed Insights mobile results while still open during Category 03. If PageSpeed shows "N/A" or no INP value, record that — it typically means insufficient lab interaction data, not a failure.)*
+
+- **INP value:** \_\_\_\_\_\_\_ ms *(or "N/A — insufficient lab data")*
+- **Badge:** *(Pass < 200ms or N/A from lab; High Value 200–500ms; Critical > 500ms)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note which interaction is slowest, from PageSpeed diagnostics)*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_GBP1: Google Business Profile Quality
+
+> Open the GBP listing via the sameAs Google Maps URL (from B_AI1) or by searching Google for the business name + city. Score each of the five signals below.
+
+- **GBP listing found and claimed:** [ ] Yes  [ ] No *(if No: badge is Critical — stop here)*
+- **Signal 1 — Hours complete:** [ ] ✓  [ ] ✗
+- **Signal 2 — Business description present (1–2+ sentences):** [ ] ✓  [ ] ✗
+- **Signal 3 — Photos ≥ 5 (owner-uploaded):** [ ] ✓  [ ] ✗
+- **Signal 4 — Reviews ≥ 5, with owner response to most recent:** [ ] ✓  [ ] ✗
+- **Signal 5 — GBP post within last 90 days:** [ ] ✓  [ ] ✗
+- **Score:** \_\_\_ / 5
+- **Badge:** *(Pass = 4–5/5; High Value = 2–3/5; Critical = 0–1/5 or no listing)*
+- **Found:**
+- **Business Impact:**
+- **Technical Detail:** *(optional — note specific gaps, e.g., "last post: November 2024")*
+- **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
+
+#### B_GBP2: NAP Consistency Across Citations
+
+> Establish the canonical Name / Address / Phone from the website, then visit each sameAs URL + Yelp + Bing Places and record exactly what each shows.
+
+- **Canonical NAP (from website):**
+  - Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  - Address: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  - Phone: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+- **Citations checked:**
+
+| Directory | Name as listed | Address as listed | Phone as listed | Match? |
+|---|---|---|---|---|
+| Google Maps | | | | [ ] ✓  [ ] ✗ |
+| Yelp | | | | [ ] ✓  [ ] ✗ |
+| Bing Places | | | | [ ] ✓  [ ] ✗ |
+| Other (\_\_\_\_) | | | | [ ] ✓  [ ] ✗ |
+
+- **Discrepancies noted:**
+- **Badge:** *(Pass = all match; High Value = meaningful discrepancy in one or more directories; Critical = multiple contradictory entries or former address/disconnected phone)*
+- **Found:**
+- **Business Impact:**
 - **In Remedy Package:** [ ] Yes — Item #\_\_\_  [ ] No
 
 ---

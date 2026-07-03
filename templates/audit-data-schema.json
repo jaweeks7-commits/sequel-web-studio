@@ -385,6 +385,61 @@
       "impact": "No insecure entry points. Redirect chain is clean.",
       "technical": null,
       "remedyItem": null
+    },
+    {
+      "_note": "Example B14 entry — contact form live submission test. Replace with actual submission result.",
+      "id": "B14",
+      "name": "Contact Form Live Submission Test",
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "Contact form present on /contact. Test submission (Name: 'Website Audit Test', test message) returned a clear on-page success message: 'Thanks for reaching out! We'll be in touch within 24 hours.' Honeypot spam protection detected.",
+      "impact": "Form is functional and delivers messages. Spam protection reduces junk submissions.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_CWV1 entry — Cumulative Layout Shift. Read from PageSpeed mobile results.",
+      "id": "B_CWV1",
+      "name": "Cumulative Layout Shift (CLS)",
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "CLS: 0.04 — well within the Pass threshold of < 0.1. No significant layout instability detected on the homepage.",
+      "impact": "Page content does not jump or shift during load. Visitors can click links and buttons without missing due to unexpected movement.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_CWV2 entry — Interaction to Next Paint. Read from PageSpeed mobile results. If PageSpeed reports N/A (insufficient lab data), record that and badge as Pass.",
+      "id": "B_CWV2",
+      "name": "Interaction to Next Paint (INP)",
+      "badgeClass": "badge-pass",
+      "badgeLabel": "Pass",
+      "found": "INP: N/A — PageSpeed Insights did not capture sufficient user interaction data in its lab test. This is typical for simple marketing sites with limited interactive elements. Real-world INP can be monitored via Google Search Console > Core Web Vitals.",
+      "impact": "No actionable INP issue detected from the lab scan. Monitor in Search Console once traffic reaches a sufficient sample size.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_GBP1 entry — Google Business Profile quality. Score based on 5 signals evaluated manually during audit session.",
+      "id": "B_GBP1",
+      "name": "Google Business Profile Quality",
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "GBP listing found and claimed. Score: 3/5. Hours: ✓ (complete). Description: ✓ (two-sentence description present). Photos: ✗ (2 photos — below the 5-photo threshold). Reviews: ✓ (14 reviews, owner responded to most recent). Recent post: ✗ (last post: October 2025 — over 90 days ago).",
+      "impact": "An incomplete GBP listing suppresses map pack placement. Adding photos and resuming regular posts are the two fastest ways to improve local search visibility.",
+      "technical": null,
+      "remedyItem": null
+    },
+    {
+      "_note": "Example B_GBP2 entry — NAP consistency. Record canonical NAP from website, then compare to each directory checked.",
+      "id": "B_GBP2",
+      "name": "NAP Consistency Across Citations",
+      "badgeClass": "badge-high",
+      "badgeLabel": "High Value",
+      "found": "Canonical NAP from website: 'Acme Plumbing | 123 Main St, Fort Worth, TX 76102 | (817) 555-0100'. Discrepancy found on Yelp: listed as 'Acme Plumbing Services' (different business name) at '123 Main Street' (expanded abbreviation). Google Maps and Bing Places match the canonical NAP exactly.",
+      "impact": "The Yelp business name discrepancy lowers Google's confidence that the website and Yelp listing refer to the same entity, which can suppress local pack ranking. Correcting the Yelp listing to match the canonical name is a one-time fix.",
+      "technical": "Yelp listing URL: https://www.yelp.com/biz/acme-plumbing-fort-worth — update business name to 'Acme Plumbing' to match all other citations.",
+      "remedyItem": null
     }
   ]
 }

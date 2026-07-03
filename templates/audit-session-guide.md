@@ -380,6 +380,8 @@ Look for "Eliminate render-blocking resources" in PageSpeed. Also:
 
 > **Checkpoint — write Category 03 findings to intake progress file before continuing.**
 > Include PageSpeed scores and any specific numbers (LCP ms, TTFB ms, savings KiB) — these are easy to lose from context.
+>
+> **While PageSpeed Insights is still open:** Also read and record CLS (Cumulative Layout Shift) and INP (Interaction to Next Paint) from the Core Web Vitals section. You will record these as B_CWV1 and B_CWV2 in the B-check section — but capture them now while the page is visible, not later from memory.
 
 ---
 
@@ -923,7 +925,7 @@ Run these after the 28 standard checks and the Exploration Pass. **This table is
 | **B11** | Phone number format | `[...document.querySelectorAll('a[href^="tel:"]')].map(a => a.href)` |
 | **B12** | Social media links | `[...document.querySelectorAll('a[href*="facebook"],a[href*="instagram"],a[href*="linkedin"],a[href*="twitter"],a[href*="x.com"]')].map(a => a.href)` |
 | **B13** | Embedded map on Contact | Navigate to Contact page — `document.querySelector('iframe[src*="google.com/maps"]')` |
-| **B14** | Web form on Contact | Navigate to Contact page — `document.querySelector('form')` |
+| **B14** | Contact form — existence and live submission | Navigate to Contact page — `document.querySelector('form')`; then fill and submit a test message; verify a success response appears — see detailed section below |
 | **B15** | Inner page title quality | Navigate to 3 inner pages, run Check 1 on each |
 | **B16** | Missing page-specific schema | FAQ page without FAQPage schema, Services page without Service schema |
 | **B17** | Mixed content (HTTP on HTTPS page) | `[...document.querySelectorAll('img[src^="http://"],script[src^="http://"],link[href^="http://"],iframe[src^="http://"]')].map(e => e.src \|\| e.href)` |
@@ -934,6 +936,10 @@ Run these after the 28 standard checks and the Exploration Pass. **This table is
 | **B22** | hreflang tags (international/multilingual) | `[...document.querySelectorAll('link[rel="alternate"][hreflang]')].map(l => ({lang: l.hreflang, href: l.href}))` |
 | **B_AI1** | sameAs authority links | Extract `sameAs` from all LD+JSON blocks (see Check 16 script); verify each URL loads the correct business listing |
 | **B_AI2** | FAQPage schema from site FAQ content | Scan for FAQ-like content (`document.querySelectorAll('[class*="faq"],[id*="faq"],details,summary')`); check whether FAQPage schema exists |
+| **B_CWV1** | Cumulative Layout Shift (CLS) | Read CLS from PageSpeed Insights mobile results (already open from Category 03) — also collectable via `performance.getEntriesByType('layout-shift').reduce((s,e)=>s+e.value,0).toFixed(3)` |
+| **B_CWV2** | Interaction to Next Paint (INP) | Read INP from PageSpeed Insights mobile results (already open from Category 03) — shown as "Interaction to Next Paint" in the Core Web Vitals section |
+| **B_GBP1** | Google Business Profile quality | Open GBP listing from sameAs URL or Google search; manually score 5 signals — see detailed section below |
+| **B_GBP2** | NAP consistency across citations | Visit each sameAs URL + Yelp + Bing Places; record exact business Name, Address, Phone and compare — see detailed section below |
 | **B_A11Y1** | Form input labels | See detailed section below — run on the contact page |
 | **B_A11Y2** | Keyboard focus visibility | See detailed section below |
 | **B_A11Y3** | Color contrast spot-check | See detailed section below |
@@ -1140,6 +1146,159 @@ This is a spot-check of the two highest-impact text elements, not a full WCAG au
 - **High Value:** 3 or more generic links
 
 **Impact copy for High Value:** "Links that just say 'click here' or 'learn more' waste two audiences at once. Screen reader users often jump through a page link by link, and a list of identical 'learn more' links tells them nothing. Google also uses link text to understand what the destination page is about, so descriptive links ('See our lawn care pricing') help the pages they point to rank for those words."
+
+---
+
+### B14 — Contact Form Live Submission Test
+
+> This check replaces the previous existence-only check. Finding a `<form>` element confirms a form was added; submitting it confirms the form actually delivers messages. A broken form that accepts input but silently fails is the most damaging uncaught issue a lead-generation site can have.
+
+Navigate to the Contact page (or wherever the primary form lives — found earlier in the session).
+
+**Step 1 — Confirm the form and its controls exist:**
+```js
+// playwright_evaluate:
+({
+  hasForm:      !!document.querySelector('form'),
+  inputCount:   document.querySelectorAll('input:not([type=hidden]),select,textarea').length,
+  submitButton: document.querySelector('button[type=submit],input[type=submit]')?.innerText?.trim() ?? null,
+  honeypot:     document.querySelectorAll('input[name*="honey" i],input[tabindex="-1"],input[aria-hidden="true"]').length > 0,
+})
+```
+
+**Step 2 — Submit a test message:**
+
+Fill the form with realistic test data using `browser_fill_form` and submit with `browser_click`. Use values that read as a plausible short inquiry:
+- Name: `Website Audit Test`
+- Email: `joe@sequelwebstudio.com` (or your test email — this is where any confirmation would land)
+- Phone: `(555) 555-0100` if a phone field is present
+- Message: `Test from website audit — please disregard this submission.`
+
+Submitting via `browser_fill_form` also tests UX quality: if filling the form requires unusual steps or produces errors, note them as part of the finding.
+
+**Step 3 — Observe and record the response:**
+
+Take a snapshot immediately after submitting. Look for:
+- A success message on-page ("Thanks! We'll be in touch.") → **Pass**
+- A redirect to a thank-you page → **Pass**
+- The page reloads with a cleared form and no visible feedback → likely silent failure → **Critical**
+- A server error (500) or broken endpoint error → **Critical**
+- No change after clicking Submit — button appears broken → **Critical**
+
+> Do NOT wait to see if Joe receives the test email — that is outside audit scope. Record the on-page response only.
+
+**Badge assignment:**
+- **Pass:** Form exists AND submission produces a clear success message or redirect
+- **High Value:** Form exists and submits, but success messaging is vague or absent; OR form has no honeypot/spam protection of any kind
+- **Critical:** Form does not exist on Contact page; OR submission returns a server error or broken endpoint; OR submit button is present but non-functional
+
+**Impact copy for Critical:** "Your contact form is where visitors become leads. A form that silently fails means every person who filled it out and waited for a reply heard nothing — and you had no way to know. That's lost revenue with no audit trail, and it continues until the form is fixed."
+
+**Record:** form existence, submission result (describe what the page showed), spam protection detected (yes/no), success messaging quality, badge
+
+---
+
+### B_CWV1 — Cumulative Layout Shift (CLS)
+
+Read from PageSpeed Insights mobile results captured during Category 03.
+
+**What it measures:** CLS quantifies how much the visible page content unexpectedly shifts while loading — images popping in and pushing text down, banners appearing above nav, etc. A high CLS score makes the page feel broken and unreliable.
+
+**Badge assignment:**
+- **Pass:** CLS < 0.1
+- **High Value:** CLS 0.1–0.25
+- **Critical:** CLS > 0.25
+
+**Common causes of high CLS:** Images without explicit width/height attributes; web fonts loading after text (FOUT); ads or banners injected without reserved space; late-loading embeds (YouTube, Google Maps) without a fixed container.
+
+**Record:** CLS value from PageSpeed, badge
+
+---
+
+### B_CWV2 — Interaction to Next Paint (INP)
+
+Read from PageSpeed Insights mobile results captured during Category 03. INP replaced First Input Delay (FID) as an official Core Web Vital in March 2024.
+
+**What it measures:** INP measures the time from a user interaction (tap, click, key press) to the next visual response from the page. High INP means the page feels unresponsive — buttons take a visible pause to react.
+
+**Badge assignment:**
+- **Pass:** INP < 200ms
+- **High Value:** INP 200–500ms
+- **Critical:** INP > 500ms
+
+**Note:** Many simple static and Squarespace sites show "INP: N/A" in PageSpeed — this means the tool captured insufficient interaction data during its lab test. Record "INP not captured in lab test (N/A)" and badge as Pass with a note. INP is primarily measurable from real user traffic in Google Search Console.
+
+**Record:** INP value from PageSpeed (or "N/A — insufficient lab data"), badge
+
+---
+
+### B_GBP1 — Google Business Profile Quality
+
+> This check evaluates the listing itself, not just whether a link to it exists. For local businesses, the GBP map pack frequently generates as many leads as the website. A listing with missing hours, no photos, or no recent activity ranks lower and is clicked less than a complete, active listing.
+
+**How to find the listing:**
+1. Use the Google Maps link from the site's LocalBusiness schema `sameAs` array (captured in B_AI1)
+2. Or search Google for the business name + city — the Knowledge Panel on the right is the GBP listing
+
+Score these five signals. The full check takes 3–5 minutes:
+
+| Signal | Pass condition |
+|---|---|
+| Hours complete | Business hours filled in for all operating days — not "Hours not available" or blank |
+| Business description | A description is present with at least 1–2 sentences about what the business does |
+| Photos | At least 5 photos uploaded by the owner (exterior, interior, work samples, team) |
+| Reviews with response | At least 5 reviews total; owner has replied to at least the most recent review |
+| Recent post | A GBP post (update, offer, or event) published within the last 90 days |
+
+**Badge assignment:**
+- **Pass:** 5/5 or 4/5 signals met
+- **High Value:** 2/5 or 3/5 signals met
+- **Critical:** 0/5 or 1/5 signals met; OR the business has no claimed GBP listing at all
+
+**No GBP listing found:** If the sameAs array has no Google Maps URL and a Google search for the business name produces no Knowledge Panel, flag as **Critical** — the business either has not created a GBP listing or has not claimed it. Note this clearly: appearing in the map pack requires a claimed and verified listing. Unverified listings suppress map pack placement entirely.
+
+**Impact copy for High Value:** "Google Business Profile is the most direct ranking signal for 'near me' and local city searches. A listing missing hours, photos, or recent activity tells both Google's ranking algorithm and potential customers that the business is not actively maintained — which suppresses map pack placement and lowers the click rate on listings that do appear."
+
+**Impact copy for Critical (no listing):** "Your business has no Google Business Profile listing, which means it cannot appear in Google Maps results or the local search panel. The map pack — the three local businesses shown above all organic results — drives a significant share of local service leads. Without a claimed and verified listing, you are invisible in that placement entirely."
+
+**Record:** score (e.g., "3/5"), which signals pass and fail, any notable gaps (e.g., "last GBP post was November 2024"), badge
+
+---
+
+### B_GBP2 — NAP Consistency Across Citations
+
+**NAP = Name, Address, Phone.** When these three data points differ between directories — Google says "123 Main St," Yelp says "123 Main Street Suite 100," Facebook says "123 Main" — Google's local ranking algorithm treats each version as a potentially distinct business. Inconsistency is a documented local pack ranking suppressor and the first thing any local SEO professional checks.
+
+**Step 1 — Establish the canonical NAP from the website:**
+
+Extract from the homepage footer, Contact page, or LocalBusiness schema:
+- Exact business name (character-for-character, including "Co.", "LLC", punctuation)
+- Full address including suite/unit number if applicable
+- Phone number (note the format the business itself uses)
+
+**Step 2 — Visit each citation source and record the exact Name / Address / Phone:**
+
+Check these in order:
+1. Each sameAs URL from the LocalBusiness schema (already verified in B_AI1)
+2. Yelp — search `yelp.com` for the business name + city
+3. Bing Places — search `bingplaces.com` for the business
+
+For each directory, note the Name, Address, and Phone exactly as displayed (do not normalize — "St." vs "Street" is a meaningful discrepancy).
+
+**Step 3 — Flag discrepancies:**
+
+Any field that differs from the canonical NAP — missing suite number, abbreviated business name, different phone format, old address — is a discrepancy. Discrepancies accumulate; even small ones compound.
+
+**Badge assignment:**
+- **Pass:** NAP matches exactly (or with trivially equivalent abbreviation such as "TX" vs "Texas") across all checked directories
+- **High Value:** One or more directories show a meaningful discrepancy (different address format, missing suite, alternate business name, different phone number)
+- **Critical:** Multiple directories show contradictory NAP; OR a directory lists a former address or disconnected phone number
+
+**Impact copy for High Value:** "When Google sees your business listed as '[Name A]' at '[Address A]' on your website, but as '[Name B]' at '[Address B]' on Yelp, it has lower confidence these are the same business — and lower confidence means lower local pack ranking. Correcting these citations is one of the highest-leverage local SEO actions a small business can take, and each correction is a one-time fix that pays dividends indefinitely."
+
+**Record:** canonical NAP established from the website, each directory checked with exact Name/Address/Phone found, specific discrepancies flagged, badge
+
+> **If no sameAs links exist:** Run this check using Google, Yelp, and Bing regardless. The findings inform both the NAP remedy and the sameAs array in the schema deliverable.
 
 ---
 
