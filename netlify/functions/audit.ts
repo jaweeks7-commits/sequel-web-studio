@@ -1,6 +1,7 @@
 import { getStore } from '@netlify/blobs';
 import { JSON_HEADERS, json } from '../lib/http';
 import { turnstilePassed } from '../lib/turnstile';
+import { runScan } from '../lib/scan';
 
 type LambdaEvent = {
   httpMethod: string;
@@ -51,26 +52,46 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     return { statusCode: 400, headers: JSON_HEADERS, body: json({ error: 'Please enter a valid URL' }) };
   }
 
-  // Store submission in Netlify Blobs — picked up by the daily digest function
+  // Run the real scan. A failure here is almost always an unreachable or
+  // hostile target (DNS failure, timeout, 4xx/5xx), so surface it as a clean
+  // 422 the front-end can turn into a friendly "we couldn't reach that site".
+  let result: Awaited<ReturnType<typeof runScan>>;
+  try {
+    result = await runScan(normalized);
+  } catch (err) {
+    console.error(`[audit] Scan failed for ${normalized}:`, err);
+    return {
+      statusCode: 422,
+      headers: JSON_HEADERS,
+      body: json({
+        error:
+          "We couldn't reach that site to scan it. Double-check the address and try again.",
+      }),
+    };
+  }
+
+  // Store the lead in Netlify Blobs — picked up by the daily digest function.
+  // Never fail the visitor's scan if storage is unavailable (e.g. local dev).
   try {
     const store = getStore('audit-leads');
     await store.set(
       `submission-${Date.now()}`,
-      JSON.stringify({ url: normalized, submittedAt: new Date().toISOString() }),
+      JSON.stringify({
+        url: result.url,
+        scores: result.scores,
+        criticalCount: result.criticalCount,
+        submittedAt: result.timestamp,
+      }),
     );
   } catch (err) {
-    // Don't fail the visitor's request if storage is unavailable (e.g. local dev)
     console.error('[audit] Blob storage failed:', err);
   }
 
-  console.log(`[audit] Submission received: ${normalized}`);
+  console.log(`[audit] Scan complete: ${result.url}`, result.scores);
 
   return {
     statusCode: 200,
     headers: JSON_HEADERS,
-    body: json({
-      status: 'queued',
-      message: "Audit submitted — we'll have your report ready shortly.",
-    }),
+    body: json({ status: 'complete', ...result }),
   };
 };

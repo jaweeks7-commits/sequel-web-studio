@@ -1,12 +1,17 @@
 ---
-// Reusable audit URL form — appears in Section 4 and Section 8 of the homepage.
-// Phase 1: shows demo results after a simulated scan.
-// Phase 2: will call /.netlify/functions/audit with real PageSpeed + SEO engine.
+// Reusable Free Lite Audit form. Posts the URL to /.netlify/functions/audit,
+// which runs a real scan (live HTML + header signals, plus PageSpeed for the
+// performance score) and returns site-specific category scores rendered below.
 
 interface Props {
   dark?: boolean;
 }
 const { dark = false } = Astro.props;
+
+// Turnstile renders only when the site key is configured, mirroring the
+// server's "no secret = skip" gating (see netlify/lib/turnstile.ts) so the
+// form never breaks while bot protection is off.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <div class={`audit-widget${dark ? ' audit-dark' : ''}`} data-audit-widget>
@@ -35,36 +40,51 @@ const { dark = false } = Astro.props;
         </span>
       </button>
     </div>
+
+    <!-- Honeypot — a real visitor never fills this; a bot usually does. -->
+    <p class="audit-hp" aria-hidden="true">
+      <label>Leave this field empty
+        <input type="text" tabindex="-1" autocomplete="off" name="bot-field" data-audit-hp />
+      </label>
+    </p>
+
+    {turnstileSiteKey && (
+      <div
+        class="cf-turnstile"
+        data-sitekey={turnstileSiteKey}
+        data-theme="auto"
+        style="margin-top: 12px;"
+      ></div>
+    )}
+
     <p class="audit-trust">No email required to see your score. No credit card. No sales call unless you ask.</p>
     <p data-audit-error role="alert" hidden class="audit-error"></p>
   </form>
 
-  <!-- Done state — demo results card (Phase 1) -->
+  <!-- Done state — results card, populated from the live scan response -->
   <div data-audit-result hidden class="audit-result">
     <div class="result-header">
       <span data-result-url class="result-url"></span>
       <span class="result-badge">Report Ready</span>
     </div>
     {[
-      ['Performance',           61, '#D97706'],
-      ['SEO / Discoverability', 44, '#DC2626'],
-      ['AI Readiness',          22, '#DC2626'],
-      ['Mobile Experience',     94, '#16A34A'],
-      ['Security & Compliance', 55, '#D97706'],
-    ].map(([label, score, color]) => (
-      <div class="score-row">
+      ['performance', 'Performance'],
+      ['seo',         'SEO / Discoverability'],
+      ['ai',          'AI Readiness'],
+      ['mobile',      'Mobile Experience'],
+      ['security',    'Security & Compliance'],
+    ].map(([key, label]) => (
+      <div class="score-row" data-score-row={key}>
         <div class="score-labels">
           <span class="score-label">{label}</span>
-          <span class="score-value" style={`color: ${color};`}>{score}/100</span>
+          <span class="score-value" data-score-value>—</span>
         </div>
         <div class="score-track">
-          <div class="score-fill" style={`width: ${score}%; background: ${color};`}></div>
+          <div class="score-fill" data-score-fill style="width: 0%;"></div>
         </div>
       </div>
     ))}
-    <div class="result-footer">
-      3 critical issues found.
-    </div>
+    <div class="result-footer" data-result-footer></div>
   </div>
 
   <!-- Post-audit upsell card -->
@@ -149,6 +169,15 @@ const { dark = false } = Astro.props;
     transition: opacity 0.2s;
   }
   .audit-btn:disabled { opacity: 0.75; cursor: not-allowed; }
+
+  /* Honeypot — kept in the layout but off-screen and out of the tab order. */
+  .audit-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
 
   .audit-trust {
     margin-top: 10px;
@@ -309,6 +338,16 @@ const { dark = false } = Astro.props;
 <script>
   import { reportConversion } from '../lib/conversions';
 
+  // <50 = red, 50–79 = amber, 80+ = green (matches the audit report tiers).
+  function colorFor(score: number): string {
+    if (score < 50) return '#DC2626';
+    if (score < 80) return '#D97706';
+    return '#16A34A';
+  }
+
+  const clampScore = (n: unknown): number =>
+    Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+
   document.querySelectorAll<HTMLElement>('[data-audit-widget]').forEach(widget => {
     const form    = widget.querySelector<HTMLFormElement>('[data-audit-form]')!;
     const input   = widget.querySelector<HTMLInputElement>('[data-audit-input]')!;
@@ -319,40 +358,88 @@ const { dark = false } = Astro.props;
     const result  = widget.querySelector<HTMLElement>('[data-audit-result]')!;
     const upsell  = widget.querySelector<HTMLElement>('[data-audit-upsell]')!;
     const urlEl   = result.querySelector<HTMLElement>('[data-result-url]')!;
+    const footer  = result.querySelector<HTMLElement>('[data-result-footer]')!;
+    const hp      = widget.querySelector<HTMLInputElement>('[data-audit-hp]');
 
-    form.addEventListener('submit', (e) => {
+    const setRunning = (on: boolean) => {
+      btn.disabled = on;
+      label.hidden = on;
+      spinner.hidden = !on;
+    };
+    const showError = (msg: string) => {
+      errEl.textContent = msg;
+      errEl.hidden = false;
+    };
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errEl.hidden = true;
       errEl.textContent = '';
 
       let url = input.value.trim();
       if (!url) {
-        errEl.textContent = 'Please enter your website URL.';
-        errEl.hidden = false;
+        showError('Please enter your website URL.');
         input.focus();
         return;
       }
       if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
       try { new URL(url); } catch {
-        errEl.textContent = "That doesn't look like a valid URL — try something like yoursite.com";
-        errEl.hidden = false;
+        showError("That doesn't look like a valid URL — try something like yoursite.com");
         input.focus();
         return;
       }
 
-      // Running state
-      btn.disabled = true;
-      label.hidden = true;
-      spinner.hidden = false;
+      const tokenInput = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
+      const turnstileToken = tokenInput ? tokenInput.value : '';
 
-      // Phase 1: demo results after simulated scan delay
-      setTimeout(() => {
+      setRunning(true);
+      try {
+        const res = await fetch('/.netlify/functions/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, botField: hp?.value ?? '', turnstileToken }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(
+            data.error || 'Something went wrong running your scan. Please try again.',
+          );
+        }
+
+        const scores = (data.scores ?? {}) as Record<string, number>;
+        widget.querySelectorAll<HTMLElement>('[data-score-row]').forEach(row => {
+          const key = row.dataset.scoreRow!;
+          const score = clampScore(scores[key]);
+          const color = colorFor(score);
+          const valEl = row.querySelector<HTMLElement>('[data-score-value]')!;
+          const fillEl = row.querySelector<HTMLElement>('[data-score-fill]')!;
+          valEl.textContent = `${score}/100`;
+          valEl.style.color = color;
+          fillEl.style.width = `${score}%`;
+          fillEl.style.background = color;
+        });
+
+        const n = clampScore(data.criticalCount);
+        footer.textContent = n === 0
+          ? 'No critical issues found — but there are still gains available.'
+          : `${n} critical issue${n === 1 ? '' : 's'} found.`;
+
+        urlEl.textContent = data.url || url;
         form.style.display = 'none';
-        urlEl.textContent = url;
         result.hidden = false;
         reportConversion('audit_form');
         setTimeout(() => { upsell.hidden = false; }, 300);
-      }, 2200);
+      } catch (err) {
+        setRunning(false);
+        // Turnstile tokens are single-use — reset so a retry gets a fresh one.
+        const turnstile = (window as unknown as { turnstile?: { reset?: () => void } }).turnstile;
+        if (turnstile?.reset) { try { turnstile.reset(); } catch { /* noop */ } }
+        showError(err instanceof Error ? err.message : 'Network error — please try again.');
+      }
     });
   });
 </script>
+
+{turnstileSiteKey && (
+  <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+)}
