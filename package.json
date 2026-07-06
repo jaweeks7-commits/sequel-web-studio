@@ -25,6 +25,7 @@
     "@netlify/blobs": "^10.7.4",
     "@types/nodemailer": "^8.0.0",
     "astro": "^6.1.9",
+    "google-auth-library": "^9.15.1",
     "nodemailer": "^8.0.6",
     "resend": "^6.12.4",
     "stripe": "^22.1.0",
