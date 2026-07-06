@@ -3,7 +3,24 @@
 // without waiting for the 9 AM digest. This whole file is deleted right after
 // the check, which makes the endpoint (and the disposable token below) inert.
 import { JSON_HEADERS, json } from '../lib/http';
-import { isSheetsConfigured, appendAuditRows } from '../lib/sheets';
+import { isSheetsConfigured, appendAuditRows, normalizePrivateKey } from '../lib/sheets';
+
+// Safe metadata about the stored key (no secret bytes; the PEM header/footer
+// are standard public boilerplate) to diagnose formatting problems.
+function keyDiag() {
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY ?? '';
+  const norm = normalizePrivateKey(raw);
+  return {
+    rawLength: raw.length,
+    startsWithQuote: /^["']/.test(raw),
+    rawHasLiteralBackslashN: raw.includes('\\n'),
+    rawHasDoubleBackslashN: raw.includes('\\\\n'),
+    rawHasRealNewline: raw.includes('\n'),
+    normStartsWithHeader: norm.startsWith('-----BEGIN PRIVATE KEY-----'),
+    normEndsWithFooter: norm.trimEnd().endsWith('-----END PRIVATE KEY-----'),
+    normLineCount: norm.split('\n').length,
+  };
+}
 
 // One-off token. Disposable: the function is removed after the test, so the
 // token cannot be used again even though it lands in git history.
@@ -49,7 +66,11 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     return {
       statusCode: 200,
       headers: JSON_HEADERS,
-      body: json({ ok: false, error: err instanceof Error ? err.message : String(err) }),
+      body: json({
+        ok: false,
+        error: err instanceof Error ? err.message : String(err),
+        keyDiag: keyDiag(),
+      }),
     };
   }
 };

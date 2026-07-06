@@ -10,6 +10,23 @@ import { JWT } from 'google-auth-library';
 
 const SHEET_RANGE = 'Sheet1!A:I'; // 9 columns; see daily-digest row shape
 
+// Turn whatever ended up in the env var back into a valid PEM. Handles the
+// common paste hazards: surrounding quotes copied along with the JSON value,
+// and newlines stored as escaped "\n" or double-escaped "\\n" rather than real
+// line breaks.
+export function normalizePrivateKey(raw: string): string {
+  let key = (raw ?? '').trim();
+  if (
+    (key.startsWith('"') && key.endsWith('"')) ||
+    (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    key = key.slice(1, -1);
+  }
+  // Collapse one-or-more backslashes before an n (\n, \\n) into a real newline.
+  key = key.replace(/\\+n/g, '\n');
+  return key;
+}
+
 export function isSheetsConfigured(): boolean {
   return Boolean(
     process.env.GOOGLE_SHEETS_ID &&
@@ -23,8 +40,7 @@ export async function appendAuditRows(rows: (string | number)[][]): Promise<void
 
   const sheetId = process.env.GOOGLE_SHEETS_ID as string;
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL as string;
-  // Netlify stores the private key with literal "\n" sequences; restore them.
-  const key = (process.env.GOOGLE_SERVICE_ACCOUNT_KEY as string).replace(/\\n/g, '\n');
+  const key = normalizePrivateKey(process.env.GOOGLE_SERVICE_ACCOUNT_KEY as string);
 
   const client = new JWT({
     email,
