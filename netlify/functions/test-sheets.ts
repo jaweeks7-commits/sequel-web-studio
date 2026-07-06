@@ -19,6 +19,9 @@ function keyDiag() {
     normStartsWithHeader: norm.startsWith('-----BEGIN PRIVATE KEY-----'),
     normEndsWithFooter: norm.trimEnd().endsWith('-----END PRIVATE KEY-----'),
     normLineCount: norm.split('\n').length,
+    // First line only — the PEM header is public boilerplate, not secret.
+    normFirstLine: JSON.stringify(norm.split('\n')[0]),
+    rawHead: JSON.stringify(raw.slice(0, 40)),
   };
 }
 

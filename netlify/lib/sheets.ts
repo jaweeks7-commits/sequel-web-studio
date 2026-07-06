@@ -23,8 +23,9 @@ export function normalizePrivateKey(raw: string): string {
     key = key.slice(1, -1);
   }
   // Collapse one-or-more backslashes before an n (\n, \\n) into a real newline.
-  key = key.replace(/\\+n/g, '\n');
-  return key;
+  key = key.replace(/\\+n/g, '\n').trim();
+  // PEM parsers expect a trailing newline; leading whitespace must be gone.
+  return key + '\n';
 }
 
 export function isSheetsConfigured(): boolean {
