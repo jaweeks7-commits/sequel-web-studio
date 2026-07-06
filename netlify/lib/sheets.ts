@@ -12,8 +12,8 @@ const SHEET_RANGE = 'Sheet1!A:I'; // 9 columns; see daily-digest row shape
 
 // Turn whatever ended up in the env var back into a valid PEM. Handles the
 // common paste hazards: surrounding quotes copied along with the JSON value,
-// and newlines stored as escaped "\n" or double-escaped "\\n" rather than real
-// line breaks.
+// newlines stored as escaped "\n"/"\\n" rather than real line breaks, and a
+// selection that dropped the "-----BEGIN/END PRIVATE KEY-----" boundary lines.
 export function normalizePrivateKey(raw: string): string {
   let key = (raw ?? '').trim();
   if (
@@ -24,8 +24,17 @@ export function normalizePrivateKey(raw: string): string {
   }
   // Collapse one-or-more backslashes before an n (\n, \\n) into a real newline.
   key = key.replace(/\\+n/g, '\n').trim();
-  // PEM parsers expect a trailing newline; leading whitespace must be gone.
-  return key + '\n';
+
+  // Already a well-formed PEM: return with a guaranteed trailing newline.
+  if (key.includes('-----BEGIN') && key.includes('-----END')) {
+    return key.endsWith('\n') ? key : key + '\n';
+  }
+
+  // A paste dropped the header and/or footer. Rebuild a PKCS#8 PEM from the
+  // base64 body (Google service-account keys are always PKCS#8).
+  const body = key.replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+  const wrapped = body.match(/.{1,64}/g)?.join('\n') ?? body;
+  return `-----BEGIN PRIVATE KEY-----\n${wrapped}\n-----END PRIVATE KEY-----\n`;
 }
 
 export function isSheetsConfigured(): boolean {
