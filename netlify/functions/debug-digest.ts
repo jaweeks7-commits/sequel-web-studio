@@ -3,7 +3,8 @@
 // digest is failing to run. Token-gated; removed after diagnosis.
 import { getStore } from '@netlify/blobs';
 import { JSON_HEADERS, json } from '../lib/http';
-import { handler as digestHandler } from './daily-digest';
+import { connectBlobs } from '../lib/blobs';
+import { runDigest } from './daily-digest';
 
 const TOKEN = '6e2bfca331406bcb76820431c6816625c1f1';
 
@@ -14,6 +15,9 @@ export const handler = async (event: Event) => {
     return { statusCode: 404, headers: JSON_HEADERS, body: json({ error: 'Not found.' }) };
   }
 
+  // Initialize Blobs from this request's event; runDigest() reuses the context.
+  connectBlobs(event);
+
   // 1) What's currently queued in the audit-leads store?
   let storeInfo: unknown;
   try {
@@ -21,7 +25,7 @@ export const handler = async (event: Event) => {
     const { blobs } = await store.list();
     let firstEntry: unknown = null;
     if (blobs.length) {
-      try { firstEntry = JSON.parse((await store.get(blobs[0].key)) ?? 'null'); } catch { firstEntry = 'unparseable'; }
+      try { firstEntry = JSON.parse(((await store.get(blobs[0].key)) as unknown as string | null) ?? 'null'); } catch { firstEntry = 'unparseable'; }
     }
     storeInfo = { count: blobs.length, keys: blobs.map((b) => b.key).slice(0, 25), firstEntry };
   } catch (e) {
@@ -34,7 +38,7 @@ export const handler = async (event: Event) => {
     const store = getStore('audit-leads');
     const k = `__probe-${Date.now()}`;
     await store.set(k, 'ok');
-    const v = await store.get(k);
+    const v = (await store.get(k)) as unknown as string | null;
     await store.delete(k);
     blobSelfTest = v === 'ok' ? 'read/write/delete OK' : `unexpected read: ${v}`;
   } catch (e) {
@@ -45,7 +49,7 @@ export const handler = async (event: Event) => {
   let digestResult: unknown = 'skipped (add &run=1 to execute)';
   if (event.queryStringParameters?.run === '1') {
     try {
-      digestResult = await digestHandler({});
+      digestResult = await runDigest();
     } catch (e) {
       digestResult = { threw: e instanceof Error ? `${e.name}: ${e.message}` : String(e) };
     }

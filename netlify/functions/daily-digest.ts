@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 // Visitor-submitted URLs are rendered into the digest email body, so escape
 // them to prevent HTML/attribute injection into the message.
 import { escapeHtml } from '../lib/escape';
+import { connectBlobs } from '../lib/blobs';
 import { isSheetsConfigured, appendAuditRows } from '../lib/sheets';
 
 type LambdaResponse = {
@@ -56,6 +57,14 @@ export const handler = async (event?: { httpMethod?: string }): Promise<LambdaRe
     return { statusCode: 404, body: 'Not found.' };
   }
 
+  // V1 functions must initialize the Blobs context from the invocation event.
+  connectBlobs(event);
+  return runDigest();
+};
+
+// Core digest logic, separated so the on-demand debug endpoint can flush the
+// queue too. Assumes the Blobs context is already connected by the caller.
+export async function runDigest(): Promise<LambdaResponse> {
   const store = getStore('audit-leads');
   const { blobs } = await store.list();
 
@@ -68,7 +77,7 @@ export const handler = async (event?: { httpMethod?: string }): Promise<LambdaRe
   const submissions: Submission[] = [];
   for (const blob of blobs) {
     try {
-      const raw = await store.get(blob.key);
+      const raw = (await store.get(blob.key)) as unknown as string | null;
       if (raw) submissions.push(JSON.parse(raw) as Submission);
     } catch {
       // skip malformed entries

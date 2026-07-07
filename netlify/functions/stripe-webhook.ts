@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { getStore } from '@netlify/blobs';
 import nodemailer from 'nodemailer';
+import { connectBlobs } from '../lib/blobs';
 import { escapeHtml, safeHref } from '../lib/escape';
 
 type LambdaEvent = {
@@ -199,6 +200,7 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
 
     // Persist order record
     try {
+      connectBlobs(event);
       const store = getStore('pro-diagnosis-orders');
       await store.set(`order-${Date.now()}`, JSON.stringify({
         stripeSessionId: session.id,

@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { JSON_HEADERS, json } from '../lib/http';
+import { connectBlobs } from '../lib/blobs';
 import { turnstilePassed } from '../lib/turnstile';
 import { runScan } from '../lib/scan';
 
@@ -73,6 +74,7 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
   // Store the lead in Netlify Blobs — picked up by the daily digest function.
   // Never fail the visitor's scan if storage is unavailable (e.g. local dev).
   try {
+    connectBlobs(event);
     const store = getStore('audit-leads');
     await store.set(
       `submission-${Date.now()}`,
