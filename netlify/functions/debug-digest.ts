@@ -45,6 +45,28 @@ export const handler = async (event: Event) => {
     blobSelfTest = { error: e instanceof Error ? e.message : String(e) };
   }
 
+  // 2b) Only when ?seed=1: write one realistic submission so the digest has
+  // something to flush (used to verify the read/email/sheet path end-to-end,
+  // since live scans are gated by Turnstile and can't be posted synthetically).
+  let seedResult: unknown = 'skipped (add &seed=1)';
+  if (event.queryStringParameters?.seed === '1') {
+    try {
+      const store = getStore('audit-leads');
+      await store.set(
+        `submission-${Date.now()}`,
+        JSON.stringify({
+          url: 'https://example.com/',
+          scores: { performance: 92, seo: 50, ai: 10, mobile: 96, security: 65 },
+          criticalCount: 2,
+          submittedAt: new Date().toISOString(),
+        }),
+      );
+      seedResult = 'seeded 1 test submission';
+    } catch (e) {
+      seedResult = { error: e instanceof Error ? e.message : String(e) };
+    }
+  }
+
   // 3) Only when ?run=1: actually run the digest (emails + appends + clears).
   let digestResult: unknown = 'skipped (add &run=1 to execute)';
   if (event.queryStringParameters?.run === '1') {
@@ -55,5 +77,5 @@ export const handler = async (event: Event) => {
     }
   }
 
-  return { statusCode: 200, headers: JSON_HEADERS, body: json({ storeInfo, blobSelfTest, digestResult }) };
+  return { statusCode: 200, headers: JSON_HEADERS, body: json({ storeInfo, blobSelfTest, seedResult, digestResult }) };
 };
