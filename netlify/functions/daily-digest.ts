@@ -58,8 +58,8 @@ export default async (): Promise<Response> => {
 };
 
 export const config = {
-  // TEMP verification run at 03:00 UTC — revert to '0 14 * * *'.
-  schedule: '0 3 * * *',
+  // 8 AM Central (14:00 UTC covers CST; shifts to 9 AM during CDT).
+  schedule: '0 14 * * *',
 };
 
 // Core digest logic, separated so the on-demand debug endpoint can flush the
