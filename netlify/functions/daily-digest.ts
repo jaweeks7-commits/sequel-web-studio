@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 // Visitor-submitted URLs are rendered into the digest email body, so escape
 // them to prevent HTML/attribute injection into the message.
 import { escapeHtml } from '../lib/escape';
-import { connectBlobs } from '../lib/blobs';
 import { isSheetsConfigured, appendAuditRows } from '../lib/sheets';
 
 type LambdaResponse = {
@@ -49,21 +48,23 @@ function domainOf(u: string): string {
   }
 }
 
-export const handler = async (event?: { httpMethod?: string }): Promise<LambdaResponse> => {
-  // This is a scheduled function. Netlify's scheduler invokes it with no
-  // httpMethod; a public request routed through /api/* would carry one. Reject
-  // those so nobody can trigger the send (and the store-clearing below) on demand.
-  if (event?.httpMethod) {
-    return { statusCode: 404, body: 'Not found.' };
-  }
+// Scheduled V2 Netlify function. V2 functions receive the Netlify Blobs context
+// automatically (no connectLambda dance, unlike the V1 request functions in
+// netlify/lib/blobs.ts) and are not exposed on a public URL, so no manual guard
+// is needed. The schedule lives here in `config` rather than in netlify.toml.
+export default async (): Promise<Response> => {
+  const result = await runDigest();
+  return new Response(result.body, { status: result.statusCode });
+};
 
-  // V1 functions must initialize the Blobs context from the invocation event.
-  connectBlobs(event);
-  return runDigest();
+export const config = {
+  // TEMP verification run at 03:00 UTC — revert to '0 14 * * *'.
+  schedule: '0 3 * * *',
 };
 
 // Core digest logic, separated so the on-demand debug endpoint can flush the
-// queue too. Assumes the Blobs context is already connected by the caller.
+// queue too. Assumes the Blobs context is available (V2 ambient here, or
+// connected by the V1 debug caller before it invokes runDigest).
 export async function runDigest(): Promise<LambdaResponse> {
   const store = getStore('audit-leads');
   const { blobs } = await store.list();

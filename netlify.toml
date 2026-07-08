@@ -42,9 +42,8 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
-# TEMP verification of the scheduled Blobs context — revert to "0 14 * * *".
-[functions."daily-digest"]
-  schedule = "5 19 * * *"
+# daily-digest is a scheduled V2 function; its cron lives in the function's
+# `config` export (netlify/functions/daily-digest.ts), not here.
 
 # Route /api/* calls to Netlify Functions (used for contact form, audit tool in Phase 2)
 [[redirects]]
