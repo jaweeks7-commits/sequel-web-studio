@@ -9,6 +9,16 @@ interface Props {
   description?: string;
   ogImage?: string;
   ogType?: string;
+  /**
+   * minimal: hides the full site Nav and Footer — used by dedicated ad landing
+   * pages so paid visitors have one job (convert) instead of a menu of exits.
+   */
+  minimal?: boolean;
+  /**
+   * noindex: tells search engines not to list this page in organic results.
+   * Used by ad landing pages so they never compete with the main site pages.
+   */
+  noindex?: boolean;
 }
 
 const {
@@ -18,6 +28,8 @@ const {
   // and a large social card instead of falling back to a blank summary.
   ogImage = `${SITE_URL}/images/og-home.png`,
   ogType = 'website',
+  minimal = false,
+  noindex = false,
 } = Astro.props;
 
 const pageTitle    = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
@@ -37,6 +49,7 @@ const loaderId    = ga4Id || adsId;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
     <title>{pageTitle}</title>
 
@@ -110,11 +123,29 @@ const loaderId    = ga4Id || adsId;
     )}
   </head>
   <body>
-    <Nav />
+    {minimal ? (
+      <header style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; padding: 22px 32px;">
+        <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #2E75B6, #8E44AD); color: white; font-weight: 700; font-size: 18px; font-family: Georgia, serif;">S</span>
+          <span style="font-weight: 700; font-size: 17px; color: white; letter-spacing: -0.3px;">Sequel Web Studio</span>
+        </a>
+      </header>
+    ) : (
+      <Nav />
+    )}
     <main id="main-content">
       <slot />
     </main>
-    <Footer />
+    {minimal ? (
+      <footer style="background: #0F1F3D; padding: 28px 32px; text-align: center;">
+        <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin: 0;">
+          © {new Date().getFullYear()} Sequel Web Studio · Serving small businesses nationwide ·
+          <a href="/privacy" style="color: rgba(255,255,255,0.65);">Privacy Policy</a>
+        </p>
+      </footer>
+    ) : (
+      <Footer />
+    )}
 
     <!-- Scroll reveal observer — wires up all .reveal elements -->
     <script>

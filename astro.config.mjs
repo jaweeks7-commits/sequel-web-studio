@@ -13,6 +13,8 @@ export default defineConfig({
   output: 'static',
   integrations: [
     tailwind({ applyBaseStyles: false }),
-    sitemap(),
+    // /free-ai-audit is a noindex ad landing page — keep it out of the sitemap
+    // so search engines aren't invited to a page that asks not to be indexed.
+    sitemap({ filter: (page) => !page.includes('/free-ai-audit') }),
   ],
 });
