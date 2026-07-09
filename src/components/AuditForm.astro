@@ -397,7 +397,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         const res = await fetch('/.netlify/functions/audit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, botField: hp?.value ?? '', turnstileToken }),
+          // page: which page hosted the widget — lets the lead log distinguish
+          // ad-landing-page scans from homepage scans.
+          body: JSON.stringify({ url, botField: hp?.value ?? '', turnstileToken, page: location.pathname }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {

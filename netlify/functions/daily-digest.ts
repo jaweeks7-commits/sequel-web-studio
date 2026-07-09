@@ -23,7 +23,17 @@ type Submission = {
   submittedAt: string;
   scores?: Scores;
   criticalCount?: number;
+  sourcePage?: string;
 };
+
+// Friendly label for where the scan was run. New pages that host the widget
+// fall through to their raw path so they're still distinguishable.
+function sourceLabel(page?: string): string {
+  if (!page) return 'Unknown';
+  if (page === '/' || page === '/index.html') return 'Homepage';
+  if (page.startsWith('/free-ai-audit')) return 'Ad landing page';
+  return page;
+}
 
 // Same tiers the site uses for the scan result card: <50 red, 50-79 amber, 80+ green.
 function scoreColor(n: number): string {
@@ -105,7 +115,7 @@ export async function runDigest(): Promise<LambdaResponse> {
           : `<td style="padding:8px 6px;border-bottom:1px solid #e4eaf5;font-size:13px;text-align:center;color:#bbb;">n/a</td>`;
       return `
         <tr>
-          <td style="padding:8px 10px;border-bottom:1px solid #e4eaf5;font-size:13px;">${escapeHtml(domainOf(s.url))}</td>
+          <td style="padding:8px 10px;border-bottom:1px solid #e4eaf5;font-size:13px;">${escapeHtml(domainOf(s.url))}<br><span style="font-size:10px;color:#8E44AD;font-weight:600;">${escapeHtml(sourceLabel(s.sourcePage))}</span></td>
           <td style="padding:8px 10px;border-bottom:1px solid #e4eaf5;font-size:12px;color:#595959;white-space:nowrap;">${time} CT</td>
           ${scoreCell(sc?.performance)}
           ${scoreCell(sc?.seo)}
@@ -117,6 +127,17 @@ export async function runDigest(): Promise<LambdaResponse> {
     })
     .join('');
 
+  // One-line source breakdown, e.g. "2 from Ad landing page · 1 from Homepage".
+  const sourceCounts = new Map<string, number>();
+  for (const s of submissions) {
+    const label = sourceLabel(s.sourcePage);
+    sourceCounts.set(label, (sourceCounts.get(label) ?? 0) + 1);
+  }
+  const sourceSummary = [...sourceCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([label, n]) => `${n} from ${escapeHtml(label)}`)
+    .join(' · ');
+
   const th = 'padding:8px 6px;text-align:center;color:#0F1F3D;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;';
   const html = `
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:24px;">
@@ -127,7 +148,8 @@ export async function runDigest(): Promise<LambdaResponse> {
         <h2 style="margin:0 0 4px;color:#0F1F3D;font-size:22px;font-weight:700;">
           ${count} audit request${count !== 1 ? 's' : ''} today
         </h2>
-        <p style="margin:0 0 24px;color:#595959;font-size:14px;">${today}</p>
+        <p style="margin:0 0 6px;color:#595959;font-size:14px;">${today}</p>
+        <p style="margin:0 0 24px;color:#8E44AD;font-size:13px;font-weight:600;">${sourceSummary}</p>
         <table style="width:100%;border-collapse:collapse;">
           <thead>
             <tr style="background:#F4F6FB;">
@@ -188,6 +210,7 @@ export async function runDigest(): Promise<LambdaResponse> {
         sc?.mobile ?? '',
         sc?.security ?? '',
         s.criticalCount ?? '',
+        sourceLabel(s.sourcePage),
       ];
     });
     try {

@@ -21,12 +21,16 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
     return { statusCode: 405, headers: JSON_HEADERS, body: json({ error: 'Method not allowed' }) };
   }
 
-  let url: string, botField: string, turnstileToken: string;
+  let url: string, botField: string, turnstileToken: string, sourcePage: string;
   try {
-    const body = JSON.parse(event.body ?? '{}') as { url?: string; botField?: string; turnstileToken?: string };
+    const body = JSON.parse(event.body ?? '{}') as { url?: string; botField?: string; turnstileToken?: string; page?: string };
     url            = (body.url            ?? '').trim();
     botField       = (body.botField        ?? '').trim();
     turnstileToken = (body.turnstileToken  ?? '').trim();
+    // Visitor-supplied, so keep only a plausible path: must start with "/",
+    // capped in length. Anything else is recorded as unknown.
+    const rawPage = (body.page ?? '').trim();
+    sourcePage = /^\/[\w\-./]{0,100}$/.test(rawPage) ? rawPage : '';
   } catch {
     return { statusCode: 400, headers: JSON_HEADERS, body: json({ error: 'Invalid request body' }) };
   }
@@ -83,6 +87,7 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
         scores: result.scores,
         criticalCount: result.criticalCount,
         submittedAt: result.timestamp,
+        sourcePage,
       }),
     );
   } catch (err) {
