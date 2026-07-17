@@ -60,3 +60,11 @@ cat > .claude/settings.local.json << 'EOF'
 EOF
 
 echo "=== Codespace setup complete. Run 'claude' to start. ==="
+echo ""
+echo "FIRST-RUN AUTH: inside Claude, run '/login' and choose the"
+echo "'Claude account with subscription' option (Pro/Max) — not the API-key option."
+echo ""
+echo "If models error with 'may not exist / no access', an API key is hijacking the"
+echo "subscription login. Check it with: echo \$ANTHROPIC_API_KEY"
+echo "If it prints a key, run 'unset ANTHROPIC_API_KEY' and delete the ANTHROPIC_API_KEY"
+echo "Codespaces secret in GitHub (the audit pipeline does not need it)."
